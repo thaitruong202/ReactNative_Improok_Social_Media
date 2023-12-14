@@ -1,9 +1,8 @@
 import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import CameraRoll from '../images/cameraroll.png';
 import * as ImagePicker from 'expo-image-picker';
 // import ImagePicker from 'react-native-image-picker'
-import { useContext } from 'react';
 import { MyUserContext } from "../../App";
 import axios from 'axios';
 

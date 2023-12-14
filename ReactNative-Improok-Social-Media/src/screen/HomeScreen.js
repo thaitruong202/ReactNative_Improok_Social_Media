@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import { Fragment } from "react";
+import React, { useState, Fragment } from "react";
 import { Button, Image, ScrollView, StyleSheet, View } from "react-native";
 import SubHeader from "../layouts/SubHeader";
 

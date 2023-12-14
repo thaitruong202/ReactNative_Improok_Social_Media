@@ -1,13 +1,15 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { createContext, useReducer } from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NativeRouter } from 'react-router-native';
-import MyUserReducer from "./src/reducers/MyUserReducer.js";
+import MyUserReducer from "./src/reducers/MyUserReducer";
 import Login from './src/components/Login';
 import Register from './src/components/Register';
 import MainScreen from './src/screen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Profile from './src/components/Profile';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export const MyUserContext = createContext();
 
@@ -23,6 +25,31 @@ export default function App() {
             <Stack.Screen name="Đăng nhập" component={Login} />
             <Stack.Screen name="Đăng ký" component={Register} />
             <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="Trang cá nhân"
+              component={Profile}
+              options={{
+                headerTitleAlign: 'center',
+                headerTitleStyle: {
+                  color: 'black',
+                  fontSize: 18,
+                },
+                headerStyle: {
+                  shadowColor: '#fff',
+                  elevation: 0,
+                },
+                headerRight: () => (
+                  <View style={{ marginRight: 10 }}>
+                    <FontAwesome5.Button
+                      name="search"
+                      size={20}
+                      backgroundColor="#fff"
+                      color="black"
+                    />
+                  </View>
+                ),
+              }}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeRouter>
