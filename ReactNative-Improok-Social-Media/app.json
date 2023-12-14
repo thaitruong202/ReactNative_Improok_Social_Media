@@ -1,0 +1,11 @@
+{
+  "expo": {
+    "name": "ReactNative-Improok-Social-Media",
+    "slug": "ReactNative-Improok-Social-Media",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  },
+  "name": "ReactNative-Improok-Social-Media"
+}
