@@ -6,6 +6,7 @@ import { windowWidth } from '../utils/Dimensions';
 import Collapsible from 'react-native-collapsible';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PersonalScreen = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -30,7 +31,12 @@ const PersonalScreen = ({ navigation }) => {
 
     const getCurrentUser = async () => {
         try {
-            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`)
+            const token = await AsyncStorage.getItem('token');
+            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`, {
+                headers: {
+                    'Authorization': "Bearer" + " " + token,
+                }
+            })
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)

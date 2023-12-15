@@ -4,6 +4,9 @@ import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import CreatePost from '../layouts/CreatePost';
+import Timeline from '../layouts/Timeline';
 
 const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -11,7 +14,12 @@ const Profile = ({ navigation }) => {
 
     const getCurrentUser = async () => {
         try {
-            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`)
+            const token = await AsyncStorage.getItem('token');
+            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`, {
+                headers: {
+                    'Authorization': "Bearer" + " " + token,
+                }
+            })
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)
@@ -111,7 +119,8 @@ const Profile = ({ navigation }) => {
                     </Text>
                 </View>
                 <View style={styles.divider}></View>
-                {/* <PostStatus navigation={navigation} /> */}
+                <CreatePost navigation={navigation} />
+                <Timeline />
             </ScrollView>
         </>
     );

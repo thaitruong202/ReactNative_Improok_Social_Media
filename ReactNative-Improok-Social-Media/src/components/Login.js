@@ -34,7 +34,7 @@ const Login = ({ navigation }) => {
             const data = await axios.get('http://192.168.1.134:8000/users/current-user/', {
                 headers: {
                     'Authorization': res.data.token_type + " " + res.data.access_token,
-                },
+                }
             });
             await AsyncStorage.setItem('user', JSON.stringify(data));
 

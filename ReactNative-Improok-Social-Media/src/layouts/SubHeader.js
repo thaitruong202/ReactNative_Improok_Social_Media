@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 // import ImagePicker from 'react-native-image-picker'
 import { MyUserContext } from "../../App";
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SubHeader = () => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -13,7 +14,12 @@ const SubHeader = () => {
 
     const getCurrentUser = async () => {
         try {
-            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`)
+            const token = await AsyncStorage.getItem('token');
+            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`, {
+                headers: {
+                    'Authorization': "Bearer" + " " + token,
+                }
+            })
             setUserInfo(res.data);
             console.log(res.data);
         } catch (err) {

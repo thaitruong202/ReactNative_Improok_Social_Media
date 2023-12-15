@@ -17,12 +17,7 @@ const VectorIcon = props => {
     return (
         <View style={style}>
             {type === 'MaterialCommunityIcons' ? (
-                <MaterialCommunityIcons
-                    onPress={onPress}
-                    name={name}
-                    size={size}
-                    color={color}
-                />
+                <MaterialCommunityIcons onPress={onPress} name={name} size={size} color={color} />
             ) : type === 'FontAwesome' ? (
                 <FontAwesome onPress={onPress} name={name} size={size} color={color} />
             ) : type === 'FontAwesome5' ? (
@@ -42,12 +37,7 @@ const VectorIcon = props => {
             ) : type === 'Fontisto' ? (
                 <Fontisto onPress={onPress} name={name} size={size} color={color} />
             ) : (
-                <MaterialIcons
-                    onPress={onPress}
-                    name={name}
-                    size={size}
-                    color={color}
-                />
+                <MaterialIcons onPress={onPress} name={name} size={size} color={color} />
             )}
         </View>
     );

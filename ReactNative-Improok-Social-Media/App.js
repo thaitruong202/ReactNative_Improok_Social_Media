@@ -10,6 +10,7 @@ import MainScreen from './src/screen/MainScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './src/components/Profile';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import StatusPost from './src/layouts/StatusPost';
 
 export const MyUserContext = createContext();
 
@@ -50,6 +51,7 @@ export default function App() {
                 ),
               }}
             />
+            <Stack.Screen name="Bài đăng" component={StatusPost} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeRouter>
