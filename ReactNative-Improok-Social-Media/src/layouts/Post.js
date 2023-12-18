@@ -20,6 +20,8 @@ const Post = () => {
     const [isLiked, setIsLiked] = useState(false);
     // const [likedPosts, setLikedPosts] = useState([]);
     const [isPostIdUpdated, setIsPostIdUpdated] = useState(false);
+    const [countPostReaction, setCountPostReaction] = useState([]);
+    const [checkReaction, setCheckReaction] = useState([]);
 
     const navigation = useNavigation();
 
@@ -44,10 +46,35 @@ const Post = () => {
                 let res = await axios.get(`http://192.168.1.134:8000/accounts/${userInfo?.id}/posts/`, {
                     headers: {
                         'Authorization': "Bearer" + " " + token
-                    },
+                    }
                 })
                 setPostHead(res.data);
+                console.log(res.data.length);
+                const postIds = res.data.map(post => post.id);
+                const reactionCounts = [];
+                const reactionChecks = [];
+                for (let i = 0; i < res.data.length; i++) {
+                    let postId = postIds[i];
+                    let reactionRes = await axios.get(`http://192.168.1.134:8000/posts/${postId}/count_all_reactions/`, {
+                        headers: {
+                            'Authorization': "Bearer" + " " + token
+                        }
+                    });
+                    let resCheck = await axios.get(`http://192.168.1.134:8000/accounts/${userInfo?.id}/reacted_to_the_post/?post_id=${postId}`, {
+                        headers: {
+                            'Authorization': "Bearer" + " " + token
+                        }
+                    })
+                    let reactCount = reactionRes.data
+                    reactionCounts.push(reactCount);
+                    let reactedCheck = resCheck.data;
+                    reactionChecks.push(reactedCheck);
+                }
+                setCountPostReaction(reactionCounts);
+                setCheckReaction(reactionChecks);
                 console.log(res.data);
+                console.log(reactionCounts);
+                console.log(reactionChecks);
             } catch (error) {
                 console.log(error)
             }
@@ -55,6 +82,18 @@ const Post = () => {
         if (userInfo?.id) {
             getPost();
         }
+        // const checkReaction = async () => {
+        //     try {
+        //         const token = await AsyncStorage.getItem('token');
+        //         let res = await axios.get(`http://192.168.1.134:8000/accounts/${userInfo?.id}/reacted_to_the_post/`, {
+        //             headers: {
+        //                 'Authorization': "Bearer" + " " + token
+        //             }
+        //         })
+        //     } catch (error) {
+        //         console.log(error)
+        //     }
+        // }
     }, [userInfo?.id])
 
     useEffect(() => {
@@ -98,7 +137,7 @@ const Post = () => {
 
     return (
         <Fragment>
-            {postHead.map(ph => {
+            {postHead.map((ph, index) => {
                 // const momentDate = moment(ph.created_date);
                 // const timeAgo = momentDate.fromNow();
                 // const formattedDate = momentDate.format('DD/MM/YYYY');
@@ -133,26 +172,71 @@ const Post = () => {
                             </View>
                             <View style={styles.postFooterContainer}>
                                 <View style={styles.footerReactionSec}>
-                                    <View style={styles.row}>
-                                        <Image source={Like} style={styles.reactionIcon} />
-                                        <Image source={Wow} style={styles.reactionIcon} />
-                                        <Image source={Love} style={styles.reactionIcon} />
-                                        <Text style={styles.reactionCount}>20</Text>
-                                    </View>
-                                    <Text style={styles.reactionCount}>10 comments</Text>
+                                    {countPostReaction[index] > 0 && (
+                                        <View style={styles.row}>
+                                            {countPostReaction[index] > 0 && <Image source={Like} style={styles.reactionIcon} />}
+                                            {countPostReaction[index] > 0 && <Image source={Wow} style={styles.reactionIcon} />}
+                                            {countPostReaction[index] > 0 && <Image source={Love} style={styles.reactionIcon} />}
+                                        </View>
+                                    )}
                                 </View>
                                 <View style={styles.userActionSec}>
                                     <View>
-                                        <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id), setIsPostIdUpdated(true); }} style={styles.row}>
-                                            <VectorIcon
-                                                name="like2"
-                                                type="AntDesign"
-                                                size={25}
-                                                color={isLiked ? "blue" : "#3A3A3A"}
-                                            />
-                                            <Text style={styles.reactionCount}>Like</Text>
-                                        </TouchableOpacity>
-                                        <Modal visible={isModalVisible} onBackdropPress={() => setModalVisible(false)} style={styles.modalReaction}>
+                                        {checkReaction[index] && checkReaction[index].reaction === true && checkReaction[index].data.length > 0 ? (
+                                            checkReaction[index].data[0].reaction_id === 1 ? (
+                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <VectorIcon
+                                                        name="like1"
+                                                        type="AntDesign"
+                                                        size={25}
+                                                        color="blue"
+                                                    />
+                                                    <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
+                                                </TouchableOpacity>
+                                            ) : checkReaction[index].data[0].reaction_id === 2 ? (
+                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <VectorIcon
+                                                        name="heart"
+                                                        type="AntDesign"
+                                                        size={25}
+                                                        color="red"
+                                                    />
+                                                    <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
+                                                </TouchableOpacity>
+                                            ) : checkReaction[index].data[0].reaction_id === 3 ? (
+                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <VectorIcon
+                                                        name="laugh-squint"
+                                                        type="FontAwesome5"
+                                                        size={25}
+                                                        color="#f7a339"
+                                                    />
+                                                    <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
+                                                </TouchableOpacity>
+                                            ) : (
+                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <VectorIcon
+                                                        name="like2"
+                                                        type="AntDesign"
+                                                        size={25}
+                                                        color="#3A3A3A"
+                                                    />
+                                                    <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
+                                                </TouchableOpacity>
+                                            )
+                                        ) : (
+                                            // JSX code for default reaction
+                                            <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                <VectorIcon
+                                                    name="like2"
+                                                    type="AntDesign"
+                                                    size={25}
+                                                    color="#3A3A3A"
+                                                />
+                                                <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
+                                            </TouchableOpacity>
+                                        )}
+                                        < Modal visible={isModalVisible} onBackdropPress={() => setModalVisible(false)} style={styles.modalReaction}>
                                             <View style={styles.modalContainer}>
                                                 <TouchableOpacity>
                                                     <Image source={Like} style={styles.reactionAction} />
@@ -174,7 +258,7 @@ const Post = () => {
                                                 size={25}
                                                 color="#3A3A3A"
                                             />
-                                            <Text style={styles.reactionCount}>Comment</Text>
+                                            {/* <Text style={styles.reactionCount}>Comment</Text> */}
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.row}>
@@ -184,16 +268,16 @@ const Post = () => {
                                             size={25}
                                             color="#3A3A3A"
                                         />
-                                        <Text style={styles.reactionCount}>Share</Text>
+                                        {/* <Text style={styles.reactionCount}>Share</Text> */}
                                     </View>
                                 </View>
                             </View>
                             <View style={styles.divider}></View>
-                        </View>
+                        </View >
                     </>
                 );
             })}
-        </Fragment>
+        </Fragment >
     );
 };
 
@@ -261,8 +345,8 @@ const styles = StyleSheet.create({
         paddingLeft: 5,
     },
     footerReactionSec: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        // flexDirection: 'row',
+        // justifyContent: 'space-between',
         borderBottomWidth: 1,
         borderBottomColor: "#EBECF0",
         paddingBottom: 15,

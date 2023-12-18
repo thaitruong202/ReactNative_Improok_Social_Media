@@ -233,35 +233,38 @@ const PersonalScreen = ({ navigation }) => {
                         </Collapsible>
                     </View>
                     <View style={styles.divider}></View>
-                    <View>
-                        <TouchableOpacity onPress={toggleManage}>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <VectorIcon
-                                    name="cogs"
-                                    type="FontAwesome5"
-                                    size={20}
-                                />
-                                <Text style={styles.collapsibleSubItemHeaderText}>Quản trị hệ thống</Text>
-                                <AntDesign
-                                    name={manageExpanded ? 'up' : 'down'}
-                                    size={18}
-                                    color="black"
-                                    style={{ position: 'absolute', right: 5 }}
-                                />
+                    {userInfo?.role.role_name === "Admin" ?
+                        <>
+                            <View>
+                                <TouchableOpacity onPress={toggleManage}>
+                                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <VectorIcon
+                                            name="cogs"
+                                            type="FontAwesome5"
+                                            size={20}
+                                        />
+                                        <Text style={styles.collapsibleSubItemHeaderText}>Quản trị hệ thống</Text>
+                                        <AntDesign
+                                            name={manageExpanded ? 'up' : 'down'}
+                                            size={18}
+                                            color="black"
+                                            style={{ position: 'absolute', right: 5 }}
+                                        />
+                                    </View>
+                                </TouchableOpacity>
+                                <Collapsible collapsed={!manageExpanded}>
+                                    <View style={styles.collapsibleSubItem}>
+                                        <VectorIcon
+                                            name="users-cog"
+                                            type="FontAwesome5"
+                                            size={19}
+                                        />
+                                        <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
+                                    </View>
+                                </Collapsible>
                             </View>
-                        </TouchableOpacity>
-                        <Collapsible collapsed={!manageExpanded}>
-                            <View style={styles.collapsibleSubItem}>
-                                <VectorIcon
-                                    name="users-cog"
-                                    type="FontAwesome5"
-                                    size={19}
-                                />
-                                <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
-                            </View>
-                        </Collapsible>
-                    </View>
-                    <View style={styles.divider}></View>
+                            <View style={styles.divider}></View>
+                        </> : ""}
                 </View>
                 <View >
                     <TouchableOpacity style={styles.logoutContainer} onPress={logout}>
