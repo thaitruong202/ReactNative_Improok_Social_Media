@@ -11,6 +11,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Profile from './src/components/Profile';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import StatusPost from './src/layouts/StatusPost';
+import Comment from './src/layouts/Comment';
+import Post from './src/layouts/Post';
 
 export const MyUserContext = createContext();
 
@@ -51,7 +53,9 @@ export default function App() {
                 ),
               }}
             />
+            <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="Bài đăng" component={StatusPost} />
+            <Stack.Screen name="Bình luận" component={Comment} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeRouter>

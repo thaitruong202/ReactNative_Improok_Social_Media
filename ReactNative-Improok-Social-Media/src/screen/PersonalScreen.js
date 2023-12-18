@@ -19,6 +19,7 @@ const PersonalScreen = ({ navigation }) => {
 
     const [helpExpanded, setHelpExpanded] = useState(false);
     const [settingExpanded, setSettingExpanded] = useState(false);
+    const [manageExpanded, setManageExpanded] = useState(false);
 
     const toggleHelp = () => {
         setHelpExpanded(!helpExpanded);
@@ -27,6 +28,11 @@ const PersonalScreen = ({ navigation }) => {
     const toggleSetting = () => {
         setSettingExpanded(!settingExpanded);
     };
+
+    const toggleManage = () => {
+        setManageExpanded(!manageExpanded);
+    }
+
     const [userInfo, setUserInfo] = useState();
 
     const getCurrentUser = async () => {
@@ -223,6 +229,35 @@ const PersonalScreen = ({ navigation }) => {
                                     size={19}
                                 />
                                 <Text style={styles.collapsibleSubItemBodyText}>Về chúng tôi</Text>
+                            </View>
+                        </Collapsible>
+                    </View>
+                    <View style={styles.divider}></View>
+                    <View>
+                        <TouchableOpacity onPress={toggleManage}>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <VectorIcon
+                                    name="cogs"
+                                    type="FontAwesome5"
+                                    size={20}
+                                />
+                                <Text style={styles.collapsibleSubItemHeaderText}>Quản trị hệ thống</Text>
+                                <AntDesign
+                                    name={manageExpanded ? 'up' : 'down'}
+                                    size={18}
+                                    color="black"
+                                    style={{ position: 'absolute', right: 5 }}
+                                />
+                            </View>
+                        </TouchableOpacity>
+                        <Collapsible collapsed={!manageExpanded}>
+                            <View style={styles.collapsibleSubItem}>
+                                <VectorIcon
+                                    name="users-cog"
+                                    type="FontAwesome5"
+                                    size={19}
+                                />
+                                <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
                             </View>
                         </Collapsible>
                     </View>

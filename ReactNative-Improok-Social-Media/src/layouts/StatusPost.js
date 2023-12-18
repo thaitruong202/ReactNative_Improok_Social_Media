@@ -75,6 +75,55 @@ const StatusPost = ({ navigation }) => {
         }
     };
 
+    const createImagePost = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            let res = await axios.post("http://192.168.1.134:8000/posts/", {
+                "post_content": text,
+                "account": userInfo?.id
+            }, {
+                headers: {
+                    'Authorization': "Bearer" + " " + token
+                },
+            })
+            const postId = res.data.id
+            let form = new FormData();
+            for (let i = 0; i < selectedImages.length; i++) {
+                const image = selectedImages[i];
+                // form.append('post_images_url', image.uri);
+                form.append('post_images_url', {
+                    uri: image.uri,
+                    type: 'image/jpeg',
+                    name: 'picture.jpeg'
+                });
+                form.append('post', postId);
+                console.log(image.uri);
+                console.log(postId);
+            }
+            // form.append('post_image_url', {
+            //     uri: selectedImages.uri,
+            //     type: "image/jpeg"
+            // })
+            // console.log(selectedImages.uri);
+            form.append('post', postId);
+            let img = await axios.post("http://192.168.1.134:8000/post_images/", form, {
+                headers: {
+                    'Authorization': "Bearer" + " " + token,
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data',
+                },
+                transformRequest: () => {
+                    return form;
+                }
+            })
+            console.log(img.data);
+            console.log(res.data, "Đăng bài thành công!")
+            navigation.goBack();
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const handleDeleteImage = (index) => {
         setSelectedImages((prevSelectedImages) => {
             const updatedSelectedImages = [...prevSelectedImages];
@@ -136,7 +185,13 @@ const StatusPost = ({ navigation }) => {
                     )}
                 </View>
                 <View>
-                    <TouchableOpacity onPress={() => createPost()} disabled={!text} style={styles.postContainer}>
+                    <TouchableOpacity onPress={() => {
+                        if (selectedImages.length !== 0) {
+                            createImagePost();
+                        } else {
+                            createPost();
+                        }
+                    }} disabled={!text} style={styles.postContainer}>
                         <Text style={styles.postStyle}>Post</Text>
                     </TouchableOpacity>
                 </View>

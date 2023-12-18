@@ -1,13 +1,13 @@
 import React from 'react';
 import { Text, View } from 'react-native';
-import PostHeader from './PostHeader';
+import Post from './Post';
 
 const Timeline = () => {
     return (
         <>
             <View>
                 <Text>
-                    <PostHeader />
+                    <Post />
                 </Text>
             </View>
         </>
