@@ -21,7 +21,8 @@ const Comment = () => {
     useEffect(() => {
         const getCommentList = async () => {
             try {
-                let res = await djangoAuthApi().get(endpoints['get-comment-by-post'](postId))
+                const token = await AsyncStorage.getItem('token');
+                let res = await djangoAuthApi(token).get(endpoints['get-comment-by-post'](postId))
                 setCommentList(res.data);
                 console.log(res.data);
             } catch (err) {
@@ -34,7 +35,8 @@ const Comment = () => {
     useEffect(() => {
         const getCurrentUser = async () => {
             try {
-                let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id));
+                const token = await AsyncStorage.getItem('token');
+                let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id));
                 setUserInfo(res.data);
                 console.log(res.data);
             } catch (err) {
@@ -52,7 +54,8 @@ const Comment = () => {
             form.append('comment_image_url', new Blob());
             form.append('account', userInfo?.id);
             form.append('post', postId);
-            let res = await djangoAuthApi().post(endpoints['create-comment'], form, {
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).post(endpoints['create-comment'], form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }

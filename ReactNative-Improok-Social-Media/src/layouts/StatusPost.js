@@ -17,7 +17,8 @@ const StatusPost = ({ navigation }) => {
 
     const getCurrentUser = async () => {
         try {
-            let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)
@@ -30,7 +31,8 @@ const StatusPost = ({ navigation }) => {
 
     const createPost = async () => {
         try {
-            let res = await djangoAuthApi().post(endpoints['create-post'], {
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).post(endpoints['create-post'], {
                 "post_content": text,
                 "account": userInfo?.id
             })
@@ -69,7 +71,7 @@ const StatusPost = ({ navigation }) => {
     const createImagePost = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            let res = await djangoAuthApi().post(endpoints['create-post'], {
+            let res = await djangoAuthApi(token).post(endpoints['create-post'], {
                 "post_content": text,
                 "account": userInfo?.id
             })

@@ -6,6 +6,7 @@ import { windowHeight, windowWidth } from '../utils/Dimensions';
 import CreatePost from '../layouts/CreatePost';
 import Timeline from '../layouts/Timeline';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -13,7 +14,8 @@ const Profile = ({ navigation }) => {
 
     const getCurrentUser = async () => {
         try {
-            let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)

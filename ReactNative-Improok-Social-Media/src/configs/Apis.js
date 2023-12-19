@@ -18,17 +18,17 @@ export const endpoints = {
     "check-reacted-to-post": (accountId, postId) => `${DJANGO_SERVER}/accounts/${accountId}/reacted_to_the_post/?post_id=${postId}`
 }
 
-let token;
+// let token;
 
-const getToken = async () => {
-    token = await AsyncStorage.getItem('token');
-};
+// const getToken = async () => {
+//     token = await AsyncStorage.getItem('token');
+// };
 
-getToken();
+// getToken();
 
-export const djangoAuthApi = () => {
+export const djangoAuthApi = (token) => {
     return axios.create({
-        baseURL: SERVER,
+        baseURL: DJANGO_SERVER,
         headers: {
             "Authorization": "Bearer" + " " + token
         }
@@ -36,5 +36,5 @@ export const djangoAuthApi = () => {
 }
 
 export default axios.create({
-    baseURL: SERVER
+    baseURL: DJANGO_SERVER
 });

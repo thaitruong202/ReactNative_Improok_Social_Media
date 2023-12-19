@@ -5,6 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 // import ImagePicker from 'react-native-image-picker';
 import { MyUserContext } from "../../App";
 import { djangoAuthApi, endpoints } from '../configs/Apis';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SubHeader = () => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -13,7 +14,8 @@ const SubHeader = () => {
 
     const getCurrentUser = async () => {
         try {
-            let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
             setUserInfo(res.data);
             console.log(res.data);
         } catch (err) {

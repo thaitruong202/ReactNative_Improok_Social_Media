@@ -31,7 +31,8 @@ const Post = () => {
     useEffect(() => {
         const getCurrentUser = async () => {
             try {
-                let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
+                const token = await AsyncStorage.getItem('token');
+                let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
                 setUserInfo(res.data);
             } catch (err) {
                 console.log(err)
@@ -40,7 +41,8 @@ const Post = () => {
         getCurrentUser();
         const getPost = async () => {
             try {
-                let res = await djangoAuthApi().get(endpoints['get-post-by-account'](userInfo?.id))
+                const token = await AsyncStorage.getItem('token');
+                let res = await djangoAuthApi(token).get(endpoints['get-post-by-account'](userInfo?.id))
                 setPostHead(res.data);
                 console.log(res.data.length);
                 const postIds = res.data.map(post => post.id);
@@ -48,8 +50,8 @@ const Post = () => {
                 const reactionChecks = [];
                 for (let i = 0; i < res.data.length; i++) {
                     let postId = postIds[i];
-                    let reactionRes = await djangoAuthApi().get(endpoints['count-post-reaction'](postId));
-                    let resCheck = await djangoAuthApi().get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
+                    let reactionRes = await djangoAuthApi(token).get(endpoints['count-post-reaction'](postId));
+                    let resCheck = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
                     let reactCount = reactionRes.data
                     reactionCounts.push(reactCount);
                     let reactedCheck = resCheck.data;

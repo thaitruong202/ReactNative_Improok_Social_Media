@@ -38,7 +38,7 @@ const PersonalScreen = ({ navigation }) => {
     const getCurrentUser = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)
