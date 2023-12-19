@@ -13,6 +13,10 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import StatusPost from './src/layouts/StatusPost';
 import Comment from './src/layouts/Comment';
 import Post from './src/layouts/Post';
+import AccountManagement from './src/layouts/AccountManagement';
+import GroupManagement from './src/layouts/GroupManagement';
+import GroupMember from './src/layouts/GroupMember';
+import GroupEdit from './src/layouts/GroupEdit';
 
 export const MyUserContext = createContext();
 
@@ -56,6 +60,10 @@ export default function App() {
             <Stack.Screen name="Post" component={Post} />
             <Stack.Screen name="Bài đăng" component={StatusPost} />
             <Stack.Screen name="Bình luận" component={Comment} />
+            <Stack.Screen name="Quản lý tài khoản" component={AccountManagement} />
+            <Stack.Screen name="Quản lý nhóm" component={GroupManagement} />
+            <Stack.Screen name="Thành viên nhóm" component={GroupMember} />
+            <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
           </Stack.Navigator>
         </NavigationContainer>
       </NativeRouter>

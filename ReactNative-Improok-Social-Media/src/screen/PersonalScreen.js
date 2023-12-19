@@ -257,6 +257,26 @@ const PersonalScreen = ({ navigation }) => {
                                         />
                                         <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
                                     </View>
+                                    <View>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý tài khoản")}>
+                                            <VectorIcon
+                                                name="account"
+                                                type="MaterialCommunityIcons"
+                                                size={19}
+                                            />
+                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý tài khoản</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                    <View>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý nhóm")}>
+                                            <VectorIcon
+                                                name="account-group"
+                                                type="MaterialCommunityIcons"
+                                                size={19}
+                                            />
+                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý nhóm</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </Collapsible>
                             </View>
                             <View style={styles.divider}></View>

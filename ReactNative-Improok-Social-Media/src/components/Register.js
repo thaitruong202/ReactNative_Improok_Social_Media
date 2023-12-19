@@ -1,9 +1,52 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { Image, StyleSheet, TextInput, TouchableOpacity, Button, Text, View } from "react-native";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Apis, { endpoints } from "../configs/Apis";
 
 const Register = ({ navigation }) => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [alumniCode, setAlumniCode] = useState('');
+
+    const createAlumniAccount = async () => {
+        try {
+            let userRes = await Apis.post(endpoints['create-user'], {
+                'username': username,
+                'password': password,
+                'first_name': firstName,
+                'last_name': lastName,
+                'email': email
+            })
+            console.log(userRes.data);
+
+            console.log(userRes.data.id);
+
+            let form = new FormData();
+            form.append('user', userRes.data.id);
+            let accRes = await Apis.post(endpoints['create-account'], form, {
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log(accRes.data);
+
+            let alumRes = await Apis.post(endpoints['create-alumni-account'], {
+                'alumni_account_code': alumniCode,
+                'account': accRes.data.id
+            });
+            console.log(alumRes.data);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
     return (
         <Fragment>
             <View style={styles.registerContainer}>
@@ -11,23 +54,35 @@ const Register = ({ navigation }) => {
                 <Text style={styles.text}>TẠO TÀI KHOẢN MỚI</Text>
                 <View>
                     <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={24} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} placeholder="Tên người dùng" numberOfLines={1} />
+                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={username} onChangeText={(text) => setUsername(text)} placeholder="Tên người dùng" numberOfLines={1} />
                     </View>
                     <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={24} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} placeholder="Mã số sinh viên" numberOfLines={1} />
+                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={lastName} onChangeText={(text) => setLastName(text)} placeholder="Họ" numberOfLines={1} />
                     </View>
                     <View style={styles.inputView}>
-                        <MaterialIcons name="https" size={24} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} placeholder="Mật khẩu" numberOfLines={1} />
+                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={firstName} onChangeText={(text) => setFirstName(text)} placeholder="Tên" numberOfLines={1} />
                     </View>
                     <View style={styles.inputView}>
-                        <MaterialIcons name="https" size={24} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} placeholder="Xác nhận mật khẩu" numberOfLines={1} />
+                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={email} onChangeText={(text) => setEmail(text)} placeholder="Địa chỉ email" numberOfLines={1} />
+                    </View>
+                    <View style={styles.inputView}>
+                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={alumniCode} onChangeText={(text) => setAlumniCode(text)} placeholder="Mã số sinh viên" numberOfLines={1} />
+                    </View>
+                    <View style={styles.inputView}>
+                        <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={password} onChangeText={(text) => setPassword(text)} placeholder="Mật khẩu" numberOfLines={1} />
+                    </View>
+                    <View style={styles.inputView}>
+                        <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
+                        <TextInput style={styles.input} value={confirmPassword} onChangeText={(text) => setConfirmPassword(text)} placeholder="Xác nhận mật khẩu" numberOfLines={1} />
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.buttonRegister}>
+                        <TouchableOpacity style={styles.buttonRegister} onPress={() => createAlumniAccount()}>
                             <Text style={styles.buttonRegisterText}>Đăng ký</Text>
                         </TouchableOpacity>
                     </View>
@@ -64,14 +119,14 @@ const Register = ({ navigation }) => {
 const styles = StyleSheet.create({
     registerContainer: {
         flex: 1,
-        marginTop: 25,
+        marginTop: 15,
         paddingHorizontal: 10,
         justifyContent: 'center',
         alignItems: 'center',
     },
     improokLogo: {
-        height: 150,
-        width: 150,
+        height: 75,
+        width: 75,
         resizeMode: 'stretch',
     },
     button: {
@@ -83,7 +138,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 10,
         width: '100%',
-        height: windowHeight / 17,
+        height: windowHeight / 21,
         borderColor: '#ccc',
         borderRadius: 15,
         borderWidth: 1,
@@ -131,7 +186,7 @@ const styles = StyleSheet.create({
     buttonRegister: {
         marginTop: 10,
         width: '100%',
-        height: windowHeight / 16,
+        height: windowHeight / 20,
         backgroundColor: '#2e64e5',
         padding: 10,
         alignItems: 'center',
@@ -141,7 +196,7 @@ const styles = StyleSheet.create({
     buttonLogin: {
         marginBottom: 20,
         width: '100%',
-        height: windowHeight / 16,
+        height: windowHeight / 20,
         backgroundColor: 'white',
         padding: 10,
         alignItems: 'center',

@@ -15,7 +15,11 @@ export const endpoints = {
     "get-comment-by-post": (id) => `${DJANGO_SERVER}/posts/${id}/comments/`,
     "get-post-by-account": (id) => `${DJANGO_SERVER}/accounts/${id}/posts/`,
     "count-post-reaction": (id) => `${DJANGO_SERVER}/posts/${id}/count_all_reactions/`,
-    "check-reacted-to-post": (accountId, postId) => `${DJANGO_SERVER}/accounts/${accountId}/reacted_to_the_post/?post_id=${postId}`
+    "check-reacted-to-post": (accountId, postId) => `${DJANGO_SERVER}/accounts/${accountId}/reacted_to_the_post/?post_id=${postId}`,
+    "create-alumni-account": `${DJANGO_SERVER}/alumni_accounts/`,
+    "create-user": `${DJANGO_SERVER}/users/`,
+    "create-account": `${DJANGO_SERVER}/accounts/`,
+    "view-invitation-group": `${DJANGO_SERVER}/invitation_groups/`
 }
 
 // let token;
