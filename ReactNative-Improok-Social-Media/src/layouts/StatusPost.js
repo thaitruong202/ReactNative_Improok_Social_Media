@@ -6,6 +6,7 @@ import VectorIcon from '../utils/VectorIcon';
 import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { djangoAuthApi, endpoints } from '../configs/Apis';
 
 const StatusPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -16,12 +17,7 @@ const StatusPost = ({ navigation }) => {
 
     const getCurrentUser = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
-            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`, {
-                headers: {
-                    'Authorization': "Bearer" + " " + token
-                },
-            })
+            let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)
@@ -34,14 +30,9 @@ const StatusPost = ({ navigation }) => {
 
     const createPost = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
-            let res = await axios.post("http://192.168.1.134:8000/posts/", {
+            let res = await djangoAuthApi().post(endpoints['create-post'], {
                 "post_content": text,
                 "account": userInfo?.id
-            }, {
-                headers: {
-                    'Authorization': "Bearer" + " " + token
-                },
             })
             console.log(res.data, "Đăng bài thành công!")
             navigation.goBack();
@@ -78,13 +69,9 @@ const StatusPost = ({ navigation }) => {
     const createImagePost = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            let res = await axios.post("http://192.168.1.134:8000/posts/", {
+            let res = await djangoAuthApi().post(endpoints['create-post'], {
                 "post_content": text,
                 "account": userInfo?.id
-            }, {
-                headers: {
-                    'Authorization': "Bearer" + " " + token
-                },
             })
             const postId = res.data.id
             let form = new FormData();
@@ -106,7 +93,7 @@ const StatusPost = ({ navigation }) => {
             // })
             // console.log(selectedImages.uri);
             form.append('post', postId);
-            let img = await axios.post("http://192.168.1.134:8000/post_images/", form, {
+            let img = await axios.post("http://192.168.1.51:8000/post_images/", form, {
                 headers: {
                     'Authorization': "Bearer" + " " + token,
                     Accept: 'application/json',

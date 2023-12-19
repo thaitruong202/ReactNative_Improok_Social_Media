@@ -4,8 +4,7 @@ import CameraRoll from '../images/cameraroll.png';
 import * as ImagePicker from 'expo-image-picker';
 import { MyUserContext } from "../../App";
 import VectorIcon from '../utils/VectorIcon';
-import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { djangoAuthApi, endpoints } from '../configs/Apis';
 
 const CreatePost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -13,12 +12,7 @@ const CreatePost = ({ navigation }) => {
 
     const getCurrentUser = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
-            let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`, {
-                headers: {
-                    'Authorization': "Bearer" + " " + token
-                }
-            })
+            let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id));
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)

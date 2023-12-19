@@ -10,6 +10,7 @@ import Wow from '../images/wow.jpeg';
 import Love from '../images/love.jpeg';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
+import { djangoAuthApi, endpoints } from '../configs/Apis';
 
 const Post = () => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -23,17 +24,14 @@ const Post = () => {
     const [countPostReaction, setCountPostReaction] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);
 
+    const [openModal, setOpenModal] = useState(false);
+
     const navigation = useNavigation();
 
     useEffect(() => {
         const getCurrentUser = async () => {
             try {
-                const token = await AsyncStorage.getItem('token');
-                let res = await axios.get(`http://192.168.1.134:8000/users/${user.id}/account/`, {
-                    headers: {
-                        'Authorization': "Bearer" + " " + token
-                    },
-                })
+                let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id))
                 setUserInfo(res.data);
             } catch (err) {
                 console.log(err)
@@ -42,12 +40,7 @@ const Post = () => {
         getCurrentUser();
         const getPost = async () => {
             try {
-                const token = await AsyncStorage.getItem('token');
-                let res = await axios.get(`http://192.168.1.134:8000/accounts/${userInfo?.id}/posts/`, {
-                    headers: {
-                        'Authorization': "Bearer" + " " + token
-                    }
-                })
+                let res = await djangoAuthApi().get(endpoints['get-post-by-account'](userInfo?.id))
                 setPostHead(res.data);
                 console.log(res.data.length);
                 const postIds = res.data.map(post => post.id);
@@ -55,16 +48,8 @@ const Post = () => {
                 const reactionChecks = [];
                 for (let i = 0; i < res.data.length; i++) {
                     let postId = postIds[i];
-                    let reactionRes = await axios.get(`http://192.168.1.134:8000/posts/${postId}/count_all_reactions/`, {
-                        headers: {
-                            'Authorization': "Bearer" + " " + token
-                        }
-                    });
-                    let resCheck = await axios.get(`http://192.168.1.134:8000/accounts/${userInfo?.id}/reacted_to_the_post/?post_id=${postId}`, {
-                        headers: {
-                            'Authorization': "Bearer" + " " + token
-                        }
-                    })
+                    let reactionRes = await djangoAuthApi().get(endpoints['count-post-reaction'](postId));
+                    let resCheck = await djangoAuthApi().get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
                     let reactCount = reactionRes.data
                     reactionCounts.push(reactCount);
                     let reactedCheck = resCheck.data;
@@ -107,7 +92,7 @@ const Post = () => {
         try {
             if (isLiked === true) {
                 const token = await AsyncStorage.getItem('token');
-                let del = await axios.delete(`http://192.168.1.134:8000/post_reactions/1/`, {
+                let del = await axios.delete(`http://192.168.1.51:8000/post_reactions/1/`, {
                     headers: {
                         'Authorization': "Bearer" + " " + token
                     }
@@ -118,7 +103,7 @@ const Post = () => {
             else {
                 const token = await AsyncStorage.getItem('token');
                 console.log(currentPostId, userInfo?.id);
-                let res = await axios.post(`http://192.168.1.134:8000/post_reactions/`, {
+                let res = await axios.post(`http://192.168.1.51:8000/post_reactions/`, {
                     "reaction": "1",
                     "post": currentPostId,
                     "account": userInfo?.id
@@ -138,12 +123,6 @@ const Post = () => {
     return (
         <Fragment>
             {postHead.map((ph, index) => {
-                // const momentDate = moment(ph.created_date);
-                // const timeAgo = momentDate.fromNow();
-                // const formattedDate = momentDate.format('DD/MM/YYYY');
-
-                // const displayDate = momentDate.diff(moment(), 'days') > 10 ? formattedDate : timeAgo;
-
                 return (
                     <>
                         <View key={ph.id}>
@@ -159,13 +138,29 @@ const Post = () => {
                                         </View>
                                     </View>
                                     <View style={styles.row}>
-                                        <VectorIcon
-                                            name="dots-three-horizontal"
-                                            type="Entypo"
-                                            size={25}
-                                            color="#606770"
-                                            style={styles.headerIcons}
-                                        />
+                                        <TouchableOpacity onPress={() => setOpenModal(true)}>
+                                            <VectorIcon
+                                                name="dots-three-horizontal"
+                                                type="Entypo"
+                                                size={25}
+                                                color="#606770"
+                                                style={styles.headerIcons}
+                                            />
+                                        </TouchableOpacity>
+                                        <Modal visible={openModal} animationType="slide" onBackdropPress={() => setOpenModal(false)} style={{ width: windowWidth, height: windowHeight / 2, backgroundColor: 'yellow', position: 'absolute', bottom: 0 }}>
+                                            <View>
+                                                <TouchableOpacity>
+                                                    <Text>Edit</Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity>
+                                                    <Text>Delete</Text>
+                                                </TouchableOpacity>
+                                                {/* Thêm các mục menu khác tại đây */}
+                                                <TouchableOpacity>
+                                                    <Text>Cancel</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </Modal>
                                     </View>
                                 </View>
                                 <Text style={styles.caption}>{ph.post_content}</Text>
@@ -182,7 +177,7 @@ const Post = () => {
                                 </View>
                                 <View style={styles.userActionSec}>
                                     <View>
-                                        {checkReaction[index] && checkReaction[index].reaction === true && checkReaction[index].data.length > 0 ? (
+                                        {checkReaction[index] && checkReaction[index].reacted === true && checkReaction[index].data.length > 0 ? (
                                             checkReaction[index].data[0].reaction_id === 1 ? (
                                                 <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                     <VectorIcon

@@ -3,13 +3,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SERVER_CONTEXT = "/IMPROOK_CARE";
 const SERVER = "http://192.168.1.134";
-const DJANGO_SERVER = "http://192.168.1.134:8000"
+const DJANGO_SERVER = "http://192.168.1.51:8000"
 
 export const endpoints = {
-    "login": `${SERVER_CONTEXT}/api/public/login/`,
-    "current-user": `${SERVER_CONTEXT}/api/auth/current-user/`,
+    "current-user": `${DJANGO_SERVER}/users/current-user/`,
     "account": `${DJANGO_SERVER}/accounts/`,
-    'djlogin': `${DJANGO_SERVER}/o/token/`
+    "djlogin": `${DJANGO_SERVER}/o/token/`,
+    "get-account-by-user": (id) => `${DJANGO_SERVER}/users/${id}/account/`,
+    "create-post": `${DJANGO_SERVER}/posts/`,
+    "create-comment": `${DJANGO_SERVER}/comment/`,
+    "get-comment-by-post": (id) => `${DJANGO_SERVER}/posts/${id}/comments/`,
+    "get-post-by-account": (id) => `${DJANGO_SERVER}/accounts/${id}/posts/`,
+    "count-post-reaction": (id) => `${DJANGO_SERVER}/posts/${id}/count_all_reactions/`,
+    "check-reacted-to-post": (accountId, postId) => `${DJANGO_SERVER}/accounts/${accountId}/reacted_to_the_post/?post_id=${postId}`
 }
 
 let token;
@@ -20,20 +26,11 @@ const getToken = async () => {
 
 getToken();
 
-export const authApi = (token) => {
-    return axios.create({
-        baseURL: SERVER,
-        headers: {
-            "Authorization": token
-        }
-    })
-}
-
 export const djangoAuthApi = () => {
     return axios.create({
         baseURL: SERVER,
         headers: {
-            "Authorization": 'Bearer fXy4beXpTi7MIWUj4UbDAKivROtfSF'
+            "Authorization": "Bearer" + " " + token
         }
     })
 }

@@ -4,6 +4,7 @@ import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowWidth } from '../utils/Dimensions';
+import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -13,39 +14,71 @@ const Comment = () => {
     const { postId } = route.params
     const [content, setContent] = useState('');
     const [commentList, setCommentList] = useState([]);
-    const [listAccountComment, setListAccountComment] = useState([]);
+    const [currentCommentId, setCurrentCommentId] = useState(null);
+
+    const [userInfo, setUserInfo] = useState();
 
     useEffect(() => {
         const getCommentList = async () => {
             try {
-                const token = await AsyncStorage.getItem('token');
-                let res = await axios.get(`http://192.168.1.134:8000/posts/${postId}/comments/`, {
-                    headers: {
-                        'Authorization': "Bearer" + " " + token
-                    },
-                })
+                let res = await djangoAuthApi().get(endpoints['get-comment-by-post'](postId))
                 setCommentList(res.data);
-                const accountIds = res.data.map(account => account.id);
-                const listCmtAccount = [];
-                for (let i = 0; i < res.data.length; i++) {
-                    let accountId = accountIds[i];
-                    let resAccount = await axios.get(`http://192.168.1.134:8000/accounts/${accountId}/`, {
-                        headers: {
-                            'Authorization': "Bearer" + " " + token
-                        },
-                    })
-                    let listAccount = resAccount.data;
-                    listCmtAccount.push(listAccount);
-                }
-                setListAccountComment(listCmtAccount);
                 console.log(res.data);
-                console.log(listCmtAccount);
             } catch (err) {
                 console.log(err)
             }
         }
         getCommentList();
     }, [])
+
+    useEffect(() => {
+        const getCurrentUser = async () => {
+            try {
+                let res = await djangoAuthApi().get(endpoints['get-account-by-user'](user.id));
+                setUserInfo(res.data);
+                console.log(res.data);
+            } catch (err) {
+                console.log(err)
+            }
+        }
+        getCurrentUser();
+    }, [])
+
+    const createComment = async () => {
+        try {
+            let form = new FormData();
+            console.log(content, postId, userInfo?.id)
+            form.append('comment_content', content);
+            form.append('comment_image_url', new Blob());
+            form.append('account', userInfo?.id);
+            form.append('post', postId);
+            let res = await djangoAuthApi().post(endpoints['create-comment'], form, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                }
+            })
+            const newComment = res.data;
+            setCommentList((prevCommentList) => [...prevCommentList, newComment]);
+            console.log(res.data);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const deleteComment = async (commentId) => {
+        try {
+            console.log(commentId);
+            const token = await AsyncStorage.getItem('token');
+            let res = await axios.delete(`http://192.168.1.51:8000/comment/${commentId}/`, {
+                headers: {
+                    'Authorization': "Bearer" + " " + token,
+                }
+            })
+            console.log(res.status);
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <>
@@ -54,23 +87,29 @@ const Comment = () => {
                     {/* <Text>
                         Đây là bình luận của bài post {postId}
                     </Text> */}
-                    {commentList.map((cl, index) => {
+                    {commentList.map(cl => {
                         return (
                             <>
                                 <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 5 }}>
-                                    <Image source={{ uri: listAccountComment[index]?.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                    <Image source={{ uri: cl.account.avatar }} style={{ width: 50, height: 50, borderRadius: 25 }} />
+                                    {/* <Text>{cl.account.avatar}</Text> */}
                                     <View>
-                                        <Text style={{ fontSize: 17 }}>{listAccountComment[index]?.user.last_name} {listAccountComment[index]?.user.first_name}</Text>
+                                        <Text style={{ fontSize: 17 }}>{cl.account.user.last_name} {cl.account.user.first_name}</Text>
                                         <Text style={{ fontSize: 16 }}>
                                             {cl.comment_content}
                                         </Text>
-                                        {cl.comment_image_url === "/static/None" ? "" :
+                                        {cl.comment_image_url === "/static/" || cl.comment_image_url === "/static/None" ? "" :
                                             <>
                                                 <View>
                                                     <Image source={{ uri: cl.comment_image_url }} style={{ width: 100, height: 100 }} />
                                                 </View>
                                             </>
                                         }
+                                    </View>
+                                    <View>
+                                        <TouchableOpacity style={{ padding: 5, backgroundColor: 'yellow' }} onPress={() => deleteComment(cl.id)}>
+                                            <Text>Xóa nè</Text>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                             </>
@@ -93,7 +132,7 @@ const Comment = () => {
                         style={content.length > 0 ? styles.inputComment : styles.emptyInputComment}
                     />
                     {content.length > 0 &&
-                        <TouchableOpacity style={{ width: "10%" }}>
+                        <TouchableOpacity style={{ width: "10%" }} onPress={() => createComment()}>
                             <VectorIcon
                                 name="send"
                                 type="Ionicons"

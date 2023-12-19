@@ -7,6 +7,7 @@ const MyUserReducer = (currentState, action) => {
         case "logout":
             AsyncStorage.removeItem('token');
             AsyncStorage.removeItem('user');
+            console.log("Xóa")
             return null;
         default:
             return currentState;

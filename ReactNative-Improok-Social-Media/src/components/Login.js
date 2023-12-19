@@ -15,28 +15,30 @@ const Login = ({ navigation }) => {
     const login = async () => {
         try {
             let form = new FormData();
-            form.append("username", 'admin')
-            form.append("password", '123456')
+            form.append("username", username)
+            form.append("password", password)
             form.append('client_id', 'zDnklZ6ztQVU0X4DOQEymwV96MfWhW3Hk2VHq3D9')
             form.append('client_secret', 'Wo2j1Qn6UKI691i30hmc4gZ7JCTazZ18KXNne7n2IYihCYoEw3PozWTtPc0CkiKZHtMBxOFTWISj83R5cSODQbCh9uTmNb5eefA4W9TwZmzI0D0smpz6bBf8CgSNnYDj')
             form.append('grant_type', 'password')
 
 
-            let res = await djangoAuthApi().post(endpoints['djlogin'], form, {
+            let res = await Apis.post(endpoints['djlogin'], form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
-                },
+                }
             });
 
             console.log(res.data);
 
             await AsyncStorage.setItem('token', res.data.access_token);
-            const data = await axios.get('http://192.168.1.134:8000/users/current-user/', {
+            console.log("Lưu token")
+            const data = await Apis.get(endpoints['current-user'], {
                 headers: {
                     'Authorization': res.data.token_type + " " + res.data.access_token,
                 }
             });
             await AsyncStorage.setItem('user', JSON.stringify(data));
+            console.log("Lưu current user")
 
             console.log(data.data)
 
