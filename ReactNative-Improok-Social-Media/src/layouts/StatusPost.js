@@ -145,10 +145,32 @@ const StatusPost = ({ navigation }) => {
                         <VectorIcon
                             name="images"
                             type="Ionicons"
-                            size={22}>
+                            size={22}
+                            color="green">
                         </VectorIcon>
                         <Text style={styles.inputStyle}>Photo</Text>
                     </TouchableOpacity>
+                    {userInfo?.role.role_name === "Admin" ?
+                        <TouchableOpacity style={styles.postOption}>
+                            <VectorIcon
+                                name="poll"
+                                type="FontAwesome5"
+                                size={22}>
+                            </VectorIcon>
+                            <Text style={styles.inputStyle}>Survey</Text>
+                        </TouchableOpacity>
+                        : ""}
+                    {userInfo?.role.role_name === "Admin" ?
+                        <TouchableOpacity style={styles.postOption}>
+                            <VectorIcon
+                                name="event"
+                                type="MaterialIcons"
+                                size={22}
+                                color="red">
+                            </VectorIcon>
+                            <Text style={styles.inputStyle}>Event</Text>
+                        </TouchableOpacity>
+                        : ""}
                     {selectedImages.length > 0 && (
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                             <View style={{ flexDirection: 'row' }}>

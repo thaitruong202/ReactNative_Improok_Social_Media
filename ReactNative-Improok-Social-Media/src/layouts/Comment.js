@@ -6,7 +6,6 @@ import VectorIcon from '../utils/VectorIcon';
 import { windowWidth } from '../utils/Dimensions';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 const Comment = () => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -72,11 +71,7 @@ const Comment = () => {
         try {
             console.log(commentId);
             const token = await AsyncStorage.getItem('token');
-            let res = await axios.delete(`http://192.168.1.51:8000/comment/${commentId}/`, {
-                headers: {
-                    'Authorization': "Bearer" + " " + token,
-                }
-            })
+            let res = await djangoAuthApi(token).delete(endpoints['delete-comment'](commentId))
             console.log(res.status);
         } catch (error) {
             console.log(error)

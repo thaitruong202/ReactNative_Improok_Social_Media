@@ -5,17 +5,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import VectorIcon from "../utils/VectorIcon";
+import { djangoAuthApi, endpoints } from "../configs/Apis";
 
 const HomeScreen = ({ navigation }) => {
     const [postList, setPostList] = useState([]);
     useEffect(() => {
         const getPostList = async () => {
             const token = await AsyncStorage.getItem('token');
-            let res = await axios.get(`http://192.168.1.51:8000/posts/`, {
-                headers: {
-                    'Authorization': 'Bearer' + " " + token
-                }
-            })
+            let res = await djangoAuthApi(token).get(endpoints['get-all-post'])
             setPostList(res.data.results);
         }
         getPostList();
@@ -25,7 +22,7 @@ const HomeScreen = ({ navigation }) => {
         try {
             console.log(postId);
             const token = await AsyncStorage.getItem("token");
-            let res = await axios.delete(`http://192.168.1.51:8000/posts/${postId}/`, {
+            let res = await axios.delete(`http://192.168.1.134:8000/posts/${postId}/`, {
                 headers: {
                     'Authorization': "Bearer" + " " + token,
                 }

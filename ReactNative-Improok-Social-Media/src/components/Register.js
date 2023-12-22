@@ -14,39 +14,80 @@ const Register = ({ navigation }) => {
     const [lastName, setLastName] = useState('');
     const [alumniCode, setAlumniCode] = useState('');
 
-    const createAlumniAccount = async () => {
-        try {
-            let userRes = await Apis.post(endpoints['create-user'], {
-                'username': username,
-                'password': password,
-                'first_name': firstName,
-                'last_name': lastName,
-                'email': email
-            })
-            console.log(userRes.data);
+    // const createAlumniAccount = async () => {
+    //     try {
+    //         let userRes = await Apis.post(endpoints['create-user'], {
+    //             'username': username,
+    //             'password': password,
+    //             'first_name': firstName,
+    //             'last_name': lastName,
+    //             'email': email
+    //         })
+    //         console.log(userRes.data);
 
-            console.log(userRes.data.id);
+    //         console.log(userRes.data.id);
 
-            let form = new FormData();
-            form.append('user', userRes.data.id);
-            let accRes = await Apis.post(endpoints['create-account'], form, {
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log(accRes.data);
+    //         let form = new FormData();
+    //         form.append('user', userRes.data.id);
+    //         let accRes = await Apis.post(endpoints['create-account'], form, {
+    //             headers: {
+    //                 Accept: 'application/json',
+    //                 'Content-Type': 'multipart/form-data'
+    //             }
+    //         });
+    //         console.log(accRes.data);
 
-            let alumRes = await Apis.post(endpoints['create-alumni-account'], {
-                'alumni_account_code': alumniCode,
-                'account': accRes.data.id
-            });
-            console.log(alumRes.data);
+    //         let alumRes = await Apis.post(endpoints['create-alumni-account'], {
+    //             'alumni_account_code': alumniCode,
+    //             'account': accRes.data.id
+    //         });
+    //         console.log(alumRes.data);
 
-        } catch (error) {
-            console.log(error)
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    // const createAlumniAccount = async () => {
+    //     try {
+    //         let res = await Apis.post(endpoints['create-alumni'], {
+    //             'username': username,
+    //             'password': password,
+    //             'email': email,
+    //             'first_name': firstName,
+    //             'last_name': lastName,
+    //             'alumni_account_code': alumniCode
+    //         })
+    //         console.log(res.data);
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+
+    const createAlumniAccount = (evt) => {
+        evt.preventDefault();
+
+        const process = async () => {
+            try {
+                let res = await Apis.post(endpoints['create-alumni'], {
+                    'username': username,
+                    'password': password,
+                    'email': email,
+                    'first_name': firstName,
+                    'last_name': lastName,
+                    'alumni_account_code': alumniCode
+                })
+                console.log(res.data);
+            } catch (error) {
+                console.log(error)
+            }
         }
+        if (password === confirmPassword)
+            process();
+        else
+            console.log("Mật khẩu không khớp!")
     }
+
     return (
         <Fragment>
             <View style={styles.registerContainer}>
@@ -82,7 +123,7 @@ const Register = ({ navigation }) => {
                         <TextInput style={styles.input} value={confirmPassword} onChangeText={(text) => setConfirmPassword(text)} placeholder="Xác nhận mật khẩu" numberOfLines={1} />
                     </View>
                     <View>
-                        <TouchableOpacity style={styles.buttonRegister} onPress={() => createAlumniAccount()}>
+                        <TouchableOpacity style={styles.buttonRegister} onPress={(evt) => createAlumniAccount(evt)}>
                             <Text style={styles.buttonRegisterText}>Đăng ký</Text>
                         </TouchableOpacity>
                     </View>

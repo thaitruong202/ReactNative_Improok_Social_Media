@@ -17,6 +17,7 @@ import AccountManagement from './src/layouts/AccountManagement';
 import GroupManagement from './src/layouts/GroupManagement';
 import GroupMember from './src/layouts/GroupMember';
 import GroupEdit from './src/layouts/GroupEdit';
+import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
 export const MyUserContext = createContext();
 
@@ -26,47 +27,49 @@ export default function App() {
   const [user, dispatch] = useReducer(MyUserReducer, AsyncStorage.getItem("user") || null)
   return (
     <MyUserContext.Provider value={[user, dispatch]}>
-      <NativeRouter>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Đăng nhập" component={Login} />
-            <Stack.Screen name="Đăng ký" component={Register} />
-            <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
-            <Stack.Screen
-              name="Trang cá nhân"
-              component={Profile}
-              options={{
-                headerTitleAlign: 'center',
-                headerTitleStyle: {
-                  color: 'black',
-                  fontSize: 18,
-                },
-                headerStyle: {
-                  shadowColor: '#fff',
-                  elevation: 0,
-                },
-                headerRight: () => (
-                  <View style={{ marginRight: 10 }}>
-                    <FontAwesome5.Button
-                      name="search"
-                      size={20}
-                      backgroundColor="#fff"
-                      color="black"
-                    />
-                  </View>
-                ),
-              }}
-            />
-            <Stack.Screen name="Post" component={Post} />
-            <Stack.Screen name="Bài đăng" component={StatusPost} />
-            <Stack.Screen name="Bình luận" component={Comment} />
-            <Stack.Screen name="Quản lý tài khoản" component={AccountManagement} />
-            <Stack.Screen name="Quản lý nhóm" component={GroupManagement} />
-            <Stack.Screen name="Thành viên nhóm" component={GroupMember} />
-            <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </NativeRouter>
+      <AutocompleteDropdownContextProvider>
+        <NativeRouter>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="Đăng nhập" component={Login} />
+              <Stack.Screen name="Đăng ký" component={Register} />
+              <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
+              <Stack.Screen
+                name="Trang cá nhân"
+                component={Profile}
+                options={{
+                  headerTitleAlign: 'center',
+                  headerTitleStyle: {
+                    color: 'black',
+                    fontSize: 18,
+                  },
+                  headerStyle: {
+                    shadowColor: '#fff',
+                    elevation: 0,
+                  },
+                  headerRight: () => (
+                    <View style={{ marginRight: 10 }}>
+                      <FontAwesome5.Button
+                        name="search"
+                        size={20}
+                        backgroundColor="#fff"
+                        color="black"
+                      />
+                    </View>
+                  ),
+                }}
+              />
+              <Stack.Screen name="Post" component={Post} />
+              <Stack.Screen name="Bài đăng" component={StatusPost} />
+              <Stack.Screen name="Bình luận" component={Comment} />
+              <Stack.Screen name="Quản lý tài khoản" component={AccountManagement} />
+              <Stack.Screen name="Quản lý nhóm" component={GroupManagement} />
+              <Stack.Screen name="Thành viên nhóm" component={GroupMember} />
+              <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </NativeRouter>
+      </AutocompleteDropdownContextProvider>
     </MyUserContext.Provider>
   );
 }

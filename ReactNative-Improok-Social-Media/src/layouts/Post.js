@@ -22,6 +22,7 @@ const Post = () => {
     // const [likedPosts, setLikedPosts] = useState([]);
     const [isPostIdUpdated, setIsPostIdUpdated] = useState(false);
     const [countPostReaction, setCountPostReaction] = useState([]);
+    const [countPostComment, setCountPostComment] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);
 
     const [openModal, setOpenModal] = useState(false);
@@ -47,17 +48,22 @@ const Post = () => {
                 console.log(res.data.length);
                 const postIds = res.data.map(post => post.id);
                 const reactionCounts = [];
+                const commentCounts = [];
                 const reactionChecks = [];
                 for (let i = 0; i < res.data.length; i++) {
                     let postId = postIds[i];
                     let reactionRes = await djangoAuthApi(token).get(endpoints['count-post-reaction'](postId));
+                    let commentRes = await djangoAuthApi(token).get(endpoints['count-post-comment'](postId));
                     let resCheck = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
                     let reactCount = reactionRes.data
                     reactionCounts.push(reactCount);
+                    let cmtCounts = commentRes.data
+                    commentCounts.push(cmtCounts);
                     let reactedCheck = resCheck.data;
                     reactionChecks.push(reactedCheck);
                 }
                 setCountPostReaction(reactionCounts);
+                setCountPostComment(commentCounts);
                 setCheckReaction(reactionChecks);
                 console.log(res.data);
                 console.log(reactionCounts);
@@ -157,7 +163,6 @@ const Post = () => {
                                                 <TouchableOpacity>
                                                     <Text>Delete</Text>
                                                 </TouchableOpacity>
-                                                {/* Thêm các mục menu khác tại đây */}
                                                 <TouchableOpacity>
                                                     <Text>Cancel</Text>
                                                 </TouchableOpacity>
@@ -222,7 +227,6 @@ const Post = () => {
                                                 </TouchableOpacity>
                                             )
                                         ) : (
-                                            // JSX code for default reaction
                                             <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                 <VectorIcon
                                                     name="like2"
@@ -255,7 +259,7 @@ const Post = () => {
                                                 size={25}
                                                 color="#3A3A3A"
                                             />
-                                            {/* <Text style={styles.reactionCount}>Comment</Text> */}
+                                            <Text style={styles.reactionCount}>{countPostComment[index]}</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View style={styles.row}>
