@@ -15,21 +15,24 @@ const Comment = () => {
     const [commentList, setCommentList] = useState([]);
     const [currentCommentId, setCurrentCommentId] = useState(null);
 
+    const [isCommentCreated, setIsCommentCreated] = useState(false);
+
     const [userInfo, setUserInfo] = useState();
 
     useEffect(() => {
-        const getCommentList = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                let res = await djangoAuthApi(token).get(endpoints['get-comment-by-post'](postId))
-                setCommentList(res.data);
-                console.log(res.data);
-            } catch (err) {
-                console.log(err)
-            }
-        }
         getCommentList();
-    }, [])
+    }, [commentList])
+
+    const getCommentList = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-comment-by-post'](postId))
+            setCommentList(res.data);
+            console.log(res.data);
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     useEffect(() => {
         const getCurrentUser = async () => {
@@ -59,8 +62,6 @@ const Comment = () => {
                     "Content-Type": "multipart/form-data",
                 }
             })
-            const newComment = res.data;
-            setCommentList((prevCommentList) => [...prevCommentList, newComment]);
             console.log(res.data);
         } catch (error) {
             console.log(error)
@@ -82,9 +83,6 @@ const Comment = () => {
         <>
             <View style={styles.container}>
                 <ScrollView contentContainerStyle={styles.scrollContainer}>
-                    {/* <Text>
-                        Đây là bình luận của bài post {postId}
-                    </Text> */}
                     {commentList.map(cl => {
                         return (
                             <>

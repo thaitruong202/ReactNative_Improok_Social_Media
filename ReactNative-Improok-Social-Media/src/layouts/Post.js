@@ -75,18 +75,6 @@ const Post = () => {
         if (userInfo?.id) {
             getPost();
         }
-        // const checkReaction = async () => {
-        //     try {
-        //         const token = await AsyncStorage.getItem('token');
-        //         let res = await axios.get(`http://192.168.1.134:8000/accounts/${userInfo?.id}/reacted_to_the_post/`, {
-        //             headers: {
-        //                 'Authorization': "Bearer" + " " + token
-        //             }
-        //         })
-        //     } catch (error) {
-        //         console.log(error)
-        //     }
-        // }
     }, [userInfo?.id])
 
     useEffect(() => {

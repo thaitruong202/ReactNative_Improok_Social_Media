@@ -151,7 +151,7 @@ const StatusPost = ({ navigation }) => {
                         <Text style={styles.inputStyle}>Photo</Text>
                     </TouchableOpacity>
                     {userInfo?.role.role_name === "Admin" ?
-                        <TouchableOpacity style={styles.postOption}>
+                        <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo khảo sát")}>
                             <VectorIcon
                                 name="poll"
                                 type="FontAwesome5"
@@ -161,7 +161,7 @@ const StatusPost = ({ navigation }) => {
                         </TouchableOpacity>
                         : ""}
                     {userInfo?.role.role_name === "Admin" ?
-                        <TouchableOpacity style={styles.postOption}>
+                        <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo sự kiện")}>
                             <VectorIcon
                                 name="event"
                                 type="MaterialIcons"

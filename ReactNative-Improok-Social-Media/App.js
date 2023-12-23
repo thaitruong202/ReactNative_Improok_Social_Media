@@ -17,6 +17,8 @@ import AccountManagement from './src/layouts/AccountManagement';
 import GroupManagement from './src/layouts/GroupManagement';
 import GroupMember from './src/layouts/GroupMember';
 import GroupEdit from './src/layouts/GroupEdit';
+import InvitationPost from './src/layouts/InvitationPost';
+import SurveyPost from './src/layouts/SurveyPost';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 
 export const MyUserContext = createContext();
@@ -66,6 +68,8 @@ export default function App() {
               <Stack.Screen name="Quản lý nhóm" component={GroupManagement} />
               <Stack.Screen name="Thành viên nhóm" component={GroupMember} />
               <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
+              <Stack.Screen name="Tạo sự kiện" component={InvitationPost} />
+              <Stack.Screen name="Tạo khảo sát" component={SurveyPost} />
             </Stack.Navigator>
           </NavigationContainer>
         </NativeRouter>
