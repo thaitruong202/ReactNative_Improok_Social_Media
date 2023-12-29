@@ -20,6 +20,8 @@ import GroupEdit from './src/layouts/GroupEdit';
 import InvitationPost from './src/layouts/InvitationPost';
 import SurveyPost from './src/layouts/SurveyPost';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
+import SurveyForm from './src/layouts/SurveyForm';
+import FormTest from './src/layouts/FormTest';
 
 export const MyUserContext = createContext();
 
@@ -70,6 +72,8 @@ export default function App() {
               <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
               <Stack.Screen name="Tạo sự kiện" component={InvitationPost} />
               <Stack.Screen name="Tạo khảo sát" component={SurveyPost} />
+              <Stack.Screen name="Tạo đơn khảo sát" component={SurveyForm} />
+              <Stack.Screen name="Test" component={FormTest} />
             </Stack.Navigator>
           </NavigationContainer>
         </NativeRouter>

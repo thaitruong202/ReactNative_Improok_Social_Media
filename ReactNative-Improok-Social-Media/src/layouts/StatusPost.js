@@ -68,6 +68,10 @@ const StatusPost = ({ navigation }) => {
         }
     };
 
+    useEffect(() => {
+        console.log("Mảng đã chọn", selectedImages);
+    }, [selectedImages]);
+
     const createImagePost = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -76,35 +80,28 @@ const StatusPost = ({ navigation }) => {
                 "account": userInfo?.id
             })
             const postId = res.data.id
-            let form = new FormData();
+
             for (let i = 0; i < selectedImages.length; i++) {
                 const image = selectedImages[i];
-                // form.append('post_images_url', image.uri);
+                console.log(binaryData);
+                let form = new FormData();
                 form.append('post_images_url', {
                     uri: image.uri,
-                    type: 'image/jpeg',
-                    name: 'picture.jpeg'
+                    type: 'image/jpg',
+                    name: 'picture.jpg'
                 });
                 form.append('post', postId);
-                console.log(image.uri);
+                let img = await axios.post("http://192.168.1.134:8000/post_images/", form, {
+                    headers: {
+                        'Authorization': "Bearer" + " " + token,
+                        'Accept': 'application/json',
+                        'Content-Type': 'multipart/form-data',
+                    }
+                })
+                console.log('Đường dẫn', image.uri);
                 console.log(postId);
+                console.log('Mảng đã gửi', selectedImages[i]);
             }
-            // form.append('post_image_url', {
-            //     uri: selectedImages.uri,
-            //     type: "image/jpeg"
-            // })
-            // console.log(selectedImages.uri);
-            form.append('post', postId);
-            let img = await axios.post("http://192.168.1.51:8000/post_images/", form, {
-                headers: {
-                    'Authorization': "Bearer" + " " + token,
-                    Accept: 'application/json',
-                    'Content-Type': 'multipart/form-data',
-                },
-                transformRequest: () => {
-                    return form;
-                }
-            })
             console.log(img.data);
             console.log(res.data, "Đăng bài thành công!")
             navigation.goBack();

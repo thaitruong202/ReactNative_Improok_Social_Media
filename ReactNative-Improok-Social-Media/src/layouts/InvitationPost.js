@@ -9,7 +9,7 @@ import { djangoAuthApi, endpoints } from '../configs/Apis';
 const InvitationPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [userInfo, setUserInfo] = useState();
-    const [eventName, setEvenName] = useState('');
+    const [eventName, setEventName] = useState('');
 
     const [selectedBeginDate, setSelectedBeginDate] = useState(new Date());
     const [selectedBeginTime, setSelectedBeginTime] = useState(new Date());
@@ -131,76 +131,88 @@ const InvitationPost = ({ navigation }) => {
 
     return (
         <>
-            <ScrollView>
-                <View>
+            <ScrollView style={styles.scrollView}>
+                <View style={styles.inputContainer}>
                     <TextInput
                         value={eventName}
-                        onChangeText={(eventName) => setEvenName(eventName)}
+                        onChangeText={(eventName) => setEventName(eventName)}
                         placeholder="Tên sự kiện"
                         style={styles.textInputStyle}
                     />
                 </View>
-                <View>
+                <View style={styles.dateTimeContainer}>
                     <TouchableOpacity onPress={() => showBeginMode("date")}>
                         <Text style={styles.textInputStyle}>
                             {selectedBeginDate.toISOString().slice(0, 10)}
                         </Text>
-                        {showBeginDatePicker && (<DateTimePicker
-                            value={selectedBeginDate}
-                            mode={beginMode}
-                            format="YYYY-MM-DD"
-                            minimumDate={currentDate}
-                            is24Hour={true}
-                            maximumDate={new Date(2100, 0, 1)}
-                            onChange={handleBeginDateChange}
-                        />)}
+                        {showBeginDatePicker && (
+                            <DateTimePicker
+                                value={selectedBeginDate}
+                                mode={beginMode}
+                                format="YYYY-MM-DD"
+                                minimumDate={currentDate}
+                                is24Hour={true}
+                                maximumDate={new Date(2100, 0, 1)}
+                                onChange={handleBeginDateChange}
+                            />
+                        )}
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => showBeginMode("time")}>
                         <Text style={styles.textInputStyle}>
-                            {String(selectedBeginTime.getHours()).padStart(2, '0')}:{String(selectedBeginTime.getMinutes()).padStart(2, '0')}
+                            {String(selectedBeginTime.getHours()).padStart(2, '0')}:
+                            {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
                         </Text>
-                        {showBeginTimePicker && (<DateTimePicker
-                            value={selectedBeginTime}
-                            mode={beginMode}
-                            is24Hour={true}
-                            onChange={handleBeginTimeChange}
-                        />)}
+                        {showBeginTimePicker && (
+                            <DateTimePicker
+                                value={selectedBeginTime}
+                                mode={beginMode}
+                                is24Hour={true}
+                                onChange={handleBeginTimeChange}
+                            />
+                        )}
                     </TouchableOpacity>
-                    {/* <Text>{selectedDate.toLocaleString()}</Text> */}
-                    <Text>{selectedBeginDate.toISOString().slice(0, 10)} {selectedBeginTime.getHours()}:{selectedBeginTime.getMinutes()}</Text>
-                    <Text>{utcBeginDateTime}</Text>
+                    <Text style={styles.dateTimeSelectedText}>
+                        {selectedBeginDate.toISOString().slice(0, 10)} {selectedBeginTime.getHours()}:{selectedBeginTime.getMinutes()}
+                    </Text>
+                    <Text style={styles.dateTimeUtcText}>{utcBeginDateTime}</Text>
                 </View>
-                <View>
+                <View style={styles.dateTimeContainer}>
                     <TouchableOpacity onPress={() => showEndMode("date")}>
                         <Text style={styles.textInputStyle}>
                             {selectedEndDate.toISOString().slice(0, 10)}
                         </Text>
-                        {showEndDatePicker && (<DateTimePicker
-                            value={selectedEndDate}
-                            mode={endMode}
-                            format="YYYY-MM-DD"
-                            minimumDate={currentDate}
-                            is24Hour={true}
-                            maximumDate={new Date(2100, 0, 1)}
-                            onChange={handleEndDateChange}
-                        />)}
+                        {showEndDatePicker && (
+                            <DateTimePicker
+                                value={selectedEndDate}
+                                mode={endMode}
+                                format="YYYY-MM-DD"
+                                minimumDate={currentDate}
+                                is24Hour={true}
+                                maximumDate={new Date(2100, 0, 1)}
+                                onChange={handleEndDateChange}
+                            />
+                        )}
                     </TouchableOpacity>
                     <TouchableOpacity onPress={() => showEndMode("time")}>
                         <Text style={styles.textInputStyle}>
-                            {String(selectedEndTime.getHours()).padStart(2, '0')}:{String(selectedEndTime.getMinutes()).padStart(2, '0')}
+                            {String(selectedEndTime.getHours()).padStart(2, '0')}:
+                            {String(selectedEndTime.getMinutes()).padStart(2, '0')}
                         </Text>
-                        {showEndTimePicker && (<DateTimePicker
-                            value={selectedEndTime}
-                            mode={endMode}
-                            is24Hour={true}
-                            onChange={handleEndTimeChange}
-                        />)}
+                        {showEndTimePicker && (
+                            <DateTimePicker
+                                value={selectedEndTime}
+                                mode={endMode}
+                                is24Hour={true}
+                                onChange={handleEndTimeChange}
+                            />
+                        )}
                     </TouchableOpacity>
-                    {/* <Text>{selectedDate.toLocaleString()}</Text> */}
-                    <Text>{selectedEndDate.toISOString().slice(0, 10)} {selectedEndTime.getHours()}:{selectedEndTime.getMinutes()}</Text>
-                    <Text>{utcEndDateTime}</Text>
+                    <Text style={styles.dateTimeSelectedText}>
+                        {selectedEndDate.toISOString().slice(0, 10)} {selectedEndTime.getHours()}:{selectedEndTime.getMinutes()}
+                    </Text>
+                    <Text style={styles.dateTimeUtcText}>{utcEndDateTime}</Text>
                 </View>
-                <View>
+                <View style={styles.inputContainer}>
                     <TextInput
                         multiline
                         numberOfLines={5}
@@ -210,42 +222,68 @@ const InvitationPost = ({ navigation }) => {
                         style={styles.postInvitationInputStyle}
                     />
                 </View>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.createEventButton} onPress={() => createPostInvitation()}>
+                        <Text style={styles.buttonText}>Tạo sự kiện</Text>
+                    </TouchableOpacity>
+                </View>
             </ScrollView>
-            <View>
-                <TouchableOpacity style={styles.createEventButt} onPress={() => createPostInvitation()}>
-                    <Text>Tạo sự kiện</Text>
-                </TouchableOpacity>
-            </View>
         </>
     );
 };
 
 const styles = StyleSheet.create({
+    scrollView: {
+        flex: 1,
+    },
+    inputContainer: {
+        marginVertical: 10,
+        paddingHorizontal: 20,
+    },
     textInputStyle: {
         borderWidth: 1,
         borderColor: 'gray',
+        borderRadius: 5,
         padding: 10,
-        textAlignVertical: 'top',
-        fontSize: 18,
-        borderRadius: 10
     },
-    createEventButt: {
-        padding: 10,
-        backgroundColor: '#f2f2f2',
+    dateTimeContainer: {
+        flexDirection: 'row',
         alignItems: 'center',
-        position: 'absolute',
-        bottom: 3,
-        width: windowWidth / 2,
-        borderWidth: 1
+        justifyContent: 'space-between',
+        marginVertical: 10,
+        paddingHorizontal: 20,
+    },
+    dateTimeSelectedText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+    },
+    dateTimeUtcText: {
+        fontSize: 12,
+        color: 'gray',
     },
     postInvitationInputStyle: {
         borderWidth: 1,
         borderColor: 'gray',
+        borderRadius: 5,
         padding: 10,
-        textAlignVertical: 'top',
-        fontSize: 18,
-        borderRadius: 10
-    }
+        height: 100,
+    },
+    buttonContainer: {
+        alignItems: 'center',
+        marginTop: 20,
+    },
+    createEventButton: {
+        backgroundColor: 'blue',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
 });
 
 export default InvitationPost;

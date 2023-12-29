@@ -26,7 +26,9 @@ export const endpoints = {
     "create-alumni": `${DJANGO_SERVER}/users/create_alumni/`,
     "add-account-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/add_or_update_accounts/`,
     "delete-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`,
-    "create-post-invitation": `${DJANGO_SERVER}/posts/create_post_invitation/`
+    "create-post-invitation": `${DJANGO_SERVER}/posts/create_post_invitation/`,
+    "create-post-survey": `${DJANGO_SERVER}/posts/create_post_survey/`,
+    "send-email": `${DJANGO_SERVER}/send-email/`,
 }
 
 // let token;
