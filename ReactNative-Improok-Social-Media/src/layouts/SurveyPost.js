@@ -225,6 +225,7 @@ const SurveyPost = ({ navigation }) => {
             setQuestions(prevQuestions => [...prevQuestions, newQuestionItem]);
             setNewQuestion('');
             setNewOptions([]);
+            console.log(questions);
         }
     }; //Thêm mới một câu hỏi
 
@@ -268,7 +269,7 @@ const SurveyPost = ({ navigation }) => {
         };
 
         const handleAddOptionToQuestion = () => {
-            const newOption = { question_option_value: '', isAdded: true };
+            const newOption = { question_option_value: '', question_option_order: 0 };
             const updatedOptions = [...questionOptions, newOption];
             setEditedOptions(updatedOptions);
         };
@@ -304,9 +305,7 @@ const SurveyPost = ({ navigation }) => {
             const updatedOptions = questionOptions.map((option) => {
                 if (option.isAdded || option.isDeleted) {
                     return {
-                        ...option,
-                        isAdded: false,
-                        isDeleted: false,
+                        ...option
                     };
                 }
                 return option;

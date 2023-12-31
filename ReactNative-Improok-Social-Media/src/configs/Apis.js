@@ -2,7 +2,7 @@ import axios from "axios";
 // import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // const SERVER = "http://192.168.1.134";
-const DJANGO_SERVER = "http://192.168.1.134:8000"
+const DJANGO_SERVER = "http://10.17.48.144:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
