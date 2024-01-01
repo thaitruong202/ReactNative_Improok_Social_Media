@@ -1,13 +1,12 @@
 import axios from "axios";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// const SERVER = "http://192.168.1.134";
-const DJANGO_SERVER = "http://10.17.48.144:8000"
+// const DJANGO_SERVER = "http://192.168.2.123:8000"
+const DJANGO_SERVER = "http://172.16.17.226:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
     "account": `${DJANGO_SERVER}/accounts/`,
-    "djlogin": `${DJANGO_SERVER}/o/token/`,
+    "login": `${DJANGO_SERVER}/o/token/`,
     "get-account-by-user": (id) => `${DJANGO_SERVER}/users/${id}/account/`,
     "create-post": `${DJANGO_SERVER}/posts/`,
     "get-all-post": `${DJANGO_SERVER}/posts/`,
@@ -29,6 +28,7 @@ export const endpoints = {
     "create-post-invitation": `${DJANGO_SERVER}/posts/create_post_invitation/`,
     "create-post-survey": `${DJANGO_SERVER}/posts/create_post_survey/`,
     "send-email": `${DJANGO_SERVER}/send-email/`,
+    "invitation_posts_accounts": (id) => `${DJANGO_SERVER}/post_invitations/${id}/add_or_update_accounts/`
 }
 
 // let token;

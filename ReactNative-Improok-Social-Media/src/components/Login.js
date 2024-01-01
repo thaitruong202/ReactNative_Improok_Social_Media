@@ -5,7 +5,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MyUserContext } from '../../App';
 import Apis, { djangoAuthApi, endpoints } from "../configs/Apis";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 
 const Login = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -17,12 +16,8 @@ const Login = ({ navigation }) => {
             let form = new FormData();
             form.append("username", username)
             form.append("password", password)
-            // form.append('client_id', 'zDnklZ6ztQVU0X4DOQEymwV96MfWhW3Hk2VHq3D9')
-            // form.append('client_secret', 'Wo2j1Qn6UKI691i30hmc4gZ7JCTazZ18KXNne7n2IYihCYoEw3PozWTtPc0CkiKZHtMBxOFTWISj83R5cSODQbCh9uTmNb5eefA4W9TwZmzI0D0smpz6bBf8CgSNnYDj')
-            // form.append('grant_type', 'password')
 
-
-            let res = await Apis.post(endpoints['djlogin'], form, {
+            let res = await Apis.post(endpoints['login'], form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
                 }

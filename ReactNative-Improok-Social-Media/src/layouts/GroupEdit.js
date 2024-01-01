@@ -33,7 +33,7 @@ const GroupEdit = () => {
         if (text.length > 0) {
             const token = await AsyncStorage.getItem("token");
             let res = await djangoAuthApi(token).get(endpoints['account']);
-            const accountData = res.data.results;
+            const accountData = res.data;
             setAccountList(accountData);
             const filteredList = accountData.filter((item) => {
                 const fullName = `${item.user.first_name} ${item.user.last_name}`;

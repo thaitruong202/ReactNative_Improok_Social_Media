@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Button, FlatList } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native';
 import { MyUserContext } from '../../App';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { windowWidth } from '../utils/Dimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { RadioButton } from 'react-native-paper';
+import { Input } from 'react-native-elements';
+import { Button, ButtonGroup, withTheme } from '@rneui/themed';
 
 const SurveyPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -372,69 +374,89 @@ const SurveyPost = ({ navigation }) => {
     return (
         <>
             <ScrollView>
-                <View>
+                <View style={styles.inputContainer}>
                     <TextInput
                         value={surveyName}
                         onChangeText={(surveyName) => setSurveyName(surveyName)}
-                        placeholder="Tên khảo sát"
-                        style={styles.textInputStyle}
+                        placeholder="Survey Name..."
+                        style={[styles.textInputStyle, { fontSize: 17 }]}
                     />
                 </View>
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => showBeginMode("date")}>
-                        <Text style={styles.textInputStyle}>
-                            {selectedBeginDate.toISOString().slice(0, 10)}
-                        </Text>
-                        {showBeginDatePicker && (<DateTimePicker
-                            value={selectedBeginDate}
-                            mode={beginMode}
-                            format="YYYY-MM-DD"
-                            minimumDate={currentDate}
-                            is24Hour={true}
-                            maximumDate={new Date(2100, 0, 1)}
-                            onChange={handleBeginDateChange}
-                        />)}
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => showBeginMode("time")}>
-                        <Text style={styles.textInputStyle}>
-                            {String(selectedBeginTime.getHours()).padStart(2, '0')}:{String(selectedBeginTime.getMinutes()).padStart(2, '0')}
-                        </Text>
-                        {showBeginTimePicker && (<DateTimePicker
-                            value={selectedBeginTime}
-                            mode={beginMode}
-                            is24Hour={true}
-                            onChange={handleBeginTimeChange}
-                        />)}
-                    </TouchableOpacity>
+                <View style={styles.dateTimeContainer}>
+                    <View style={[styles.textInputStyle, { marginRight: 8 }]}>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày bắt đầu</Text>
+                        <TouchableOpacity onPress={() => showBeginMode("date")}>
+                            <Text style={{ fontSize: 17 }}>
+                                {selectedBeginDate.toISOString().slice(0, 10)}
+                            </Text>
+                            {showBeginDatePicker && (
+                                <DateTimePicker
+                                    value={selectedBeginDate}
+                                    mode={beginMode}
+                                    format="YYYY-MM-DD"
+                                    minimumDate={currentDate}
+                                    is24Hour={true}
+                                    maximumDate={new Date(2100, 0, 1)}
+                                    onChange={handleBeginDateChange}
+                                />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ bắt đầu</Text>
+                        <TouchableOpacity onPress={() => showBeginMode("time")}>
+                            <Text style={{ fontSize: 17 }}>
+                                {String(selectedBeginTime.getHours()).padStart(2, '0')}:
+                                {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
+                            </Text>
+                            {showBeginTimePicker && (
+                                <DateTimePicker
+                                    value={selectedBeginTime}
+                                    mode={beginMode}
+                                    is24Hour={true}
+                                    onChange={handleBeginTimeChange}
+                                />
+                            )}
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
-                    <TouchableOpacity onPress={() => showEndMode("date")}>
-                        <Text style={styles.textInputStyle}>
-                            {selectedEndDate.toISOString().slice(0, 10)}
-                        </Text>
-                        {showEndDatePicker && (<DateTimePicker
-                            value={selectedEndDate}
-                            mode={endMode}
-                            format="YYYY-MM-DD"
-                            minimumDate={currentDate}
-                            is24Hour={true}
-                            maximumDate={new Date(2100, 0, 1)}
-                            onChange={handleEndDateChange}
-                        />)}
-                    </TouchableOpacity>
-                    <TouchableOpacity onPress={() => showEndMode("time")}>
-                        <Text style={styles.textInputStyle}>
-                            {String(selectedEndTime.getHours()).padStart(2, '0')}:{String(selectedEndTime.getMinutes()).padStart(2, '0')}
-                        </Text>
-                        {showEndTimePicker && (<DateTimePicker
-                            value={selectedEndTime}
-                            mode={endMode}
-                            is24Hour={true}
-                            onChange={handleEndTimeChange}
-                        />)}
-                    </TouchableOpacity>
+                <View style={styles.dateTimeContainer}>
+                    <View style={[styles.textInputStyle, { marginRight: 8 }]}>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
+                        <TouchableOpacity onPress={() => showEndMode("date")}>
+                            <Text style={{ fontSize: 17 }}>{selectedEndDate.toISOString().slice(0, 10)}</Text>
+                            {showEndDatePicker && (
+                                <DateTimePicker
+                                    value={selectedEndDate}
+                                    mode={endMode}
+                                    format="YYYY-MM-DD"
+                                    minimumDate={currentDate}
+                                    is24Hour={true}
+                                    maximumDate={new Date(2100, 0, 1)}
+                                    onChange={handleEndDateChange}
+                                />
+                            )}
+                        </TouchableOpacity>
+                    </View>
+                    <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ kết thúc</Text>
+                        <TouchableOpacity onPress={() => showEndMode("time")}>
+                            <Text style={{ fontSize: 17 }}>
+                                {String(selectedEndTime.getHours()).padStart(2, '0')}:
+                                {String(selectedEndTime.getMinutes()).padStart(2, '0')}
+                            </Text>
+                            {showEndTimePicker && (
+                                <DateTimePicker
+                                    value={selectedEndTime}
+                                    mode={endMode}
+                                    is24Hour={true}
+                                    onChange={handleEndTimeChange}
+                                />
+                            )}
+                        </TouchableOpacity>
+                    </View>
                 </View>
-                <View>
+                <View style={styles.inputContainer}>
                     <TextInput
                         multiline
                         numberOfLines={3}
@@ -447,41 +469,42 @@ const SurveyPost = ({ navigation }) => {
                 <View style={{ alignItems: 'center', marginTop: 10 }}>
                     <Text style={{ fontSize: 20, fontWeight: 600 }}>Tạo khảo sát</Text>
                 </View>
-                <View>
+                <View style={styles.inputContainer}>
                     <View style={{ marginTop: 20 }}>
-                        <Text>New Question:</Text>
                         <TextInput
                             value={newQuestion}
                             onChangeText={text => setNewQuestion(text)}
-                            placeholder="Enter question title"
+                            placeholder="Enter question..."
+                            style={[styles.textInputStyle, { fontSize: 17 }]}
                         />
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <RadioButton
-                                value="Multiple-Choice"
-                                status={currentQuestionType === 'Multiple-Choice' ? 'checked' : 'unchecked'}
-                                onPress={() => setCurrentQuestionType('Multiple-Choice')}
-                            />
-                            <Text>Multiple Choice</Text>
+                        <View>
+                            <Text style={{ fontSize: 13, marginBottom: 10, marginTop: 10 }}>Chọn loại câu hỏi</Text>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <RadioButton
+                                    value="Multiple-Choice"
+                                    status={currentQuestionType === 'Multiple-Choice' ? 'checked' : 'unchecked'}
+                                    onPress={() => setCurrentQuestionType('Multiple-Choice')}
+                                />
+                                <Text style={{ fontSize: 15 }}>Multiple Choice</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <RadioButton
+                                    value="CheckBox"
+                                    status={currentQuestionType === 'CheckBox' ? 'checked' : 'unchecked'}
+                                    onPress={() => setCurrentQuestionType('CheckBox')}
+                                />
+                                <Text style={{ fontSize: 15 }}>CheckBox</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <RadioButton
+                                    value="Text Input"
+                                    status={currentQuestionType === 'Text Input' ? 'checked' : 'unchecked'}
+                                    onPress={() => setCurrentQuestionType('Text Input')}
+                                />
+                                <Text style={{ fontSize: 15 }}>Text Input</Text>
+                            </View>
                         </View>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <RadioButton
-                                value="CheckBox"
-                                status={currentQuestionType === 'CheckBox' ? 'checked' : 'unchecked'}
-                                onPress={() => setCurrentQuestionType('CheckBox')}
-                            />
-                            <Text>CheckBox</Text>
-                        </View>
-
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <RadioButton
-                                value="Text Input"
-                                status={currentQuestionType === 'Text Input' ? 'checked' : 'unchecked'}
-                                onPress={() => setCurrentQuestionType('Text Input')}
-                            />
-                            <Text>Text Input</Text>
-                        </View>
-                        {currentQuestionType !== 'Text Input' && (
+                        {/* {currentQuestionType !== 'Text Input' && (
                             <View>
                                 <Text>Options:</Text>
                                 <FlatList
@@ -489,17 +512,95 @@ const SurveyPost = ({ navigation }) => {
                                     renderItem={renderOption}
                                     keyExtractor={(option, index) => index.toString()}
                                 />
+                                
                                 <Button title="Add Option" onPress={handleAddOption} />
                             </View>
+                        )} */}
+                        {currentQuestionType !== 'Text Input' && (
+                            <View>
+                                <Text>Lựa chọn:</Text>
+                                {newOptions.map((item, index) => (
+                                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                        <TextInput
+                                            style={{ flex: 1, marginRight: 10 }}
+                                            placeholder="Enter option..."
+                                            value={item.question_option_value}
+                                            onChangeText={(value) => handleOptionChange(index, value)}
+                                        />
+                                        <TouchableOpacity onPress={() => handleRemoveOption(index)}>
+                                            <Text style={{ color: 'red' }}>Remove</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                ))}
+                                <View style={{ flex: 1, flexDirection: 'row' }}>
+                                    <Button
+                                        title="Add Option"
+                                        buttonStyle={{
+                                            backgroundColor: 'rgba(78, 116, 289, 1)',
+                                            borderRadius: 3,
+                                            flex: 1,
+                                            marginRight: 10,
+                                        }}
+                                        onPress={handleAddOption}
+                                    />
+                                    <Button
+                                        title="Add Question"
+                                        buttonStyle={{
+                                            backgroundColor: 'rgba(78, 116, 289, 1)',
+                                            borderRadius: 3,
+                                            flex: 1,
+                                            marginLeft: 10,
+                                        }}
+                                        onPress={handleAddQuestion}
+                                    />
+                                </View>
+                            </View>
                         )}
-                        <Button title="Add Question" onPress={handleAddQuestion} />
-                        <Button title="Create Survey" onPress={createSurvey} />
+                        <View>
+                            <Button
+                                title="Create Survey"
+                                icon={{
+                                    name: 'home',
+                                    type: 'font-awesome',
+                                    size: 15,
+                                    color: 'white',
+                                }}
+                                iconContainerStyle={{ marginRight: 10 }}
+                                titleStyle={{ fontWeight: '700' }}
+                                buttonStyle={{
+                                    backgroundColor: 'rgba(90, 154, 230, 1)',
+                                    borderColor: 'transparent',
+                                    borderWidth: 0,
+                                    borderRadius: 30,
+                                }}
+                                containerStyle={{
+                                    width: 200,
+                                    marginHorizontal: 50,
+                                    marginVertical: 10,
+                                }}
+                                onPress={createSurvey}
+                            />
+                        </View>
                     </View>
                 </View>
                 <View>
-                    <TouchableOpacity style={styles.createEventButt} onPress={() => createPostSurvey()}>
-                        <Text>Tạo khảo sát</Text>
-                    </TouchableOpacity>
+                    <Button
+                        title="Tạo khảo sát"
+                        loading={false}
+                        loadingProps={{ size: 'small', color: 'white' }}
+                        buttonStyle={{
+                            backgroundColor: 'rgba(111, 202, 186, 1)',
+                            borderRadius: 5,
+                        }}
+                        titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
+                        containerStyle={{
+                            marginHorizontal: 50,
+                            height: 50,
+                            width: 200,
+                            marginVertical: 10,
+                        }}
+                        onPress={() => createPostSurvey()}
+                    />
                 </View>
             </ScrollView>
             <FlatList
@@ -614,6 +715,63 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         backgroundColor: 'black',
     },
+    scrollView: {
+        flex: 1,
+    },
+    inputContainer: {
+        marginVertical: 10,
+        paddingHorizontal: 20,
+    },
+    textInputStyle: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+        padding: 10,
+        flex: 1,
+    },
+    dateTimeContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+        paddingHorizontal: 20,
+    },
+    dateTimeSelectedText: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginTop: 10,
+    },
+    dateTimeUtcText: {
+        fontSize: 12,
+        color: 'gray',
+    },
+    postInvitationInputStyle: {
+        borderWidth: 1,
+        borderColor: 'gray',
+        borderRadius: 5,
+        padding: 10,
+        height: 100,
+        textAlignVertical: 'top',
+        fontSize: 17
+    },
+    buttonContainer: {
+        marginTop: 20,
+        alignItems: 'center'
+    },
+    createEventButton: {
+        backgroundColor: 'blue',
+        paddingVertical: 10,
+        paddingHorizontal: 20,
+        borderRadius: 5,
+        width: windowWidth - 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    buttonText: {
+        color: 'white',
+        fontSize: 16,
+        fontWeight: 'bold',
+    }
 });
 
 export default SurveyPost;
