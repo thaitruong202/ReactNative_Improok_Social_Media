@@ -1,13 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, Image } from 'react-native';
 import { MyUserContext } from '../../App';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { windowWidth } from '../utils/Dimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { RadioButton } from 'react-native-paper';
-import { Input } from 'react-native-elements';
-import { Button, ButtonGroup, withTheme } from '@rneui/themed';
+import { Button } from '@rneui/themed';
 import VectorIcon from '../utils/VectorIcon';
 
 const SurveyPost = ({ navigation }) => {
@@ -398,6 +397,13 @@ const SurveyPost = ({ navigation }) => {
     return (
         <>
             <ScrollView>
+                <View style={styles.profileContainer}>
+                    <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
+                    <View style={styles.inputBox}>
+                        <Text style={styles.inputStyle}>{user.first_name} {user.last_name}</Text>
+                        <Text style={{ fontSize: 14, marginTop: 3 }}>Host - Administrator</Text>
+                    </View>
+                </View>
                 <View style={styles.inputContainer}>
                     <TextInput
                         value={surveyName}
@@ -411,7 +417,7 @@ const SurveyPost = ({ navigation }) => {
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày bắt đầu</Text>
                         <TouchableOpacity onPress={() => showBeginMode("date")}>
                             <Text style={{ fontSize: 17 }}>
-                                {selectedBeginDate.toISOString().slice(0, 10)}
+                                <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
                             </Text>
                             {showBeginDatePicker && (
                                 <DateTimePicker
@@ -448,7 +454,7 @@ const SurveyPost = ({ navigation }) => {
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
                         <TouchableOpacity onPress={() => showEndMode("date")}>
-                            <Text style={{ fontSize: 17 }}>{selectedEndDate.toISOString().slice(0, 10)}</Text>
+                            <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
                             {showEndDatePicker && (
                                 <DateTimePicker
                                     value={selectedEndDate}
@@ -816,6 +822,26 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    profileStyle: {
+        height: 50,
+        width: 50,
+        borderRadius: 50,
+    },
+    inputStyle: {
+        fontSize: 18,
+        color: '#000000',
+        fontWeight: '600'
+    },
+    profileContainer: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+        marginVertical: 10,
+        paddingHorizontal: 20,
+    },
+    inputBox: {
+        marginLeft: 10
     }
 });
 

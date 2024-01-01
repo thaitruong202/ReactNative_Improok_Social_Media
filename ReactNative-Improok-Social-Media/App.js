@@ -22,6 +22,9 @@ import SurveyPost from './src/layouts/SurveyPost';
 import { AutocompleteDropdownContextProvider } from 'react-native-autocomplete-dropdown';
 import SurveyForm from './src/layouts/SurveyForm';
 import FormTest from './src/layouts/FormTest';
+import Survey from './src/layouts/Survey';
+import Invitation from './src/layouts/Invitation';
+import SurveyDetail from './src/layouts/SurveyDetail';
 
 export const MyUserContext = createContext();
 
@@ -73,6 +76,9 @@ export default function App() {
               <Stack.Screen name="Tạo khảo sát" component={SurveyPost} />
               <Stack.Screen name="Tạo đơn khảo sát" component={SurveyForm} />
               <Stack.Screen name="Test" component={FormTest} />
+              <Stack.Screen name="Khảo sát" component={Survey} />
+              <Stack.Screen name="Sự kiện" component={Invitation} />
+              <Stack.Screen name="Chi tiết khảo sát" component={SurveyDetail} />
             </Stack.Navigator>
           </NavigationContainer>
         </NativeRouter>

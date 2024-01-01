@@ -1,4 +1,4 @@
-import { ScrollView, Image, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, Modal, Button } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
@@ -7,10 +7,15 @@ import CreatePost from '../layouts/CreatePost';
 import Timeline from '../layouts/Timeline';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as ImagePicker from 'expo-image-picker';
 
 const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [userInfo, setUserInfo] = useState();
+
+    const [image, setImage] = useState();
+
+    const [showModal, setShowModal] = useState(false);
 
     const getCurrentUser = async () => {
         try {
@@ -24,7 +29,95 @@ const Profile = ({ navigation }) => {
 
     useEffect(() => {
         getCurrentUser();
-    }, [])
+    }, [userInfo])
+
+    // const changeAvatar = async () => {
+    //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    //     if (status !== 'granted') {
+    //         console.log('Permission not granted');
+    //         return;
+    //     }
+
+    //     const options = {
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         allowsMultipleSelection: true,
+    //     };
+
+    //     const result = await ImagePicker.launchImageLibraryAsync(options);
+
+    //     if (result.cancelled) {
+    //         console.log('User cancelled image picker');
+    //     } else {
+    //         const selectedImages = result.assets[0];
+    //         const localUri = selectedImages.uri;
+    //         console.log('Đường dẫn:', localUri);
+    //         setImage(localUri);
+
+    //         const token = await AsyncStorage.getItem('token');
+    //         let form = new FormData();
+    //         const filename = localUri.split('/').pop();
+    //         const match = /\.(\w+)$/.exec(filename);
+    //         const type = match ? `image/${match[1]}` : 'image';
+    //         form.append('avatar', { uri: localUri, name: filename, type });
+    //         let res = await djangoAuthApi(token).patch(endpoints['avatar-change'](userInfo?.id), form, {
+    //             headers: {
+    //                 'Content-Type': 'multipart/form-data',
+    //             }
+    //         })
+    //         console.log("Cái gì dậy?", res.data, res.status);
+    //     }
+    // }
+
+    const changeAvatar = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+        if (status !== 'granted') {
+            console.log('Permission not granted');
+            return;
+        }
+
+        const options = {
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsMultipleSelection: true,
+        };
+
+        const result = await ImagePicker.launchImageLibraryAsync(options);
+
+        if (result.canceled) {
+            console.log('User cancelled image picker');
+        } else {
+            const selectedImages = result.assets[0];
+            const localUri = selectedImages.uri;
+            console.log('Đường dẫn:', localUri);
+            setImage(localUri);
+
+            setShowModal(true);
+        }
+    }
+
+    const saveAvatar = async () => {
+        setShowModal(false);
+        const token = await AsyncStorage.getItem('token');
+        let form = new FormData();
+        const filename = image.split('/').pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : 'image';
+        form.append('avatar', { uri: image, name: filename, type });
+        let res = await djangoAuthApi(token).patch(endpoints['avatar-change'](userInfo?.id), form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        console.log("Cái gì dậy?", res.data, res.status);
+        setUserInfo(prevState => ({ ...prevState, avatar: image }));
+        getCurrentUser();
+    }
+
+    const cancelAvatar = () => {
+        setShowModal(false);
+        setImage(null);
+    }
 
     return (
         <>
@@ -32,22 +125,26 @@ const Profile = ({ navigation }) => {
                 <View>
                     <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
                     <View style={styles.avatarChange}>
-                        <VectorIcon
-                            name="camera"
-                            type="FontAwesome5"
-                            size={20}
-                        ></VectorIcon>
+                        <TouchableOpacity>
+                            <VectorIcon
+                                name="camera"
+                                type="FontAwesome5"
+                                size={20}
+                            ></VectorIcon>
+                        </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.avatarContainer}>
                     <Image style={styles.avatar} source={{ uri: userInfo?.avatar }} />
-                    <View style={styles.avatarChange}>
-                        <VectorIcon
-                            name="camera"
-                            type="FontAwesome5"
-                            size={20}
-                        ></VectorIcon>
-                    </View>
+                    <TouchableOpacity style={styles.avatarChange} onPress={() => changeAvatar()}>
+                        <View>
+                            <VectorIcon
+                                name="camera"
+                                type="FontAwesome5"
+                                size={20}
+                            ></VectorIcon>
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <Text style={styles.name}>{user.last_name} {user.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
@@ -118,6 +215,15 @@ const Profile = ({ navigation }) => {
                 <CreatePost navigation={navigation} />
                 <Timeline />
             </ScrollView>
+            <Modal visible={showModal} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <Image source={{ uri: image }} style={styles.modalImage} />
+                    <View style={styles.modalButtons}>
+                        <Button title="Lưu" onPress={saveAvatar} />
+                        <Button title="Hủy" onPress={cancelAvatar} />
+                    </View>
+                </View>
+            </Modal>
         </>
     );
 };
@@ -245,6 +351,33 @@ const styles = StyleSheet.create({
         height: 25,
         width: 25,
         tintColor: 'lightgray',
+    },
+    editButton: {
+        position: 'absolute',
+        right: 10,
+        bottom: 10,
+        backgroundColor: 'blue',
+        borderRadius: 15,
+        width: 30,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    modalImage: {
+        width: 200,
+        height: 200,
+        resizeMode: 'contain',
+        marginBottom: 20,
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-evenly',
+        width: '100%',
     },
 });
 

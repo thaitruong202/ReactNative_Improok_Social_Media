@@ -132,7 +132,7 @@ const PersonalScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.utilTabRow}>
-                        <TouchableOpacity style={styles.tabItemContainer}>
+                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Sự kiện")}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="event"
@@ -142,7 +142,7 @@ const PersonalScreen = ({ navigation }) => {
                                 <Text style={styles.tabItemText}>Sự kiện</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.tabItemContainer}>
+                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Khảo sát")}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="poll"

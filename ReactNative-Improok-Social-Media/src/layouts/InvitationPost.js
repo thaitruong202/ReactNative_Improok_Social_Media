@@ -205,7 +205,7 @@ const InvitationPost = ({ navigation }) => {
                 memberAccountId.push(res.data.id);
             }
             const postInvitationId = res.data.id;
-            let member = await djangoAuthApi(token).post(endpoints['invitation_posts_accounts'](postInvitationId), {
+            let member = await djangoAuthApi(token).post(endpoints['invitation-posts-accounts'](postInvitationId), {
                 "list_account_id": memberAccountId
             })
             const recipientList = selectedMember.map(member => member.email);
@@ -243,7 +243,8 @@ const InvitationPost = ({ navigation }) => {
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày bắt đầu</Text>
                         <TouchableOpacity onPress={() => showBeginMode("date")}>
-                            <Text style={{ fontSize: 17 }}>{selectedBeginDate.toISOString().slice(0, 10)}</Text>
+                            {/* <Text style={{ fontSize: 17 }}>{selectedBeginDate.toISOString().slice(0, 10)}</Text> */}
+                            <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
                             {showBeginDatePicker && (
                                 <DateTimePicker
                                     value={selectedBeginDate}
@@ -275,7 +276,7 @@ const InvitationPost = ({ navigation }) => {
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
                         <TouchableOpacity onPress={() => showEndMode("date")}>
-                            <Text style={{ fontSize: 17 }}>{selectedEndDate.toISOString().slice(0, 10)}</Text>
+                            <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
                             {showEndDatePicker && (
                                 <DateTimePicker
                                     value={selectedEndDate}

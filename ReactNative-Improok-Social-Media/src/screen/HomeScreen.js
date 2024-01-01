@@ -1,5 +1,5 @@
 import React, { useState, Fragment, useEffect } from "react";
-import { Button, Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Button, Image, ScrollView, StyleSheet, RefreshControl, Text, TouchableOpacity, View } from "react-native";
 import SubHeader from "../layouts/SubHeader";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
@@ -9,12 +9,21 @@ import { djangoAuthApi, endpoints } from "../configs/Apis";
 
 const HomeScreen = ({ navigation }) => {
     const [postList, setPostList] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+
+    const handleRefresh = () => {
+        setRefreshing(true);
+        getPostList();
+        setRefreshing(false);
+    };
+
+    const getPostList = async () => {
+        const token = await AsyncStorage.getItem('token');
+        let res = await djangoAuthApi(token).get(endpoints['get-all-post'])
+        setPostList(res.data.results);
+    }
+
     useEffect(() => {
-        const getPostList = async () => {
-            const token = await AsyncStorage.getItem('token');
-            let res = await djangoAuthApi(token).get(endpoints['get-all-post'])
-            setPostList(res.data.results);
-        }
         getPostList();
     }, [])
 
@@ -37,7 +46,9 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <Fragment>
-            <ScrollView>
+            <ScrollView refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
+            }>
                 <SubHeader />
                 {postList.map((ph, index) => {
                     return (

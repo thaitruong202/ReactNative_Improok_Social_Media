@@ -21,7 +21,7 @@ const Comment = () => {
 
     useEffect(() => {
         getCommentList();
-    }, [commentList])
+    }, [])
 
     const getCommentList = async () => {
         try {

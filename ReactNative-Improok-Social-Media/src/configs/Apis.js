@@ -28,7 +28,11 @@ export const endpoints = {
     "create-post-invitation": `${DJANGO_SERVER}/posts/create_post_invitation/`,
     "create-post-survey": `${DJANGO_SERVER}/posts/create_post_survey/`,
     "send-email": `${DJANGO_SERVER}/send-email/`,
-    "invitation_posts_accounts": (id) => `${DJANGO_SERVER}/post_invitations/${id}/add_or_update_accounts/`
+    "invitation-posts-accounts": (id) => `${DJANGO_SERVER}/post_invitations/${id}/add_or_update_accounts/`,
+    "avatar-change": (id) => `${DJANGO_SERVER}/accounts/${id}/`,
+    "cover-avatar-change": (id) => `${DJANGO_SERVER}/accounts/${id}/`,
+    "get-post-surveys": `${DJANGO_SERVER}/post_surveys/`,
+    "get-post-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/`
 }
 
 // let token;
