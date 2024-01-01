@@ -34,7 +34,6 @@ const Login = ({ navigation }) => {
             });
             await AsyncStorage.setItem('user', JSON.stringify(data));
             console.log("Lưu current user")
-
             console.log(data.data)
 
             dispatch({

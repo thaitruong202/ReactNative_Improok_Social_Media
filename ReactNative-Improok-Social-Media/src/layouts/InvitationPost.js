@@ -65,8 +65,7 @@ const InvitationPost = ({ navigation }) => {
                 accessibilityState={{ selected: isMemberSelected }}>
                 <Image
                     source={{ uri: item.avatar }}
-                    style={{ width: 40, height: 40, borderRadius: 20 }}
-                />
+                    style={{ width: 40, height: 40, borderRadius: 20 }} />
                 <Text style={{ fontSize: 16, marginLeft: 10 }}>{fullName}</Text>
             </Pressable>
         );

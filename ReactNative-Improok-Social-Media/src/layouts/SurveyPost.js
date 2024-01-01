@@ -8,6 +8,7 @@ import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { RadioButton } from 'react-native-paper';
 import { Input } from 'react-native-elements';
 import { Button, ButtonGroup, withTheme } from '@rneui/themed';
+import VectorIcon from '../utils/VectorIcon';
 
 const SurveyPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -121,10 +122,6 @@ const SurveyPost = ({ navigation }) => {
 
     useEffect(() => {
         getCurrentUser();
-        // console.log("Chào đây là list các câu hỏi chào cưng" + " " + questions.map(question => question.survey_question_option_list[0].question_option_value))
-        // if (questions.length > 0) {
-        //     console.log("Chào đây là list các câu hỏi chào chị" + " " + questions[0].survey_question_option_list.map(survey_question_option_list => survey_question_option_list.question_option_value))
-        // }
     }, [])
 
     const createPostSurvey = async () => {
@@ -203,9 +200,9 @@ const SurveyPost = ({ navigation }) => {
                 switch (questionType) {
                     case 'Multiple-Choice':
                         return 1;
-                    case 'CheckBox':
-                        return 2;
                     case 'Text Input':
+                        return 2;
+                    case 'CheckBox':
                         return 3;
                     default:
                         return 0;
@@ -286,12 +283,10 @@ const SurveyPost = ({ navigation }) => {
 
         const toggleEditingMode = () => {
             if (isEditing) {
-                setIsEditingEnabled(false);
                 setEditedQuestionIndex(null);
                 setEditedTitle('');
                 setEditedOptions([]);
             } else {
-                setIsEditingEnabled(false);
                 setEditedQuestionIndex(index);
                 setEditedTitle(item.question_content);
                 setEditedOptions(item.survey_question_option_list);
@@ -320,19 +315,25 @@ const SurveyPost = ({ navigation }) => {
             setEditedQuestionIndex(null);
             setEditedTitle('');
             setEditedOptions([]);
-            setIsEditingEnabled(true);
         };
 
         return (
             <View style={{ marginBottom: 20 }}>
                 <TextInput
-                    style={{ marginBottom: 10 }}
+                    style={[styles.textInputStyle, { fontSize: 16 }]}
                     placeholder="Enter question..."
                     value={questionTitle}
                     onChangeText={(value) => handleEditQuestionTitle(value)}
+                    editable={isEditing}
                 />
-                <TouchableOpacity onPress={toggleEditingMode} disabled={!isEditingEnabled} style={{ backgroundColor: buttonBackgroundColor }}>
-                    <Text>Chỉnh sửa</Text>
+                <TouchableOpacity onPress={toggleEditingMode} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
+                    <VectorIcon
+                        name="edit"
+                        type="Feather"
+                        size={25}
+                        color='white'
+                    />
+                    <Text style={{ fontSize: 14, color: 'white' }}>Chỉnh sửa</Text>
                 </TouchableOpacity>
                 {questionOptions.map((option, optionIndex) => {
                     if (option.isDeleted) {
@@ -341,30 +342,53 @@ const SurveyPost = ({ navigation }) => {
                     return (
                         <View key={optionIndex} style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <TextInput
-                                style={{ flex: 1, marginRight: 10 }}
+                                style={[styles.textInputStyle, { flex: 1, marginRight: 10 }]}
                                 placeholder="Enter option..."
                                 value={option.question_option_value}
                                 onChangeText={(value) => handleOptionChange(optionIndex, value)}
+                                editable={isEditing}
                             />
                             {isEditing && (
                                 <TouchableOpacity onPress={() => handleRemoveOptionFromQuestion(optionIndex)}>
-                                    <Text style={{ color: 'red' }}>Remove</Text>
+                                    <VectorIcon
+                                        name="remove-circle"
+                                        type="Ionicons"
+                                        size={21}
+                                    />
                                 </TouchableOpacity>
                             )}
                         </View>
                     );
                 })}
                 {isEditing && (
-                    <TouchableOpacity onPress={handleAddOptionToQuestion}>
-                        <Text>Add Option</Text>
+                    <TouchableOpacity onPress={handleAddOptionToQuestion} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
+                        <VectorIcon
+                            name="add-circle"
+                            type="MaterialIcons"
+                            size={25}
+                            color="white"
+                        />
+                        <Text style={{ fontSize: 14, color: 'white' }}>Add Option</Text>
                     </TouchableOpacity>
                 )}
-                <TouchableOpacity onPress={handleRemoveQuestion}>
-                    <Text style={{ color: 'red' }}>Remove Question</Text>
+                <TouchableOpacity onPress={handleRemoveQuestion} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'red', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
+                    <VectorIcon
+                        name="delete"
+                        type="MaterialCommunityIcons"
+                        size={25}
+                        color='white'
+                    />
+                    <Text style={{ fontSize: 14, color: 'white' }}>Remove Question</Text>
                 </TouchableOpacity>
                 {isEditing && (
-                    <TouchableOpacity onPress={saveChanges}>
-                        <Text>Save Changes</Text>
+                    <TouchableOpacity onPress={saveChanges} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'black', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
+                        <VectorIcon
+                            name="save"
+                            type="Entypo"
+                            size={25}
+                            color='white'
+                        />
+                        <Text style={{ fontSize: 14, color: 'white' }}>Save Changes</Text>
                     </TouchableOpacity>
                 )}
             </View>
@@ -485,15 +509,7 @@ const SurveyPost = ({ navigation }) => {
                                     status={currentQuestionType === 'Multiple-Choice' ? 'checked' : 'unchecked'}
                                     onPress={() => setCurrentQuestionType('Multiple-Choice')}
                                 />
-                                <Text style={{ fontSize: 15 }}>Multiple Choice</Text>
-                            </View>
-                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <RadioButton
-                                    value="CheckBox"
-                                    status={currentQuestionType === 'CheckBox' ? 'checked' : 'unchecked'}
-                                    onPress={() => setCurrentQuestionType('CheckBox')}
-                                />
-                                <Text style={{ fontSize: 15 }}>CheckBox</Text>
+                                <Text style={{ fontSize: 16 }}>Multiple Choice</Text>
                             </View>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <RadioButton
@@ -501,7 +517,15 @@ const SurveyPost = ({ navigation }) => {
                                     status={currentQuestionType === 'Text Input' ? 'checked' : 'unchecked'}
                                     onPress={() => setCurrentQuestionType('Text Input')}
                                 />
-                                <Text style={{ fontSize: 15 }}>Text Input</Text>
+                                <Text style={{ fontSize: 16 }}>Text Input</Text>
+                            </View>
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <RadioButton
+                                    value="CheckBox"
+                                    status={currentQuestionType === 'CheckBox' ? 'checked' : 'unchecked'}
+                                    onPress={() => setCurrentQuestionType('CheckBox')}
+                                />
+                                <Text style={{ fontSize: 16 }}>CheckBox</Text>
                             </View>
                         </View>
                         {/* {currentQuestionType !== 'Text Input' && (
@@ -518,68 +542,89 @@ const SurveyPost = ({ navigation }) => {
                         )} */}
                         {currentQuestionType !== 'Text Input' && (
                             <View>
-                                <Text>Lựa chọn:</Text>
+                                <Text style={{ marginVertical: 8 }}>Thêm lựa chọn</Text>
                                 {newOptions.map((item, index) => (
-                                    <View key={index} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <View key={index} style={[styles.textInputStyle, { flexDirection: 'row', alignItems: 'center', borderWidth: 1, marginVertical: 3 }]}>
                                         <TextInput
-                                            style={{ flex: 1, marginRight: 10 }}
+                                            style={{ flex: 1, marginRight: 10, fontSize: 17 }}
                                             placeholder="Enter option..."
                                             value={item.question_option_value}
                                             onChangeText={(value) => handleOptionChange(index, value)}
                                         />
                                         <TouchableOpacity onPress={() => handleRemoveOption(index)}>
-                                            <Text style={{ color: 'red' }}>Remove</Text>
+                                            <VectorIcon
+                                                name="delete"
+                                                type="MaterialCommunityIcons"
+                                                size={22}>
+                                            </VectorIcon>
                                         </TouchableOpacity>
                                     </View>
                                 ))}
-                                <View style={{ flex: 1, flexDirection: 'row' }}>
-                                    <Button
-                                        title="Add Option"
-                                        buttonStyle={{
-                                            backgroundColor: 'rgba(78, 116, 289, 1)',
-                                            borderRadius: 3,
-                                            flex: 1,
-                                            marginRight: 10,
-                                        }}
-                                        onPress={handleAddOption}
-                                    />
-                                    <Button
-                                        title="Add Question"
-                                        buttonStyle={{
-                                            backgroundColor: 'rgba(78, 116, 289, 1)',
-                                            borderRadius: 3,
-                                            flex: 1,
-                                            marginLeft: 10,
-                                        }}
-                                        onPress={handleAddQuestion}
-                                    />
-                                </View>
+                                <Button
+                                    title="Add Option"
+                                    buttonStyle={{
+                                        backgroundColor: 'rgba(78, 116, 289, 1)',
+                                        borderRadius: 3,
+                                        flex: 1,
+                                        marginVertical: 10
+                                    }}
+                                    onPress={handleAddOption}
+                                />
                             </View>
                         )}
-                        <View>
-                            <Button
-                                title="Create Survey"
-                                icon={{
-                                    name: 'home',
-                                    type: 'font-awesome',
-                                    size: 15,
-                                    color: 'white',
-                                }}
-                                iconContainerStyle={{ marginRight: 10 }}
-                                titleStyle={{ fontWeight: '700' }}
-                                buttonStyle={{
-                                    backgroundColor: 'rgba(90, 154, 230, 1)',
-                                    borderColor: 'transparent',
-                                    borderWidth: 0,
-                                    borderRadius: 30,
-                                }}
-                                containerStyle={{
-                                    width: 200,
-                                    marginHorizontal: 50,
-                                    marginVertical: 10,
-                                }}
-                                onPress={createSurvey}
-                            />
+                        <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-around" }}>
+                            <View style={{ width: "46%" }}>
+                                <Button
+                                    title="Add Question"
+                                    icon={{
+                                        name: 'question-circle',
+                                        type: 'font-awesome',
+                                        size: 16,
+                                        color: 'white'
+                                    }}
+                                    iconContainerStyle={{ marginRight: 10 }}
+                                    titleStyle={{ fontWeight: '700' }}
+                                    buttonStyle={{
+                                        backgroundColor: 'rgba(90, 154, 230, 1)',
+                                        borderColor: 'transparent',
+                                        borderWidth: 0,
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        width: "100%",
+                                        // marginHorizontal: 10,
+                                        marginRight: 10,
+                                        marginVertical: 5,
+                                    }}
+                                    onPress={handleAddQuestion}
+                                />
+                            </View>
+                            <View style={{ width: "46%" }}>
+                                <Button
+                                    title="Create Survey"
+                                    icon={{
+                                        name: 'create',
+                                        type: 'ionicons',
+                                        size: 16,
+                                        color: 'white',
+                                    }}
+                                    iconContainerStyle={{ marginRight: 10 }}
+                                    titleStyle={{ fontWeight: '700' }}
+                                    buttonStyle={{
+                                        backgroundColor: 'rgba(90, 154, 230, 1)',
+                                        borderColor: 'transparent',
+                                        borderWidth: 0,
+                                        borderRadius: 30,
+                                    }}
+                                    containerStyle={{
+                                        width: "100%",
+                                        // marginLeft: 10,
+                                        // marginHorizontal: 10,
+                                        marginVertical: 5,
+                                    }}
+                                    onPress={createSurvey}
+                                />
+                            </View>
                         </View>
                     </View>
                 </View>

@@ -57,8 +57,7 @@ export default function App() {
                         name="search"
                         size={20}
                         backgroundColor="#fff"
-                        color="black"
-                      />
+                        color="black" />
                     </View>
                   ),
                 }}
