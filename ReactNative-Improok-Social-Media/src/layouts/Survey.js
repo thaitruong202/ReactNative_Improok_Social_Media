@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, ScrollView, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
+import { Text, View, ScrollView, StyleSheet, Image, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
 import { MyUserContext } from '../../App';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,10 +17,49 @@ const Survey = ({ navigation }) => {
     const [countPostComment, setCountPostComment] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);
 
-    const [postList, setPostList] = useState([]);
+    const [page, setPage] = useState(1);
+    const [loading, setLoading] = useState(false);
+
+    const [pageSize, setPageSize] = useState(null);
 
     const [openModal, setOpenModal] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
+
+    const getPostSurvey = async (pageNumber) => {
+        setLoading(true);
+        try {
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-post-surveys'](pageNumber))
+            console.log("-------------------");
+            setPostSurveyList((prevPostSurveyList) => [...prevPostSurveyList, ...res.data.results]);
+            setPage(pageNumber);
+            setPageSize(res.data.count);
+            console.log(res.data.results);
+        } catch (error) {
+            console.log(error)
+        }
+        setLoading(false);
+    }
+
+    const handleScroll = async (event) => {
+        event.persist();
+        const { layoutMeasurement, contentOffset, contentSize } = event?.nativeEvent || {};
+
+        const isEndOfScrollView = layoutMeasurement?.height + contentOffset?.y >= contentSize?.height;
+        if (!isEndOfScrollView) return;
+
+        try {
+            const hasMoreData = postSurveyList.length > 0 && postSurveyList.length < pageSize;
+
+            if (hasMoreData && !loading) {
+                const nextPage = page + 1;
+                getPostSurvey(nextPage);
+            }
+        } catch (error) {
+            // Xử lý lỗi ở đây
+            console.error(error);
+        }
+    };
 
     useEffect(() => {
         const getCurrentUser = async () => {
@@ -33,67 +72,25 @@ const Survey = ({ navigation }) => {
             }
         }
         getCurrentUser();
-        const getPostSurvey = async () => {
-            try {
-                const token = await AsyncStorage.getItem('token');
-                let res = await djangoAuthApi(token).get(endpoints['get-post-surveys'])
-                setPostSurveyList(res.data.results);
-                console.log(res.data.results);
-                console.log(res.data.results.length);
-                const postIds = res.data.results.map(post => post.post);
-                const posts = [];
-                for (let i = 0; i < res.data.results.length; i++) {
-                    let postId = postIds[0];
-                    let res = await djangoAuthApi(token).get(endpoints['get-post-by-post-id'](postId))
-                    let aPost = res.data;
-                    posts.push(aPost);
-                }
-                setPostList(posts);
-                console.log(postIds);
-                console.log(posts);
-                // const reactionCounts = [];
-                // const commentCounts = [];
-                // const reactionChecks = [];
-                // for (let i = 0; i < res.data.length; i++) {
-                //     let postId = postIds[i];
-                //     let reactionRes = await djangoAuthApi(token).get(endpoints['count-post-reaction'](postId));
-                //     let commentRes = await djangoAuthApi(token).get(endpoints['count-post-comment'](postId));
-                //     let resCheck = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
-                //     let reactCount = reactionRes.data
-                //     reactionCounts.push(reactCount);
-                //     let cmtCounts = commentRes.data
-                //     commentCounts.push(cmtCounts);
-                //     let reactedCheck = resCheck.data;
-                //     reactionChecks.push(reactedCheck);
-                // }
-                // setCountPostReaction(reactionCounts);
-                // setCountPostComment(commentCounts);
-                // setCheckReaction(reactionChecks);
-                // console.log(res.data);
-                // console.log(reactionCounts);
-                // console.log(reactionChecks);
-            } catch (error) {
-                console.log(error)
-            }
-        }
-        getPostSurvey();
+        getPostSurvey(1);
     }, [])
 
     return (
         <>
-            <ScrollView>
-                {postSurveyList.map((ph, index) => {
+            <ScrollView onScroll={handleScroll}
+                scrollEventThrottle={16}>
+                {postSurveyList.map((ps, index) => {
                     return (
                         <>
-                            <View key={ph.id}>
+                            <View key={ps.id}>
                                 <View style={styles.postHeaderContainer}>
                                     <View style={styles.postTop}>
                                         <View style={styles.row}>
-                                            <Image source={{ uri: userInfo?.avatar }} style={styles.userProfile} />
+                                            <Image source={{ uri: ps.post.account.avatar }} style={styles.userProfile} />
                                             <View style={styles.userSection}>
-                                                <Text style={styles.username}>{user.last_name} {user.first_name}</Text>
+                                                <Text style={styles.username}>{ps.post.account.user.last_name} {ps.post.account.user.first_name}</Text>
                                                 <View style={styles.row}>
-                                                    <Text style={styles.days}>{ph.created_date}</Text>
+                                                    <Text style={styles.days}>{ps.created_date}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -122,7 +119,7 @@ const Survey = ({ navigation }) => {
                                             </Modal>
                                         </View>
                                     </View>
-                                    <Text style={styles.caption}>{ph.post_content}</Text>
+                                    <Text style={styles.caption}>{ps.post_survey_title}</Text>
                                 </View>
                                 <View style={styles.postFooterContainer}>
                                     <View style={styles.footerReactionSec}>
@@ -138,7 +135,7 @@ const Survey = ({ navigation }) => {
                                         <View>
                                             {checkReaction[index] && checkReaction[index].reacted === true && checkReaction[index].data.length > 0 ? (
                                                 checkReaction[index].data[0].reaction_id === 1 ? (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                         <VectorIcon
                                                             name="like1"
                                                             type="AntDesign"
@@ -148,7 +145,7 @@ const Survey = ({ navigation }) => {
                                                         <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                     </TouchableOpacity>
                                                 ) : checkReaction[index].data[0].reaction_id === 2 ? (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                         <VectorIcon
                                                             name="heart"
                                                             type="AntDesign"
@@ -158,7 +155,7 @@ const Survey = ({ navigation }) => {
                                                         <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                     </TouchableOpacity>
                                                 ) : checkReaction[index].data[0].reaction_id === 3 ? (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                         <VectorIcon
                                                             name="laugh-squint"
                                                             type="FontAwesome5"
@@ -168,7 +165,7 @@ const Survey = ({ navigation }) => {
                                                         <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                     </TouchableOpacity>
                                                 ) : (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                         <VectorIcon
                                                             name="like2"
                                                             type="AntDesign"
@@ -179,7 +176,7 @@ const Survey = ({ navigation }) => {
                                                     </TouchableOpacity>
                                                 )
                                             ) : (
-                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
                                                     <VectorIcon
                                                         name="like2"
                                                         type="AntDesign"
@@ -204,7 +201,7 @@ const Survey = ({ navigation }) => {
                                             </Modal>
                                         </View>
                                         <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Bình luận', { postId: ph.id })}>
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Bình luận', { postId: ps.post.id })}>
                                                 <VectorIcon
                                                     name="chatbox-outline"
                                                     type="Ionicons"
@@ -214,15 +211,19 @@ const Survey = ({ navigation }) => {
                                                 <Text style={styles.reactionCount}>{countPostComment[index]}</Text>
                                             </TouchableOpacity>
                                         </View>
-                                        <View style={styles.row}>
-                                            <VectorIcon
-                                                name="arrow-redo-outline"
-                                                type="Ionicons"
-                                                size={25}
-                                                color="#3A3A3A"
-                                            />
-                                            {/* <Text style={styles.reactionCount}>Share</Text> */}
-                                        </View>
+                                        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Chi tiết khảo sát', {
+                                            postId: ps.post.id, firstName: ps.post.account.user.first_name,
+                                            lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar
+                                        })}>
+                                            <View>
+                                                <VectorIcon
+                                                    name="info-circle"
+                                                    type="FontAwesome5"
+                                                    size={25}
+                                                    color="#3A3A3A"
+                                                />
+                                            </View>
+                                        </TouchableOpacity>
                                     </View>
                                 </View>
                                 <View style={styles.divider}></View>
@@ -231,6 +232,7 @@ const Survey = ({ navigation }) => {
                     );
                 })}
             </ScrollView>
+            {loading && <ActivityIndicator size="large" color="#0000ff" />}
         </>
     );
 };

@@ -1,7 +1,8 @@
 import axios from "axios";
 
-// const DJANGO_SERVER = "http://192.168.2.123:8000"
-const DJANGO_SERVER = "http://172.16.17.226:8000"
+const DJANGO_SERVER = "http://192.168.2.123:8000"
+// const DJANGO_SERVER = "http://172.16.17.226:8000"
+// const DJANGO_SERVER = "http://192.168.2.17:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
@@ -31,8 +32,10 @@ export const endpoints = {
     "invitation-posts-accounts": (id) => `${DJANGO_SERVER}/post_invitations/${id}/add_or_update_accounts/`,
     "avatar-change": (id) => `${DJANGO_SERVER}/accounts/${id}/`,
     "cover-avatar-change": (id) => `${DJANGO_SERVER}/accounts/${id}/`,
-    "get-post-surveys": `${DJANGO_SERVER}/post_surveys/`,
-    "get-post-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/`
+    "get-post-surveys": (page) => `${DJANGO_SERVER}/post_surveys/?page=${page}`,
+    "get-post-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/`,
+    "get-post-survey-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/post_survey/`,
+    "answer-post-survey": `${DJANGO_SERVER}/posts/answer_post_survey/`
 }
 
 // let token;
