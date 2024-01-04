@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable, TouchableWithoutFeedback, FlatList, Image, Keyboard } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable, TouchableWithoutFeedback, FlatList, Image, Keyboard, Button } from 'react-native';
 import { MyUserContext } from '../../App';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,7 +32,6 @@ const InvitationPost = ({ navigation }) => {
     const [addExpanded, setAddExpanded] = useState(false);
 
     const [input, setInput] = useState('');
-    const [accountList, setAccountList] = useState([]);
 
     const [selectedMember, setSelectedMember] = useState([]);
 
@@ -46,7 +45,7 @@ const InvitationPost = ({ navigation }) => {
             <Pressable
                 onPress={() => {
                     if (!isMemberSelected) {
-                        const newMember = { id: item.id, fullName, avatar: item.avatar, email: item.user.email };
+                        const newMember = { id: item.user.id, fullName, avatar: item.avatar, email: item.user.email };
                         setSelectedMember([...selectedMember, newMember]);
                         setInput('');
                     }
@@ -71,20 +70,33 @@ const InvitationPost = ({ navigation }) => {
         );
     };
 
+    // const onChangeText = async (text) => {
+    //     setInput(text);
+    //     if (text.length > 0) {
+    //         const token = await AsyncStorage.getItem("token");
+    //         let res = await djangoAuthApi(token).get(endpoints['account']);
+    //         const accountData = res.data;
+    //         console.log(res.data);
+    //         setAccountList(accountData);
+    //         const filteredList = accountData.filter((item) => {
+    //             const fullName = `${item.user.first_name} ${item.user.last_name}`;
+    //             return fullName.toLowerCase().includes(text.toLowerCase());
+    //         });
+    //         setFilteredAccountList(filteredList);
+    //         console.log(filteredList);
+    //     } else {
+    //         setFilteredAccountList([]);
+    //     }
+    // };
+
     const onChangeText = async (text) => {
         setInput(text);
         if (text.length > 0) {
             const token = await AsyncStorage.getItem("token");
-            let res = await djangoAuthApi(token).get(endpoints['account']);
-            const accountData = res.data;
+            let res = await djangoAuthApi(token).get(endpoints['search-user'](text));
             console.log(res.data);
-            setAccountList(accountData);
-            const filteredList = accountData.filter((item) => {
-                const fullName = `${item.user.first_name} ${item.user.last_name}`;
-                return fullName.toLowerCase().includes(text.toLowerCase());
-            });
-            setFilteredAccountList(filteredList);
-            console.log(filteredList);
+            setFilteredAccountList(res.data);
+            //console.log(filteredList);
         } else {
             setFilteredAccountList([]);
         }
@@ -204,13 +216,15 @@ const InvitationPost = ({ navigation }) => {
                 let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](id));
                 memberAccountId.push(res.data.id);
             }
+            console.log(memberAccountId);
             const postInvitationId = res.data.id;
             let member = await djangoAuthApi(token).post(endpoints['invitation-posts-accounts'](postInvitationId), {
                 "list_account_id": memberAccountId
             })
+            console.log(member.status);
             const recipientList = selectedMember.map(member => member.email);
             let mail = await djangoAuthApi(token).post(endpoints['send-email'], {
-                "subject": "Thư mời đến sự kiện",
+                "subject": "Thư mời đến sự kiện" + " " + eventName,
                 "message": "Mời các bạn đến dự sự kiện của trường nha",
                 "recipient_list": recipientList
             })
@@ -348,7 +362,7 @@ const InvitationPost = ({ navigation }) => {
                                         input.length > 0 ? <FlatList
                                             data={filteredAccountList}
                                             renderItem={renderItem}
-                                            keyExtractor={item => item.id.toString()}
+                                            keyExtractor={item => item.id}
                                             nestedScrollEnabled={true}
                                             scrollEnabled={false}
                                             style={{

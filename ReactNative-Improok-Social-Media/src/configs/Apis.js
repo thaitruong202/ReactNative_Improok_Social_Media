@@ -35,7 +35,8 @@ export const endpoints = {
     "get-post-surveys": (page) => `${DJANGO_SERVER}/post_surveys/?page=${page}`,
     "get-post-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/`,
     "get-post-survey-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/post_survey/`,
-    "answer-post-survey": `${DJANGO_SERVER}/posts/answer_post_survey/`
+    "answer-post-survey": `${DJANGO_SERVER}/posts/answer_post_survey/`,
+    "search-user": (name) => `${DJANGO_SERVER}/users/search_user/?name=${name}`
 }
 
 // let token;

@@ -57,7 +57,7 @@ const SurveyDetail = ({ navigation }) => {
                 "post_survey": postSurveyDetail.id,
                 "survey_question_list": surveyAnswers
             })
-            alert("Câu trả lời của bạn đã được ghi nhận")
+            alert("Câu trả lời của bạn đã được ghi nhận");
             navigation.goBack();
         } catch (error) {
             console.log(error);
