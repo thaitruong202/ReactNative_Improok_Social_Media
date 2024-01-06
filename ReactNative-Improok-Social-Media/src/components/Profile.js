@@ -91,7 +91,6 @@ const Profile = ({ navigation }) => {
             const localUri = selectedImages.uri;
             console.log('Đường dẫn:', localUri);
             setImage(localUri);
-
             setShowModal(true);
         }
     }
@@ -109,9 +108,29 @@ const Profile = ({ navigation }) => {
                 'Content-Type': 'multipart/form-data',
             }
         })
+        console.log("Thông tin", image, filename, type);
         console.log("Cái gì dậy?", res.data, res.status);
         setUserInfo(prevState => ({ ...prevState, avatar: image }));
         getCurrentUser();
+        setShowModal(false);
+    }
+
+    const saveCoverAvatar = async () => {
+        const token = await AsyncStorage.getItem('token');
+        let form = new FormData();
+        const filename = image.split('/').pop();
+        const match = /\.(\w+)$/.exec(filename);
+        const type = match ? `image/${match[1]}` : 'image';
+        form.append('cover_avatar', { uri: image, name: filename, type });
+        let res = await djangoAuthApi(token).patch(endpoints['cover-avatar-change'](userInfo?.id), form, {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        })
+        console.log("Thành công nha", res.data, res.status);
+        setUserInfo(prevState => ({ ...prevState, cover_avatar: image }));
+        getCurrentUser();
+        setShowModal(false);
     }
 
     const cancelAvatar = () => {
@@ -124,15 +143,17 @@ const Profile = ({ navigation }) => {
             <ScrollView>
                 <View>
                     <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
-                    <View style={styles.avatarChange}>
-                        <TouchableOpacity>
-                            <VectorIcon
-                                name="camera"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </TouchableOpacity>
-                    </View>
+                    <TouchableOpacity style={styles.avatarChange} onPress={() => changeAvatar()}>
+                        <View>
+                            <TouchableOpacity>
+                                <VectorIcon
+                                    name="camera"
+                                    type="FontAwesome5"
+                                    size={20}
+                                ></VectorIcon>
+                            </TouchableOpacity>
+                        </View>
+                    </TouchableOpacity>
                 </View>
                 <View style={styles.avatarContainer}>
                     <Image style={styles.avatar} source={{ uri: userInfo?.avatar }} />
@@ -220,6 +241,15 @@ const Profile = ({ navigation }) => {
                     <Image source={{ uri: image }} style={styles.modalImage} />
                     <View style={styles.modalButtons}>
                         <Button title="Lưu" onPress={saveAvatar} />
+                        <Button title="Hủy" onPress={cancelAvatar} />
+                    </View>
+                </View>
+            </Modal>
+            <Modal visible={showModal} animationType="slide">
+                <View style={styles.modalContainer}>
+                    <Image source={{ uri: image }} style={styles.modalImage} />
+                    <View style={styles.modalButtons}>
+                        <Button title="Lưu" onPress={saveCoverAvatar} />
                         <Button title="Hủy" onPress={cancelAvatar} />
                     </View>
                 </View>

@@ -15,6 +15,10 @@ const StatusPost = ({ navigation }) => {
     const [isPosting, setIsPosting] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
 
+    // const [image, setImage] = useState();
+
+    // const [imageUri, setImageUri] = useState([]);
+
     const getCurrentUser = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -55,7 +59,6 @@ const StatusPost = ({ navigation }) => {
         const options = {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsMultipleSelection: true,
-            quality: 1
         };
 
         const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -64,12 +67,24 @@ const StatusPost = ({ navigation }) => {
             console.log('User canceled image picker');
         } else {
             const newSelectedImages = result.assets;
+            // console.log("Day la var cua Tuan: " + result.assets);
+            // for (let i = 0; i < result.assets.length; i++) {
+            //     console.log('Trinh Duy' + result.assets.length)
+            //     console.log("Day la URI ne", result.assets[i].uri);
+            //     setImageUri(prevImageUri => [...prevImageUri, result.assets[i].uri])
+            // }
+            // const localUri = newSelectedImages.uri;
+            // console.log('Đường dẫn:', localUri);
+            // setImage(localUri);
             setSelectedImages(prevSelectedImages => [...prevSelectedImages, ...newSelectedImages]);
+            // setImageUri(prevImageUri => [...prevImageUri, ...newSelectedImages.uri])
+            // console.log("Day la mang imageUri ne", imageUri);
         }
     };
 
     useEffect(() => {
         console.log("Mảng đã chọn", selectedImages);
+        // console.log("Mang URI", imageUri);
     }, [selectedImages]);
 
     const createImagePost = async () => {
@@ -81,31 +96,44 @@ const StatusPost = ({ navigation }) => {
             })
             const postId = res.data.id
 
+            // let form = new FormData();
+            // const filename = image.split('/').pop();
+            // const match = /\.(\w+)$/.exec(filename);
+            // const type = match ? `image/${match[1]}` : 'image';
+            // form.append('post_image_url', { uri: image, name: filename, type });
+            // form.append('post', postId);
+            // let img = await djangoAuthApi(token).post(endpoints['create-post-images'], form, {
+            //     headers: {
+            //         'Content-Type': 'multipart/form-data'
+            //     }
+            // })
+
+            // console.log('Thông tin', image, filename, type);
+            // console.log(img.data);
+
             for (let i = 0; i < selectedImages.length; i++) {
-                const image = selectedImages[i];
-                console.log(binaryData);
+                const image = selectedImages[i].uri;
                 let form = new FormData();
-                form.append('post_images_url', {
-                    uri: image.uri,
-                    type: 'image/jpg',
-                    name: 'picture.jpg'
-                });
+                const filename = image.split('/').pop();
+                const match = /\.(\w+)$/.exec(filename);
+                const type = match ? `image/${match[1]}` : 'image';
+                form.append('post_images_url', { uri: image, name: filename, type });
                 form.append('post', postId);
-                let img = await axios.post("http://192.168.1.134:8000/post_images/", form, {
+                let img = await djangoAuthApi(token).post(endpoints['create-post-images'], form, {
                     headers: {
-                        'Authorization': "Bearer" + " " + token,
-                        'Accept': 'application/json',
                         'Content-Type': 'multipart/form-data',
                     }
                 })
-                console.log('Đường dẫn', image.uri);
+
+                console.log('Thông tin', image, filename, type);
                 console.log(postId);
-                console.log('Mảng đã gửi', selectedImages[i]);
+                console.log('Mảng đã gửi', img.data, img.status);
             }
-            console.log(img.data);
+
             console.log(res.data, "Đăng bài thành công!")
             navigation.goBack();
-        } catch (error) {
+        }
+        catch (error) {
             console.log(error)
         }
     }
