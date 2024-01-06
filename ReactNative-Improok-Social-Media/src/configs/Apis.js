@@ -6,6 +6,8 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://10.17.65.36:8000"
 const DJANGO_SERVER = "http://192.168.1.28:8000"
 
+// const DJANGO_SERVER = "http://192.168.1.27:8000"
+
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
     "account": `${DJANGO_SERVER}/accounts/`,
@@ -39,7 +41,8 @@ export const endpoints = {
     "get-post-survey-by-post-id": (id) => `${DJANGO_SERVER}/posts/${id}/post_survey/`,
     "answer-post-survey": `${DJANGO_SERVER}/posts/answer_post_survey/`,
     "search-user": (name) => `${DJANGO_SERVER}/users/search_user/?name=${name}`,
-    "create-post-images": `${DJANGO_SERVER}/post_images/`
+    "create-post-images": `${DJANGO_SERVER}/post_images/`,
+    "send-multi-images": `${DJANGO_SERVER}/post_images/test_mutil_images/`
 }
 
 // let token;

@@ -5,11 +5,16 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MyUserContext } from '../../App';
 import Apis, { djangoAuthApi, endpoints } from "../configs/Apis";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 const Login = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+
+    const [currentUser, setCurrentUser] = useState();
+
+    const [isAccountPending, setIsAccountPending] = useState(false);
 
     const login = async () => {
         try {
@@ -34,25 +39,39 @@ const Login = ({ navigation }) => {
             });
             await AsyncStorage.setItem('user', JSON.stringify(data));
             console.log("Lưu current user")
-            console.log(data.data)
+            console.log(data.data);
+            setCurrentUser(data.data);
 
-            dispatch({
-                "type": "login",
-                "payload": data.data
-            });
-
-            if (res.status === 200) {
-                console.log('Đăng nhập thành công');
-                navigation.navigate('Trang chủ');
-                setUsername('');
-                setPassword('');
+            if (data.data.confirm_status === 3) {
+                // alert("Tài khoản của bạn chưa được xét duyệt!. Vui lòng thử lại sau");
+                Toast.show({
+                    type: 'success',
+                    text1: 'Xin lỗi vui lòng thử lại sau'
+                });
+                return;
             } else {
-                console.log('Đăng nhập thất bại');
+                dispatch({
+                    "type": "login",
+                    "payload": data.data
+                });
+
+                if (res.status === 200) {
+                    console.log('Đăng nhập thành công');
+                    navigation.navigate('Trang chủ');
+                    setUsername('');
+                    setPassword('');
+                } else {
+                    console.log('Đăng nhập thất bại');
+                }
             }
         } catch (error) {
             console.log('Lỗi mạng', error);
         }
     };
+
+    // if (currentUser?.confirm_status === 3) {
+    //     alert("Tài khoản của bạn chưa được xét duyệt!. Vui lòng thử lại sau");
+    // }
 
     return (
         <Fragment>

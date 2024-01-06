@@ -15,6 +15,8 @@ const StatusPost = ({ navigation }) => {
     const [isPosting, setIsPosting] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
 
+    // const [sendImg, setSendImg] = useState([]);
+
     // const [image, setImage] = useState();
 
     // const [imageUri, setImageUri] = useState([]);
@@ -31,7 +33,7 @@ const StatusPost = ({ navigation }) => {
 
     useEffect(() => {
         getCurrentUser();
-    }, [])
+    }, [user.id])
 
     const createPost = async () => {
         try {
@@ -44,7 +46,6 @@ const StatusPost = ({ navigation }) => {
             navigation.goBack();
         } catch (error) {
             console.log(error)
-
         }
     }
 
@@ -111,24 +112,45 @@ const StatusPost = ({ navigation }) => {
             // console.log('Thông tin', image, filename, type);
             // console.log(img.data);
 
+            // for (let i = 0; i < selectedImages.length; i++) {
+            //     const image = selectedImages[i].uri;
+            //     let form = new FormData();
+            //     const filename = image.split('/').pop();
+            //     const match = /\.(\w+)$/.exec(filename);
+            //     const type = match ? `image/${match[1]}` : 'image';
+            //     form.append('post_images_url', { uri: image, name: filename, type });
+            //     form.append('post', postId);
+            //     let img = await djangoAuthApi(token).post(endpoints['create-post-images'], form, {
+            //         headers: {
+            //             'Content-Type': 'multipart/form-data',
+            //         }
+            //     })
+
+            //     console.log('Thông tin', image, filename, type);
+            //     console.log(postId);
+            //     console.log('Mảng đã gửi', img.data, img.status);
+            // }
+
+            let form = new FormData();
+
             for (let i = 0; i < selectedImages.length; i++) {
                 const image = selectedImages[i].uri;
-                let form = new FormData();
                 const filename = image.split('/').pop();
                 const match = /\.(\w+)$/.exec(filename);
                 const type = match ? `image/${match[1]}` : 'image';
-                form.append('post_images_url', { uri: image, name: filename, type });
-                form.append('post', postId);
-                let img = await djangoAuthApi(token).post(endpoints['create-post-images'], form, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    }
-                })
-
-                console.log('Thông tin', image, filename, type);
-                console.log(postId);
-                console.log('Mảng đã gửi', img.data, img.status);
+                form.append('multi_images', { uri: image, name: filename, type });
+                // form.append('post', postId);
             }
+
+            let img = await djangoAuthApi(token).post(endpoints['send-multi-images'], form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+
+            // console.log('Thông tin', image, filename, type);
+            // console.log(postId);
+            // console.log('Mảng đã gửi', img.data, img.status);
 
             console.log(res.data, "Đăng bài thành công!")
             navigation.goBack();
