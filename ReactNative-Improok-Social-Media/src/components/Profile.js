@@ -78,8 +78,7 @@ const Profile = ({ navigation }) => {
         }
 
         const options = {
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsMultipleSelection: true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images
         };
 
         const result = await ImagePicker.launchImageLibraryAsync(options);

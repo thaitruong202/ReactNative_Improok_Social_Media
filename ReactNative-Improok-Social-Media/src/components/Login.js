@@ -46,7 +46,8 @@ const Login = ({ navigation }) => {
                 // alert("Tài khoản của bạn chưa được xét duyệt!. Vui lòng thử lại sau");
                 Toast.show({
                     type: 'success',
-                    text1: 'Xin lỗi vui lòng thử lại sau'
+                    text1: data.data.last_name + " " + data.data.first_name + " " + "đã bị ban acc!",
+                    text2: "Đóng 100k để mở"
                 });
                 return;
             } else {
@@ -61,10 +62,18 @@ const Login = ({ navigation }) => {
                     setUsername('');
                     setPassword('');
                 } else {
+                    Toast.show({
+                        type: "error",
+                        text1: "Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu!"
+                    })
                     console.log('Đăng nhập thất bại');
                 }
             }
         } catch (error) {
+            Toast.show({
+                type: "error",
+                text1: "Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu!"
+            })
             console.log('Lỗi mạng', error);
         }
     };

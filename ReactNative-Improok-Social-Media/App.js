@@ -27,6 +27,8 @@ import Invitation from './src/layouts/Invitation';
 import SurveyDetail from './src/layouts/SurveyDetail';
 import { NativeBaseProvider } from 'native-base';
 import Toast from 'react-native-toast-message';
+import PostManagement from './src/layouts/PostManagement';
+import SurveyStats from './src/layouts/SurveyStats';
 // import { NativeBaseConfigProvider } from 'native-base/lib/typescript/core/NativeBaseContext';
 
 export const MyUserContext = createContext();
@@ -83,6 +85,8 @@ export default function App() {
                 <Stack.Screen name="Khảo sát" component={Survey} />
                 <Stack.Screen name="Sự kiện" component={Invitation} />
                 <Stack.Screen name="Chi tiết khảo sát" component={SurveyDetail} />
+                <Stack.Screen name="Quản lý bài đăng" component={PostManagement} />
+                <Stack.Screen name="Thống kê khảo sát" component={SurveyStats} />
               </Stack.Navigator>
               <Toast />
             </NavigationContainer>

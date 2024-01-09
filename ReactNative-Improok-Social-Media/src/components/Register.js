@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react";
-import { Image, StyleSheet, TextInput, TouchableOpacity, Button, Text, View } from "react-native";
+import { Image, StyleSheet, TextInput, TouchableOpacity, Button, Text, View, ScrollView } from "react-native";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Apis, { endpoints } from "../configs/Apis";
+import Toast from "react-native-toast-message";
 
 const Register = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -82,77 +83,89 @@ const Register = ({ navigation }) => {
                 console.log(error)
             }
         }
-        if (password === confirmPassword)
+        if (password === confirmPassword) {
             process();
+            navigation.goBack();
+            Toast.show({
+                type: "info",
+                text1: "Đăng ký thành công. Vui lòng chờ xét duyệt!"
+            })
+        }
         else
-            console.log("Mật khẩu không khớp!")
+            Toast.show({
+                type: "warning",
+                text1: "Mật khẩu không khớp"
+            })
+        console.log("Mật khẩu không khớp!");
     }
 
     return (
         <Fragment>
-            <View style={styles.registerContainer}>
-                <Image source={require('../images/IMPROOK.png')} style={styles.improokLogo} />
-                <Text style={styles.text}>TẠO TÀI KHOẢN MỚI</Text>
-                <View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={username} onChangeText={(text) => setUsername(text)} placeholder="Tên người dùng" numberOfLines={1} />
-                    </View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={lastName} onChangeText={(text) => setLastName(text)} placeholder="Họ" numberOfLines={1} />
-                    </View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={firstName} onChangeText={(text) => setFirstName(text)} placeholder="Tên" numberOfLines={1} />
-                    </View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={email} onChangeText={(text) => setEmail(text)} placeholder="Địa chỉ email" numberOfLines={1} />
-                    </View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={alumniCode} onChangeText={(text) => setAlumniCode(text)} placeholder="Mã số sinh viên" numberOfLines={1} />
-                    </View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={password} onChangeText={(text) => setPassword(text)} placeholder="Mật khẩu" numberOfLines={1} />
-                    </View>
-                    <View style={styles.inputView}>
-                        <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
-                        <TextInput style={styles.input} value={confirmPassword} onChangeText={(text) => setConfirmPassword(text)} placeholder="Xác nhận mật khẩu" numberOfLines={1} />
-                    </View>
+            <ScrollView>
+                <View style={styles.registerContainer}>
+                    <Image source={require('../images/IMPROOK.png')} style={styles.improokLogo} />
+                    <Text style={styles.text}>TẠO TÀI KHOẢN MỚI</Text>
                     <View>
-                        <TouchableOpacity style={styles.buttonRegister} onPress={(evt) => createAlumniAccount(evt)}>
-                            <Text style={styles.buttonRegisterText}>Đăng ký</Text>
-                        </TouchableOpacity>
-                    </View>
-                    <View style={styles.textPrivate}>
-                        <Text style={styles.colorTextPrivate}>
-                            Bằng việc đăng ký, bạn đã đồng ý với IMPROOK về{' '}
-                        </Text>
-                        <TouchableOpacity onPress={() => alert('Điều khoản dịch vụ')}>
-                            <Text style={[styles.colorTextPrivate, { color: '#e88832' }]}>
-                                Điều khoản dịch vụ
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={username} onChangeText={(text) => setUsername(text)} placeholder="Tên người dùng" numberOfLines={1} />
+                        </View>
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={lastName} onChangeText={(text) => setLastName(text)} placeholder="Họ" numberOfLines={1} />
+                        </View>
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={firstName} onChangeText={(text) => setFirstName(text)} placeholder="Tên" numberOfLines={1} />
+                        </View>
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="alternate-email" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={email} onChangeText={(text) => setEmail(text)} placeholder="Địa chỉ email" numberOfLines={1} />
+                        </View>
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={alumniCode} onChangeText={(text) => setAlumniCode(text)} placeholder="Mã số sinh viên" numberOfLines={1} />
+                        </View>
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={password} onChangeText={(text) => setPassword(text)} placeholder="Mật khẩu" numberOfLines={1} secureTextEntry />
+                        </View>
+                        <View style={styles.inputView}>
+                            <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={confirmPassword} onChangeText={(text) => setConfirmPassword(text)} placeholder="Xác nhận mật khẩu" numberOfLines={1} secureTextEntry />
+                        </View>
+                        <View>
+                            <TouchableOpacity style={styles.buttonRegister} onPress={(evt) => createAlumniAccount(evt)}>
+                                <Text style={styles.buttonRegisterText}>Đăng ký</Text>
+                            </TouchableOpacity>
+                        </View>
+                        <View style={styles.textPrivate}>
+                            <Text style={styles.colorTextPrivate}>
+                                Bằng việc đăng ký, bạn đã đồng ý với IMPROOK về{' '}
                             </Text>
+                            <TouchableOpacity onPress={() => alert('Điều khoản dịch vụ')}>
+                                <Text style={[styles.colorTextPrivate, { color: '#e88832' }]}>
+                                    Điều khoản dịch vụ
+                                </Text>
+                            </TouchableOpacity>
+                            <Text style={styles.colorTextPrivate}> & </Text>
+                            <TouchableOpacity onPress={() => alert('Chính sách bảo mật')}>
+                                <Text style={[styles.colorTextPrivate, { color: '#e88832' }]}>
+                                    Chính sách bảo mật
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                        <TouchableOpacity style={styles.registered}>
+                            <Text style={styles.registeredText}>Bạn đã có tài khoản ư?</Text>
                         </TouchableOpacity>
-                        <Text style={styles.colorTextPrivate}> & </Text>
-                        <TouchableOpacity onPress={() => alert('Chính sách bảo mật')}>
-                            <Text style={[styles.colorTextPrivate, { color: '#e88832' }]}>
-                                Chính sách bảo mật
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity style={styles.registered}>
-                        <Text style={styles.registeredText}>Bạn đã có tài khoản ư?</Text>
-                    </TouchableOpacity>
-                    <View>
-                        <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('Đăng nhập')}>
-                            <Text style={styles.buttonLoginText}>Đăng nhập ngay</Text>
-                        </TouchableOpacity>
+                        <View>
+                            <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('Đăng nhập')}>
+                                <Text style={styles.buttonLoginText}>Đăng nhập ngay</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
-            </View>
+            </ScrollView>
         </Fragment>
     )
 }
@@ -179,7 +192,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
         marginBottom: 10,
         width: '100%',
-        height: windowHeight / 21,
+        height: windowHeight / 17,
         borderColor: '#ccc',
         borderRadius: 15,
         borderWidth: 1,
@@ -202,7 +215,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRightColor: '#ccc',
         borderRightWidth: 1,
-        width: 50,
+        width: 50
     },
     text: {
         fontSize: 28,
@@ -220,14 +233,14 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     buttonRegisterText: {
-        fontSize: 18,
+        fontSize: 17,
         fontWeight: 'bold',
         color: '#ffffff',
     },
     buttonRegister: {
         marginTop: 10,
         width: '100%',
-        height: windowHeight / 20,
+        height: windowHeight / 16,
         backgroundColor: '#2e64e5',
         padding: 10,
         alignItems: 'center',
@@ -237,7 +250,7 @@ const styles = StyleSheet.create({
     buttonLogin: {
         marginBottom: 20,
         width: '100%',
-        height: windowHeight / 20,
+        height: windowHeight / 16,
         backgroundColor: 'white',
         padding: 10,
         alignItems: 'center',
@@ -247,7 +260,7 @@ const styles = StyleSheet.create({
         borderColor: '#2e64e5'
     },
     buttonLoginText: {
-        fontSize: 18,
+        fontSize: 17,
         fontWeight: '500',
         color: '#2e64e5',
         textAlign: 'center'

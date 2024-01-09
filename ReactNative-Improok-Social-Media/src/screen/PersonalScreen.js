@@ -277,6 +277,16 @@ const PersonalScreen = ({ navigation }) => {
                                             <Text style={styles.collapsibleSubItemBodyText}>Quản lý nhóm</Text>
                                         </TouchableOpacity>
                                     </View>
+                                    <View>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý bài đăng")}>
+                                            <VectorIcon
+                                                name="post"
+                                                type="MaterialCommunityIcons"
+                                                size={19}
+                                            />
+                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý bài đăng</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </Collapsible>
                             </View>
                             <View style={styles.divider}></View>

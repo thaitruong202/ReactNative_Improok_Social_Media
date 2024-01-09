@@ -38,14 +38,14 @@ const InvitationPost = ({ navigation }) => {
     const [filteredAccountList, setFilteredAccountList] = useState([]);
 
     const renderItem = ({ item }) => {
-        const fullName = `${item.user.last_name} ${item.user.first_name}`;
+        const fullName = `${item.user?.last_name} ${item.user?.first_name}`;
         const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName);
 
         return (
             <Pressable
                 onPress={() => {
                     if (!isMemberSelected) {
-                        const newMember = { id: item.user.id, fullName, avatar: item.avatar, email: item.user.email };
+                        const newMember = { id: item.user?.id, fullName, avatar: item.avatar, email: item.user?.email };
                         setSelectedMember([...selectedMember, newMember]);
                         setInput('');
                     }
@@ -93,8 +93,9 @@ const InvitationPost = ({ navigation }) => {
         setInput(text);
         if (text.length > 0) {
             const token = await AsyncStorage.getItem("token");
-            let res = await djangoAuthApi(token).get(endpoints['search-user'](text));
-            console.log(res.data);
+            //let res = await djangoAuthApi(token).get(endpoints['search-user'](text));
+            let res = await djangoAuthApi(token).get(endpoints['cache-user'](text));
+            console.log("Đây là cache API", res.data);
             setFilteredAccountList(res.data);
             //console.log(filteredList);
         } else {
@@ -242,7 +243,7 @@ const InvitationPost = ({ navigation }) => {
                 <View style={styles.profileContainer}>
                     <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
                     <View style={styles.inputBox}>
-                        <Text style={styles.inputStyle}>{user.first_name} {user.last_name}</Text>
+                        <Text style={styles.inputStyle}>{user?.first_name} {user?.last_name}</Text>
                         <Text style={{ fontSize: 14, marginTop: 3 }}>Host - Administrator</Text>
                     </View>
                 </View>

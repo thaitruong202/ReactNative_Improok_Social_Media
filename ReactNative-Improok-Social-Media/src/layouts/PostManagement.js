@@ -1,15 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, ScrollView, StyleSheet, Image, TouchableOpacity, Modal, ActivityIndicator } from 'react-native';
-import { MyUserContext } from '../../App';
-import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { windowHeight, windowWidth } from '../utils/Dimensions';
+import React, { useContext, useEffect, useState } from 'react';
+import { ActivityIndicator, Image, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { djangoAuthApi, endpoints } from '../configs/Apis';
+import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
-import Like from '../images/like.jpeg';
-import Wow from '../images/wow.jpeg';
-import Love from '../images/love.jpeg';
+import { windowHeight, windowWidth } from '../utils/Dimensions';
 
-const Survey = ({ navigation }) => {
+const PostManagement = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [userInfo, setUserInfo] = useState();
     const [postSurveyList, setPostSurveyList] = useState([]);
@@ -56,6 +53,7 @@ const Survey = ({ navigation }) => {
                 getPostSurvey(nextPage);
             }
         } catch (error) {
+            // Xử lý lỗi ở đây
             console.error(error);
         }
     };
@@ -73,7 +71,6 @@ const Survey = ({ navigation }) => {
         getCurrentUser();
         getPostSurvey(1);
     }, [])
-
     return (
         <>
             <ScrollView onScroll={handleScroll}
@@ -121,93 +118,18 @@ const Survey = ({ navigation }) => {
                                     <Text style={styles.caption}>{ps.post_survey_title}</Text>
                                 </View>
                                 <View style={styles.postFooterContainer}>
-                                    <View style={styles.footerReactionSec}>
-                                        {countPostReaction[index] > 0 && (
-                                            <View style={styles.row}>
-                                                {countPostReaction[index] > 0 && <Image source={Like} style={styles.reactionIcon} />}
-                                                {countPostReaction[index] > 0 && <Image source={Wow} style={styles.reactionIcon} />}
-                                                {countPostReaction[index] > 0 && <Image source={Love} style={styles.reactionIcon} />}
-                                            </View>
-                                        )}
-                                    </View>
                                     <View style={styles.userActionSec}>
                                         <View>
-                                            {checkReaction[index] && checkReaction[index].reacted === true && checkReaction[index].data.length > 0 ? (
-                                                checkReaction[index].data[0].reaction_id === 1 ? (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
-                                                        <VectorIcon
-                                                            name="like1"
-                                                            type="AntDesign"
-                                                            size={25}
-                                                            color="blue"
-                                                        />
-                                                        <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
-                                                    </TouchableOpacity>
-                                                ) : checkReaction[index].data[0].reaction_id === 2 ? (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
-                                                        <VectorIcon
-                                                            name="heart"
-                                                            type="AntDesign"
-                                                            size={25}
-                                                            color="red"
-                                                        />
-                                                        <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
-                                                    </TouchableOpacity>
-                                                ) : checkReaction[index].data[0].reaction_id === 3 ? (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
-                                                        <VectorIcon
-                                                            name="laugh-squint"
-                                                            type="FontAwesome5"
-                                                            size={25}
-                                                            color="#f7a339"
-                                                        />
-                                                        <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
-                                                    </TouchableOpacity>
-                                                ) : (
-                                                    <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
-                                                        <VectorIcon
-                                                            name="like2"
-                                                            type="AntDesign"
-                                                            size={25}
-                                                            color="#3A3A3A"
-                                                        />
-                                                        <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
-                                                    </TouchableOpacity>
-                                                )
-                                            ) : (
-                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ps.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ps.id); setIsPostIdUpdated(true); }} style={styles.row}>
-                                                    <VectorIcon
-                                                        name="like2"
-                                                        type="AntDesign"
-                                                        size={25}
-                                                        color="#3A3A3A"
-                                                    />
-                                                    <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
-                                                </TouchableOpacity>
-                                            )}
-                                            < Modal visible={isModalVisible} onBackdropPress={() => setModalVisible(false)} style={styles.modalReaction}>
-                                                <View style={styles.modalContainer}>
-                                                    <TouchableOpacity>
-                                                        <Image source={Like} style={styles.reactionAction} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity>
-                                                        <Image source={Love} style={styles.reactionAction} />
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity>
-                                                        <Image source={Wow} style={styles.reactionAction} />
-                                                    </TouchableOpacity>
-                                                </View>
-                                            </Modal>
-                                        </View>
-                                        <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Bình luận', { postId: ps.post.id })}>
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Thống kê khảo sát', {
+                                                postId: ps.post.id, firstName: ps.post.account.user.first_name,
+                                                lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar
+                                            })}>
                                                 <VectorIcon
-                                                    name="chatbox-outline"
+                                                    name="stats-chart"
                                                     type="Ionicons"
                                                     size={25}
                                                     color="#3A3A3A"
                                                 />
-                                                <Text style={styles.reactionCount}>{countPostComment[index]}</Text>
                                             </TouchableOpacity>
                                         </View>
                                         <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Chi tiết khảo sát', {
@@ -340,4 +262,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Survey;
+export default PostManagement;

@@ -141,6 +141,7 @@ const StatusPost = ({ navigation }) => {
                 form.append('multi_images', { uri: image, name: filename, type });
                 // form.append('post', postId);
             }
+            form.append('post', postId);
 
             let img = await djangoAuthApi(token).post(endpoints['send-multi-images'], form, {
                 headers: {
