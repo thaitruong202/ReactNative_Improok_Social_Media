@@ -1,6 +1,6 @@
 import axios from "axios";
 
-// const DJANGO_SERVER = "http://192.168.2.123:8000"
+const DJANGO_SERVER = "http://192.168.2.123:8000"
 // const DJANGO_SERVER = "http://172.16.17.226:8000"
 // const DJANGO_SERVER = "http://192.168.2.17:8000"
 // const DJANGO_SERVER = "http://10.17.65.36:8000"
@@ -12,7 +12,7 @@ import axios from "axios";
 
 // const DJANGO_SERVER = "http://10.17.50.108:8000"
 
-const DJANGO_SERVER = "http://192.168.5.13:8000"
+// const DJANGO_SERVER = "http://192.168.5.13:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
