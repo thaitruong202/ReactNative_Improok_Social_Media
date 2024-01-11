@@ -291,7 +291,7 @@ const InvitationPost = ({ navigation }) => {
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
                         <TouchableOpacity onPress={() => showEndMode("date")}>
-                            <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
+                            <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedEndDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
                             {showEndDatePicker && (
                                 <DateTimePicker
                                     value={selectedEndDate}

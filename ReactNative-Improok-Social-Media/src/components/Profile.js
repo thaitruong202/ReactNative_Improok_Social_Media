@@ -15,8 +15,6 @@ const Profile = ({ navigation }) => {
 
     const [image, setImage] = useState();
 
-    const [showModal, setShowModal] = useState(false);
-
     const getCurrentUser = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
@@ -78,7 +76,9 @@ const Profile = ({ navigation }) => {
         }
 
         const options = {
-            mediaTypes: ImagePicker.MediaTypeOptions.Images
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1]
         };
 
         const result = await ImagePicker.launchImageLibraryAsync(options);
@@ -90,51 +90,63 @@ const Profile = ({ navigation }) => {
             const localUri = selectedImages.uri;
             console.log('Đường dẫn:', localUri);
             setImage(localUri);
-            setShowModal(true);
+            const token = await AsyncStorage.getItem('token');
+            let form = new FormData();
+            const filename = localUri.split('/').pop();
+            const match = /\.(\w+)$/.exec(filename);
+            const type = match ? `image/${match[1]}` : 'image';
+            form.append('avatar', { uri: localUri, name: filename, type });
+            let res = await djangoAuthApi(token).patch(endpoints['avatar-change'](userInfo?.id), form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+            console.log("Thông tin", localUri, filename, type);
+            console.log("Cái gì dậy?", res.data, res.status);
+            // setUserInfo(prevState => ({ ...prevState, avatar: image }));
+            getCurrentUser();
         }
     }
 
-    const saveAvatar = async () => {
-        setShowModal(false);
-        const token = await AsyncStorage.getItem('token');
-        let form = new FormData();
-        const filename = image.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : 'image';
-        form.append('avatar', { uri: image, name: filename, type });
-        let res = await djangoAuthApi(token).patch(endpoints['avatar-change'](userInfo?.id), form, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
-        console.log("Thông tin", image, filename, type);
-        console.log("Cái gì dậy?", res.data, res.status);
-        setUserInfo(prevState => ({ ...prevState, avatar: image }));
-        getCurrentUser();
-        setShowModal(false);
-    }
+    const changeCoverAvatar = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
-    const saveCoverAvatar = async () => {
-        const token = await AsyncStorage.getItem('token');
-        let form = new FormData();
-        const filename = image.split('/').pop();
-        const match = /\.(\w+)$/.exec(filename);
-        const type = match ? `image/${match[1]}` : 'image';
-        form.append('cover_avatar', { uri: image, name: filename, type });
-        let res = await djangoAuthApi(token).patch(endpoints['cover-avatar-change'](userInfo?.id), form, {
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        })
-        console.log("Thành công nha", res.data, res.status);
-        setUserInfo(prevState => ({ ...prevState, cover_avatar: image }));
-        getCurrentUser();
-        setShowModal(false);
-    }
+        if (status !== 'granted') {
+            console.log('Permission not granted');
+            return;
+        }
 
-    const cancelAvatar = () => {
-        setShowModal(false);
-        setImage(null);
+        const options = {
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [4, 3]
+        };
+
+        const result = await ImagePicker.launchImageLibraryAsync(options);
+
+        if (result.canceled) {
+            console.log('User cancelled image picker');
+        } else {
+            const selectedImages = result.assets[0];
+            const localUri = selectedImages.uri;
+            console.log('Đường dẫn:', localUri);
+            setImage(localUri);
+            const token = await AsyncStorage.getItem('token');
+            let form = new FormData();
+            const filename = localUri.split('/').pop();
+            const match = /\.(\w+)$/.exec(filename);
+            const type = match ? `image/${match[1]}` : 'image';
+            form.append('cover_avatar', { uri: localUri, name: filename, type });
+            let res = await djangoAuthApi(token).patch(endpoints['avatar-change'](userInfo?.id), form, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            })
+            console.log("Thông tin", localUri, filename, type);
+            console.log("Thành công nha", res.data, res.status);
+            // setUserInfo(prevState => ({ ...prevState, cover_avatar: image }));
+            getCurrentUser();
+        }
     }
 
     return (
@@ -142,7 +154,7 @@ const Profile = ({ navigation }) => {
             <ScrollView>
                 <View>
                     <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
-                    <TouchableOpacity style={styles.avatarChange} onPress={() => changeAvatar()}>
+                    <TouchableOpacity style={styles.avatarChange} onPress={() => changeCoverAvatar()}>
                         <View>
                             <TouchableOpacity>
                                 <VectorIcon
@@ -235,24 +247,6 @@ const Profile = ({ navigation }) => {
                 <CreatePost navigation={navigation} />
                 <Timeline />
             </ScrollView>
-            <Modal visible={showModal} animationType="slide">
-                <View style={styles.modalContainer}>
-                    <Image source={{ uri: image }} style={styles.modalImage} />
-                    <View style={styles.modalButtons}>
-                        <Button title="Lưu" onPress={saveAvatar} />
-                        <Button title="Hủy" onPress={cancelAvatar} />
-                    </View>
-                </View>
-            </Modal>
-            <Modal visible={showModal} animationType="slide">
-                <View style={styles.modalContainer}>
-                    <Image source={{ uri: image }} style={styles.modalImage} />
-                    <View style={styles.modalButtons}>
-                        <Button title="Lưu" onPress={saveCoverAvatar} />
-                        <Button title="Hủy" onPress={cancelAvatar} />
-                    </View>
-                </View>
-            </Modal>
         </>
     );
 };

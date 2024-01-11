@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const DJANGO_SERVER = "http://192.168.2.123:8000"
+// const DJANGO_SERVER = "http://192.168.2.123:8000"
 // const DJANGO_SERVER = "http://172.16.17.226:8000"
 // const DJANGO_SERVER = "http://192.168.2.17:8000"
 // const DJANGO_SERVER = "http://10.17.65.36:8000"
@@ -13,6 +13,9 @@ const DJANGO_SERVER = "http://192.168.2.123:8000"
 // const DJANGO_SERVER = "http://10.17.50.108:8000"
 
 // const DJANGO_SERVER = "http://192.168.5.13:8000"
+// TOCO TOCO
+
+const DJANGO_SERVER = "http://192.168.1.31:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
@@ -48,7 +51,7 @@ export const endpoints = {
     "answer-post-survey": `${DJANGO_SERVER}/posts/answer_post_survey/`,
     "search-user": (name) => `${DJANGO_SERVER}/users/search_user/?name=${name}`,
     "create-post-images": `${DJANGO_SERVER}/post_images/`,
-    "send-multi-images": `${DJANGO_SERVER}/post_images/upload_mutil_images/`,
+    "send-multi-images": `${DJANGO_SERVER}/post_images/upload_multi_images/`,
     "cache-user": (name) => `${DJANGO_SERVER}/users/search_user_cache/?name=${name}`,
     "survey-result": (id) => `${DJANGO_SERVER}/posts/${id}/get_results_post_survey/`
 }
