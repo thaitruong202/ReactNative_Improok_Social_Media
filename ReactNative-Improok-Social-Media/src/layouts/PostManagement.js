@@ -1,10 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { useContext, useEffect, useState } from 'react';
-import { ActivityIndicator, Image, Modal, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
+import Modal from 'react-native-modal';
 
 const PostManagement = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -21,6 +22,8 @@ const PostManagement = ({ navigation }) => {
 
     const [openModal, setOpenModal] = useState(false);
     const [isModalVisible, setModalVisible] = useState(false);
+
+    const [isMenuVisible, setMenuVisible] = useState(false);
 
     const getPostSurvey = async (pageNumber) => {
         setLoading(true);
@@ -53,9 +56,12 @@ const PostManagement = ({ navigation }) => {
                 getPostSurvey(nextPage);
             }
         } catch (error) {
-            // Xử lý lỗi ở đây
             console.error(error);
         }
+    };
+
+    const toggleMenu = () => {
+        setMenuVisible(!isMenuVisible);
     };
 
     useEffect(() => {
@@ -71,6 +77,7 @@ const PostManagement = ({ navigation }) => {
         getCurrentUser();
         getPostSurvey(1);
     }, [])
+
     return (
         <>
             <ScrollView onScroll={handleScroll}
@@ -91,7 +98,7 @@ const PostManagement = ({ navigation }) => {
                                             </View>
                                         </View>
                                         <View style={styles.row}>
-                                            <TouchableOpacity onPress={() => setOpenModal(true)}>
+                                            <TouchableOpacity onPress={() => toggleMenu()}>
                                                 <VectorIcon
                                                     name="dots-three-horizontal"
                                                     type="Entypo"
@@ -100,17 +107,101 @@ const PostManagement = ({ navigation }) => {
                                                     style={styles.headerIcons}
                                                 />
                                             </TouchableOpacity>
-                                            <Modal visible={openModal} animationType="slide" onBackdropPress={() => setOpenModal(false)} style={{ width: windowWidth, height: windowHeight / 2, backgroundColor: 'yellow', position: 'absolute', bottom: 0 }}>
-                                                <View>
-                                                    <TouchableOpacity>
-                                                        <Text>Edit</Text>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity>
-                                                        <Text>Delete</Text>
-                                                    </TouchableOpacity>
-                                                    <TouchableOpacity>
-                                                        <Text>Cancel</Text>
-                                                    </TouchableOpacity>
+                                            <Modal
+                                                isVisible={isMenuVisible}
+                                                animationIn={'slideInUp'}
+                                                animationInTiming={150}
+                                                animationOut={'slideOutDown'}
+                                                backdropColor='transparent'
+                                                animationOutTiming={150}
+                                                swipeDirection="down"
+                                                onSwipeComplete={() => {
+                                                    toggleMenu();
+                                                }}
+                                                onBackdropPress={() => {
+                                                    toggleMenu();
+                                                }}
+                                                style={{ justifyContent: 'flex-end', margin: 0 }}
+                                            >
+                                                <View style={{ height: windowHeight / 2, backgroundColor: 'white', width: '100%', position: 'absolute', bottom: 0 }}>
+                                                    <View style={{ padding: 20 }}>
+                                                        <TouchableOpacity>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <VectorIcon
+                                                                    name="pin"
+                                                                    type="Entypo"
+                                                                    size={25}
+                                                                    style={{
+                                                                        backgroundColor: '#EBECF0',
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        borderRadius: 50,
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        marginRight: 10,
+                                                                    }}
+                                                                />
+                                                                <Text>Pin Post</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <VectorIcon
+                                                                    name="edit"
+                                                                    type="MaterialIcons"
+                                                                    size={25}
+                                                                    style={{
+                                                                        backgroundColor: '#EBECF0',
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        borderRadius: 50,
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        marginRight: 10,
+                                                                    }}
+                                                                />
+                                                                <Text>Edit Post</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <VectorIcon
+                                                                    name="lock"
+                                                                    type="FontAwesome"
+                                                                    size={25}
+                                                                    style={{
+                                                                        backgroundColor: '#EBECF0',
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        borderRadius: 50,
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        marginRight: 10,
+                                                                    }}
+                                                                />
+                                                                <Text>Lock Comment</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                        <TouchableOpacity>
+                                                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                                <VectorIcon
+                                                                    name="delete"
+                                                                    type="MaterialIcons"
+                                                                    size={25}
+                                                                    style={{
+                                                                        backgroundColor: '#EBECF0',
+                                                                        height: 40,
+                                                                        width: 40,
+                                                                        borderRadius: 50,
+                                                                        justifyContent: 'center',
+                                                                        alignItems: 'center',
+                                                                        marginRight: 10,
+                                                                    }}
+                                                                />
+                                                                <Text>Delete Post</Text>
+                                                            </View>
+                                                        </TouchableOpacity>
+                                                    </View>
                                                 </View>
                                             </Modal>
                                         </View>

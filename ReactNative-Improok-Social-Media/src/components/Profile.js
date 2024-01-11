@@ -154,15 +154,13 @@ const Profile = ({ navigation }) => {
             <ScrollView>
                 <View>
                     <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
-                    <TouchableOpacity style={styles.avatarChange} onPress={() => changeCoverAvatar()}>
+                    <TouchableOpacity style={styles.coverAvatarChange} onPress={() => changeCoverAvatar()}>
                         <View>
-                            <TouchableOpacity>
-                                <VectorIcon
-                                    name="camera"
-                                    type="FontAwesome5"
-                                    size={20}
-                                ></VectorIcon>
-                            </TouchableOpacity>
+                            <VectorIcon
+                                name="camera"
+                                type="FontAwesome5"
+                                size={20}
+                            ></VectorIcon>
                         </View>
                     </TouchableOpacity>
                 </View>
@@ -296,7 +294,7 @@ const styles = StyleSheet.create({
         position: 'absolute',
         justifyContent: 'center',
         alignItems: 'center',
-        right: 0,
+        right: 15,
         bottom: 0
     },
     name: {

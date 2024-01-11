@@ -93,8 +93,8 @@ const InvitationPost = ({ navigation }) => {
         setInput(text);
         if (text.length > 0) {
             const token = await AsyncStorage.getItem("token");
-            //let res = await djangoAuthApi(token).get(endpoints['search-user'](text));
-            let res = await djangoAuthApi(token).get(endpoints['cache-user'](text));
+            let res = await djangoAuthApi(token).get(endpoints['search-user'](text));
+            // let res = await djangoAuthApi(token).get(endpoints['cache-user'](text));
             console.log("Đây là cache API", res.data);
             setFilteredAccountList(res.data);
             //console.log(filteredList);

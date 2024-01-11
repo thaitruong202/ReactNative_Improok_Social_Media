@@ -2,7 +2,6 @@ import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React, { Fragment, useContext, useEffect, useState } from 'react';
 import VectorIcon from '../utils/VectorIcon';
 import { MyUserContext } from '../../App';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import Like from '../images/like.jpeg';
@@ -26,6 +25,8 @@ const Post = () => {
     const [checkReaction, setCheckReaction] = useState([]);
 
     const [openModal, setOpenModal] = useState(false);
+
+    const [isMenuVisible, setMenuVisible] = useState(false);
 
     const navigation = useNavigation();
 
@@ -84,37 +85,59 @@ const Post = () => {
         }
     }, [isPostIdUpdated]);
 
-    const likeReaction = async () => {
+    const likeReaction = async (postId) => {
         try {
-            if (isLiked === true) {
-                const token = await AsyncStorage.getItem('token');
-                let del = await axios.delete(`http://192.168.1.51:8000/post_reactions/1/`, {
-                    headers: {
-                        'Authorization': "Bearer" + " " + token
-                    }
+            // if (isLiked === true) {
+            //     const token = await AsyncStorage.getItem('token');
+            //     let del = await axios.delete(`http://192.168.1.51:8000/post_reactions/1/`, {
+            //         headers: {
+            //             'Authorization': "Bearer" + " " + token
+            //         }
+            //     })
+            //     setIsLiked(false);
+            //     console.log(del.status);
+            // }
+            // else {
+            //     const token = await AsyncStorage.getItem('token');
+            //     console.log(currentPostId, userInfo?.id);
+            //     let res = await axios.post(`http://192.168.1.51:8000/post_reactions/`, {
+            //         "reaction": "1",
+            //         "post": currentPostId,
+            //         "account": userInfo?.id
+            //     }, {
+            //         headers: {
+            //             'Authorization': "Bearer" + " " + token
+            //         }
+            //     })
+            //     setIsLiked(true);
+            //     console.log(res.data, res.status)
+            // }
+            const token = await AsyncStorage.getItem('token');
+            console.log("Bài post id", postId);
+            let check = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, postId))
+            console.log(check.data.reacted);
+            if (check.data.reacted === false) {
+                let res = await djangoAuthApi(token).post(endpoints['like-reaction'], {
+                    "reaction": "1",
+                    "post": postId,
+                    "account": userInfo?.id
                 })
-                setIsLiked(false);
-                console.log(del.status);
+                console.log("Like thành công", res.data);
             }
             else {
-                const token = await AsyncStorage.getItem('token');
-                console.log(currentPostId, userInfo?.id);
-                let res = await axios.post(`http://192.168.1.51:8000/post_reactions/`, {
-                    "reaction": "1",
-                    "post": currentPostId,
-                    "account": userInfo?.id
-                }, {
-                    headers: {
-                        'Authorization': "Bearer" + " " + token
-                    }
-                })
-                setIsLiked(true);
-                console.log(res.data, res.status)
+                let res = await djangoAuthApi(token).get(endpoints['get-post-reaction'](postId, 1, userInfo?.id))
+                console.log(res.data.id);
+                let del = await djangoAuthApi(token).delete(endpoints['delete-like'](postId))
+                console.log("Xóa like thành công", del.data);
             }
         } catch (error) {
             console.log(error)
         }
     }
+
+    const toggleMenu = () => {
+        setMenuVisible(!isMenuVisible);
+    };
 
     return (
         <Fragment>
@@ -134,7 +157,7 @@ const Post = () => {
                                         </View>
                                     </View>
                                     <View style={styles.row}>
-                                        <TouchableOpacity onPress={() => setOpenModal(true)}>
+                                        <TouchableOpacity onPress={() => toggleMenu()}>
                                             <VectorIcon
                                                 name="dots-three-horizontal"
                                                 type="Entypo"
@@ -143,17 +166,101 @@ const Post = () => {
                                                 style={styles.headerIcons}
                                             />
                                         </TouchableOpacity>
-                                        <Modal visible={openModal} animationType="slide" onBackdropPress={() => setOpenModal(false)} style={{ width: windowWidth, height: windowHeight / 2, backgroundColor: 'yellow', position: 'absolute', bottom: 0 }}>
-                                            <View>
-                                                <TouchableOpacity>
-                                                    <Text>Edit</Text>
-                                                </TouchableOpacity>
-                                                <TouchableOpacity>
-                                                    <Text>Delete</Text>
-                                                </TouchableOpacity>
-                                                <TouchableOpacity>
-                                                    <Text>Cancel</Text>
-                                                </TouchableOpacity>
+                                        <Modal
+                                            isVisible={isMenuVisible}
+                                            animationIn={'slideInUp'}
+                                            animationInTiming={150}
+                                            animationOut={'slideOutDown'}
+                                            backdropColor='transparent'
+                                            animationOutTiming={150}
+                                            swipeDirection="down"
+                                            onSwipeComplete={() => {
+                                                toggleMenu();
+                                            }}
+                                            onBackdropPress={() => {
+                                                toggleMenu();
+                                            }}
+                                            style={{ justifyContent: 'flex-end', margin: 0 }}
+                                        >
+                                            <View style={{ height: windowHeight / 2, backgroundColor: 'white', width: '100%', position: 'absolute', bottom: 0 }}>
+                                                <View style={{ padding: 20 }}>
+                                                    <TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <VectorIcon
+                                                                name="pin"
+                                                                type="Entypo"
+                                                                size={25}
+                                                                style={{
+                                                                    backgroundColor: '#EBECF0',
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    borderRadius: 50,
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    marginRight: 10,
+                                                                }}
+                                                            />
+                                                            <Text>Pin Post</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <VectorIcon
+                                                                name="edit"
+                                                                type="MaterialIcons"
+                                                                size={25}
+                                                                style={{
+                                                                    backgroundColor: '#EBECF0',
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    borderRadius: 50,
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    marginRight: 10,
+                                                                }}
+                                                            />
+                                                            <Text>Edit Post</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <VectorIcon
+                                                                name="lock"
+                                                                type="FontAwesome"
+                                                                size={25}
+                                                                style={{
+                                                                    backgroundColor: '#EBECF0',
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    borderRadius: 50,
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    marginRight: 10,
+                                                                }}
+                                                            />
+                                                            <Text>Lock Comment</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                    <TouchableOpacity>
+                                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                            <VectorIcon
+                                                                name="delete"
+                                                                type="MaterialIcons"
+                                                                size={25}
+                                                                style={{
+                                                                    backgroundColor: '#EBECF0',
+                                                                    height: 40,
+                                                                    width: 40,
+                                                                    borderRadius: 50,
+                                                                    justifyContent: 'center',
+                                                                    alignItems: 'center',
+                                                                    marginRight: 10,
+                                                                }}
+                                                            />
+                                                            <Text>Delete Post</Text>
+                                                        </View>
+                                                    </TouchableOpacity>
+                                                </View>
                                             </View>
                                         </Modal>
                                     </View>
@@ -174,7 +281,11 @@ const Post = () => {
                                     <View>
                                         {checkReaction[index] && checkReaction[index].reacted === true && checkReaction[index].data.length > 0 ? (
                                             checkReaction[index].data[0].reaction_id === 1 ? (
-                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                <TouchableOpacity
+                                                    onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                    // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
+                                                    onPress={() => likeReaction(ph.id)}
+                                                    style={styles.row}>
                                                     <VectorIcon
                                                         name="like1"
                                                         type="AntDesign"
@@ -184,7 +295,11 @@ const Post = () => {
                                                     <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                 </TouchableOpacity>
                                             ) : checkReaction[index].data[0].reaction_id === 2 ? (
-                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                <TouchableOpacity
+                                                    onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                    // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
+                                                    onPress={() => likeReaction(ph.id)}
+                                                    style={styles.row}>
                                                     <VectorIcon
                                                         name="heart"
                                                         type="AntDesign"
@@ -194,7 +309,11 @@ const Post = () => {
                                                     <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                 </TouchableOpacity>
                                             ) : checkReaction[index].data[0].reaction_id === 3 ? (
-                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                <TouchableOpacity
+                                                    onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                    // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
+                                                    onPress={() => likeReaction(ph.id)}
+                                                    style={styles.row}>
                                                     <VectorIcon
                                                         name="laugh-squint"
                                                         type="FontAwesome5"
@@ -204,7 +323,11 @@ const Post = () => {
                                                     <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                 </TouchableOpacity>
                                             ) : (
-                                                <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                                <TouchableOpacity
+                                                    onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                    // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
+                                                    onPress={() => likeReaction(ph.id)}
+                                                    style={styles.row}>
                                                     <VectorIcon
                                                         name="like2"
                                                         type="AntDesign"
@@ -215,7 +338,11 @@ const Post = () => {
                                                 </TouchableOpacity>
                                             )
                                         ) : (
-                                            <TouchableOpacity onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true) }} onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }} style={styles.row}>
+                                            <TouchableOpacity
+                                                onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
+                                                onPress={() => likeReaction(ph.id)}
+                                                style={styles.row}>
                                                 <VectorIcon
                                                     name="like2"
                                                     type="AntDesign"
@@ -225,7 +352,11 @@ const Post = () => {
                                                 <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                             </TouchableOpacity>
                                         )}
-                                        < Modal visible={isModalVisible} onBackdropPress={() => setModalVisible(false)} style={styles.modalReaction}>
+                                        < Modal
+                                            isVisible={isModalVisible}
+                                            backdropColor='transparent'
+                                            onBackdropPress={() => setModalVisible(false)}
+                                            style={styles.modalReaction}>
                                             <View style={styles.modalContainer}>
                                                 <TouchableOpacity>
                                                     <Image source={Like} style={styles.reactionAction} />
