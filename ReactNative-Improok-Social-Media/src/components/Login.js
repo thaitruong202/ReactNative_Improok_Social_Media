@@ -6,15 +6,18 @@ import { MyUserContext } from '../../App';
 import Apis, { djangoAuthApi, endpoints } from "../configs/Apis";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
+import { useNavigation } from '@react-navigation/native';
 
 const Login = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const [currentUser, setCurrentUser] = useState();
+    // const [currentUser, setCurrentUser] = useState();
 
-    const [isAccountPending, setIsAccountPending] = useState(false);
+    // const [isAccountPending, setIsAccountPending] = useState(false);
+
+    const nav = useNavigation();
 
     const login = async () => {
         try {
@@ -42,11 +45,11 @@ const Login = ({ navigation }) => {
             console.log(data.data);
             setCurrentUser(data.data);
 
-            if (data.data.confirm_status === 3) {
+            if (data.data?.confirm_status === 3) {
                 // alert("Tài khoản của bạn chưa được xét duyệt!. Vui lòng thử lại sau");
                 Toast.show({
                     type: 'success',
-                    text1: data.data.last_name + " " + data.data.first_name + " " + "đã bị ban acc!",
+                    text1: data.data?.last_name + " " + data.data?.first_name + " " + "đã bị ban acc!",
                     text2: "Đóng 100k để mở"
                 });
                 return;
@@ -58,7 +61,11 @@ const Login = ({ navigation }) => {
 
                 if (res.status === 200) {
                     console.log('Đăng nhập thành công');
-                    navigation.navigate('Trang chủ');
+                    // navigation.navigate('Trang chủ');
+                    nav.reset({
+                        index: 0,
+                        routes: [{ name: 'Trang chủ' }],
+                    });
                     setUsername('');
                     setPassword('');
                 } else {

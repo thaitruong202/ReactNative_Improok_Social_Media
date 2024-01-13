@@ -75,7 +75,7 @@ const PersonalScreen = ({ navigation }) => {
                     <TouchableOpacity onPress={() => navigation.navigate('Trang cá nhân')} style={styles.profileContainer}>
                         <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
                         <View style={styles.inputBox}>
-                            <Text style={styles.profileNameText}>{user.last_name} {user.first_name}</Text>
+                            <Text style={styles.profileNameText}>{user?.last_name} {user?.first_name}</Text>
                         </View>
                         <TouchableOpacity style={styles.profileExpandIcon}>
                             <VectorIcon

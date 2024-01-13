@@ -2,7 +2,6 @@ import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity } from 'reac
 import React, { useEffect, useState, useContext } from 'react';
 import CameraRoll from '../images/cameraroll.png';
 import * as ImagePicker from 'expo-image-picker';
-// import ImagePicker from 'react-native-image-picker';
 import { MyUserContext } from "../../App";
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -54,7 +53,7 @@ const SubHeader = () => {
         <View style={styles.container}>
             <Image source={{ uri: userInfo?.avatar }} style={styles.avatarStyle} />
             <View style={styles.inputBox}>
-                <Text style={styles.inputStyle}>What's on your mind, {user.first_name}?</Text>
+                <Text style={styles.inputStyle}>What's on your mind, {user?.first_name}?</Text>
             </View>
             <TouchableOpacity onPress={openImagePicker}>
                 <Image source={CameraRoll} style={styles.cameraRoll} />
