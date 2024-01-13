@@ -17,6 +17,8 @@ const Comment = () => {
 
     const [isCommentCreated, setIsCommentCreated] = useState(false);
 
+    const [isLock, setIsLock] = useState(null);
+
     const [userInfo, setUserInfo] = useState();
 
     useEffect(() => {
@@ -46,6 +48,17 @@ const Comment = () => {
             }
         }
         getCurrentUser();
+        const getPostById = async () => {
+            try {
+                const token = await AsyncStorage.getItem('token');
+                let res = await djangoAuthApi(token).get(endpoints['get-post-by-post-id'](postId))
+                console.log(res.data.comment_lock);
+                setIsLock(res.data.comment_lock);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+        getPostById();
     }, [])
 
     const createComment = async () => {
@@ -53,10 +66,11 @@ const Comment = () => {
             let form = new FormData();
             console.log(content, postId, userInfo?.id)
             form.append('comment_content', content);
-            form.append('comment_image_url', new Blob());
+            // form.append('comment_image_url', new Blob());
             form.append('account', userInfo?.id);
             form.append('post', postId);
             const token = await AsyncStorage.getItem('token');
+            // let res = await djangoAuthApi(token).post(endpoints['create-comment'], form)
             let res = await djangoAuthApi(token).post(endpoints['create-comment'], form, {
                 headers: {
                     "Content-Type": "multipart/form-data",
@@ -64,7 +78,8 @@ const Comment = () => {
             })
             console.log(res.data);
         } catch (error) {
-            console.log(error)
+            console.log("Lỗi ở đây");
+            console.log("Lỗi error gì", error)
         }
     }
 
@@ -94,7 +109,7 @@ const Comment = () => {
                                         <Text style={{ fontSize: 16 }}>
                                             {cl.comment_content}
                                         </Text>
-                                        {cl.comment_image_url === "/static/" || cl.comment_image_url === "/static/None" ? "" :
+                                        {cl.comment_image_url === null ? "" :
                                             <>
                                                 <View>
                                                     <Image source={{ uri: cl.comment_image_url }} style={{ width: 100, height: 100 }} />
@@ -112,29 +127,35 @@ const Comment = () => {
                         )
                     })}
                 </ScrollView>
-                <View style={styles.replyArea}>
-                    <TouchableOpacity style={{ width: "10%" }}>
-                        <VectorIcon
-                            name="images"
-                            type="Ionicons"
-                            size={22}>
-                        </VectorIcon>
-                    </TouchableOpacity>
-                    <TextInput
-                        placeholder="Viết bình luận..."
-                        value={content}
-                        onChangeText={(text) => setContent(text)}
-                        numberOfLines={1}
-                        style={content.length > 0 ? styles.inputComment : styles.emptyInputComment}
-                    />
-                    {content.length > 0 &&
-                        <TouchableOpacity style={{ width: "10%" }} onPress={() => createComment()}>
+                {isLock === true ?
+                    <View>
+                        <Text>Bài viết đã bị khóa bình luận!</Text>
+                    </View>
+                    :
+                    <View style={styles.replyArea}>
+                        <TouchableOpacity style={{ width: "10%" }}>
                             <VectorIcon
-                                name="send"
+                                name="images"
                                 type="Ionicons"
-                                size={22} color="blue" />
-                        </TouchableOpacity>}
-                </View>
+                                size={22}>
+                            </VectorIcon>
+                        </TouchableOpacity>
+                        <TextInput
+                            placeholder="Viết bình luận..."
+                            value={content}
+                            onChangeText={(text) => setContent(text)}
+                            numberOfLines={1}
+                            style={content.length > 0 ? styles.inputComment : styles.emptyInputComment}
+                        />
+                        {content.length > 0 &&
+                            <TouchableOpacity style={{ width: "10%" }} onPress={() => createComment()}>
+                                <VectorIcon
+                                    name="send"
+                                    type="Ionicons"
+                                    size={22} color="blue" />
+                            </TouchableOpacity>}
+                    </View>
+                }
             </View>
         </>
     );

@@ -13,7 +13,7 @@ const Login = ({ navigation }) => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    // const [currentUser, setCurrentUser] = useState();
+    const [currentUser, setCurrentUser] = useState();
 
     // const [isAccountPending, setIsAccountPending] = useState(false);
 

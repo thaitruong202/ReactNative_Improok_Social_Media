@@ -9,6 +9,7 @@ import Like from '../images/like.jpeg';
 import Wow from '../images/wow.jpeg';
 import Love from '../images/love.jpeg';
 import Modal from 'react-native-modal'
+import { HStack, Heading, Spinner } from 'native-base';
 
 const Survey = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -327,7 +328,13 @@ const Survey = ({ navigation }) => {
                     );
                 })}
             </ScrollView>
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
+            {/* {loading && <ActivityIndicator size="large" color="#0000ff" />} */}
+            {loading && <HStack space={2} justifyContent="center">
+                <Spinner color="indigo.500" accessibilityLabel=" Loading posts" />
+                <Heading color="indigo.500" fontSize="lg">
+                    Loading
+                </Heading>
+            </HStack>}
         </>
     );
 };

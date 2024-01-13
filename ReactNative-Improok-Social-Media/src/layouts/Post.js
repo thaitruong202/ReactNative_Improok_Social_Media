@@ -10,6 +10,7 @@ import Love from '../images/love.jpeg';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
+import { HStack, Heading, Spinner } from 'native-base';
 
 const Post = React.forwardRef((props, ref) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -17,16 +18,18 @@ const Post = React.forwardRef((props, ref) => {
     const [postHead, setPostHead] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
     const [currentPostId, setCurrentPostId] = useState(null);
-    const [isLiked, setIsLiked] = useState(false);
     // const [likedPosts, setLikedPosts] = useState([]);
     const [isPostIdUpdated, setIsPostIdUpdated] = useState(false);
     const [countPostReaction, setCountPostReaction] = useState([]);
     const [countPostComment, setCountPostComment] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);
 
+    const [seletedPostId, setSelectedPostId] = useState();
+
     // const [openModal, setOpenModal] = useState(false);
 
     const [isMenuVisible, setMenuVisible] = useState(false);
+
 
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(null);
@@ -91,6 +94,7 @@ const Post = React.forwardRef((props, ref) => {
     useEffect(() => {
         if (isPostIdUpdated) {
             likeReaction();
+            lockOrUnlock();
             setIsPostIdUpdated(false);
         }
     }, [isPostIdUpdated]);
@@ -125,8 +129,9 @@ const Post = React.forwardRef((props, ref) => {
         }
     }
 
-    const toggleMenu = () => {
+    const toggleMenu = (postId) => {
         setMenuVisible(!isMenuVisible);
+        setSelectedPostId(postId);
     }
 
     const handleScroll = async (event) => {
@@ -154,11 +159,26 @@ const Post = React.forwardRef((props, ref) => {
         handleScroll,
     }));
 
+    const lockOrUnlock = async () => {
+        try {
+            console.log("Khóa bình luận bài post", seletedPostId);
+            const token = await AsyncStorage.getItem("token");
+            let check = await djangoAuthApi(token).get(endpoints['get-post-by-post-id'](seletedPostId))
+            console.log(check.data.comment_lock);
+            let res = await djangoAuthApi(token).patch(endpoints['lock-comment'](seletedPostId), {
+                "comment_lock": check.data.comment_lock === true ? false : true
+            })
+            toggleMenu();
+            console.log(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <Fragment>
             <ScrollView onScroll={handleScroll}
-                scrollEventThrottle={16}
-            >
+                scrollEventThrottle={16}>
                 {postHead.map((ph, index) => {
                     return (
                         <>
@@ -175,7 +195,7 @@ const Post = React.forwardRef((props, ref) => {
                                             </View>
                                         </View>
                                         <View style={styles.row}>
-                                            <TouchableOpacity onPress={() => toggleMenu()}>
+                                            <TouchableOpacity onPress={() => toggleMenu(ph.id)}>
                                                 <VectorIcon
                                                     name="dots-three-horizontal"
                                                     type="Entypo"
@@ -184,7 +204,7 @@ const Post = React.forwardRef((props, ref) => {
                                                     style={styles.headerIcons}
                                                 />
                                             </TouchableOpacity>
-                                            <Modal
+                                            <Modal key={ph.id}
                                                 isVisible={isMenuVisible}
                                                 animationIn={'slideInUp'}
                                                 animationInTiming={150}
@@ -193,10 +213,10 @@ const Post = React.forwardRef((props, ref) => {
                                                 animationOutTiming={150}
                                                 swipeDirection="down"
                                                 onSwipeComplete={() => {
-                                                    toggleMenu();
+                                                    toggleMenu(index);
                                                 }}
                                                 onBackdropPress={() => {
-                                                    toggleMenu();
+                                                    toggleMenu(index);
                                                 }}
                                                 style={{ justifyContent: 'flex-end', margin: 0 }}
                                             >
@@ -240,7 +260,7 @@ const Post = React.forwardRef((props, ref) => {
                                                                 <Text>Edit Post</Text>
                                                             </View>
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => lockOrUnlock()}>
                                                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                 <VectorIcon
                                                                     name="lock"
@@ -416,7 +436,12 @@ const Post = React.forwardRef((props, ref) => {
                     );
                 })}
             </ScrollView>
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
+            {loading && <HStack space={2} justifyContent="center">
+                <Spinner color="indigo.500" accessibilityLabel=" Loading posts" />
+                <Heading color="indigo.500" fontSize="lg">
+                    Loading
+                </Heading>
+            </HStack>}
         </Fragment >
     );
 });

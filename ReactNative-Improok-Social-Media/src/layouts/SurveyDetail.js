@@ -6,7 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { RadioButton } from 'react-native-paper';
 import { CheckBox } from '@rneui/themed';
-
+import { Checkbox } from 'native-base';
 
 const SurveyDetail = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -366,7 +366,7 @@ const SurveyDetail = ({ navigation }) => {
         return (
             <View key={question.id}>
                 <Text>{question.question_content}</Text>
-                <RadioButton.Group
+                {/* <RadioButton.Group
                     onValueChange={(value) => handleRadioOptionSelect(question.id, value)}
                     value={selectedOption}
                     style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
@@ -382,7 +382,28 @@ const SurveyDetail = ({ navigation }) => {
                             </View>
                         </TouchableOpacity>
                     ))}
-                </RadioButton.Group>
+                </RadioButton.Group> */}
+                {question.survey_question_option_list.map((option) => (
+                    // <TouchableOpacity
+                    //     key={option.id}
+                    //     onPress={() => handleRadioOptionSelect(question.id, option.id)}
+                    // >
+                    //     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    //         <RadioButton value={option.id} />
+                    //         <Text>{option.question_option_value}</Text>
+                    //     </View>
+                    // </TouchableOpacity>
+                    <CheckBox
+                        checked={selectedOption === option.id}
+                        onPress={() => handleRadioOptionSelect(question.id, option.id)}
+                        checkedIcon="dot-circle-o"
+                        uncheckedIcon="circle-o"
+                        wrapperStyle={{ backgroundColor: 'transparent' }}
+                        containerStyle={{ backgroundColor: 'transparent' }}
+                        title={option.question_option_value}
+                        checkedColor='#591aaf'
+                    />
+                ))}
             </View>
         );
     };
@@ -392,20 +413,35 @@ const SurveyDetail = ({ navigation }) => {
             <View key={question.id}>
                 <Text>{question.question_content}</Text>
                 {question.survey_question_option_list.map((option) => (
-                    <TouchableOpacity
+                    // <TouchableOpacity
+                    //     key={option.id}
+                    //     onPress={() => handleCheckboxOptionToggle(question.id, option.id)}
+                    // >
+                    //     <CheckBox
+                    //         checked={checkboxStates.some(
+                    //             (state) => state.questionId === question.id && state.optionId === option.id
+                    //         )}
+                    //         iconType="material-community"
+                    //         checkedIcon="checkbox-marked"
+                    //         uncheckedIcon="checkbox-blank-outline"
+                    //         title={option.question_option_value}
+                    //     />
+                    //     {/* <Text>{option.question_option_value}</Text> */}
+                    // </TouchableOpacity>
+                    <CheckBox
+                        checked={checkboxStates.some(
+                            (state) => state.questionId === question.id && state.optionId === option.id
+                        )}
                         key={option.id}
+                        iconType="material-community"
+                        checkedIcon="checkbox-marked"
+                        uncheckedIcon="checkbox-blank-outline"
+                        title={option.question_option_value}
+                        wrapperStyle={{ backgroundColor: 'transparent' }}
+                        containerStyle={{ backgroundColor: 'transparent' }}
                         onPress={() => handleCheckboxOptionToggle(question.id, option.id)}
-                    >
-                        <CheckBox
-                            checked={checkboxStates.some(
-                                (state) => state.questionId === question.id && state.optionId === option.id
-                            )}
-                            iconType="material-community"
-                            checkedIcon="checkbox-outline"
-                            uncheckedIcon="checkbox-blank-outline"
-                        />
-                        <Text>{option.question_option_value}</Text>
-                    </TouchableOpacity>
+                        checkedColor='#591aaf'
+                    />
                 ))}
             </View>
         );

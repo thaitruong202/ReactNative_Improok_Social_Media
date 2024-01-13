@@ -51,7 +51,8 @@ export const endpoints = {
     "survey-result": (id) => `${DJANGO_SERVER}/posts/${id}/get_results_post_survey/`,
     "like-reaction": `${DJANGO_SERVER}/post_reactions/`,
     "delete-like": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`,
-    "get-post-reaction": (postId, reactionId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?reaction_id=${reactionId}&account_id=${accountId}`
+    "get-post-reaction": (postId, reactionId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?reaction_id=${reactionId}&account_id=${accountId}`,
+    "lock-comment": (id) => `${DJANGO_SERVER}/posts/${id}/`
 }
 
 export const djangoAuthApi = (token) => {

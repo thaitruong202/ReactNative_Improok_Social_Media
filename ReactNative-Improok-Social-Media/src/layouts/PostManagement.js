@@ -6,6 +6,7 @@ import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import Modal from 'react-native-modal';
+import { HStack, Heading, Spinner } from 'native-base';
 
 const PostManagement = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -244,7 +245,12 @@ const PostManagement = ({ navigation }) => {
                     );
                 })}
             </ScrollView>
-            {loading && <ActivityIndicator size="large" color="#0000ff" />}
+            {loading && <HStack space={2} justifyContent="center">
+                <Spinner color="indigo.500" accessibilityLabel=" Loading posts" />
+                <Heading color="indigo.500" fontSize="lg">
+                    Loading
+                </Heading>
+            </HStack>}
         </>
     );
 };
