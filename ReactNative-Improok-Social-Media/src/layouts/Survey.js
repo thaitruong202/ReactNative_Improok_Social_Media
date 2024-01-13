@@ -45,6 +45,7 @@ const Survey = ({ navigation }) => {
     }
 
     const handleScroll = async (event) => {
+        console.log("Cuộn tiếp đi");
         event.persist();
         const { layoutMeasurement, contentOffset, contentSize } = event?.nativeEvent || {};
 

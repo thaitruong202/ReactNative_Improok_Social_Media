@@ -1,5 +1,5 @@
 import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, Modal, Button } from 'react-native';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
@@ -8,12 +8,15 @@ import Timeline from '../layouts/Timeline';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
+import Post from '../layouts/Post';
 
 const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [userInfo, setUserInfo] = useState();
 
     const [image, setImage] = useState();
+
+    const postRef = useRef(null);
 
     const getCurrentUser = async () => {
         try {
@@ -149,9 +152,19 @@ const Profile = ({ navigation }) => {
         }
     }
 
+    const handleProfileScroll = (event) => {
+        const { contentOffset, layoutMeasurement, contentSize } = event.nativeEvent;
+        const isEndOfScroll = contentOffset.y >= (contentSize.height - layoutMeasurement.height);
+
+        if (isEndOfScroll) {
+            postRef.current.handleScroll(event);
+        }
+    };
+
     return (
         <>
-            <ScrollView>
+            <ScrollView onScroll={handleProfileScroll}
+                scrollEventThrottle={16}>
                 <View>
                     <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
                     <TouchableOpacity style={styles.coverAvatarChange} onPress={() => changeCoverAvatar()}>
@@ -243,7 +256,7 @@ const Profile = ({ navigation }) => {
                 </View>
                 <View style={styles.divider}></View>
                 <CreatePost navigation={navigation} />
-                <Timeline />
+                <Post ref={postRef} />
             </ScrollView>
         </>
     );

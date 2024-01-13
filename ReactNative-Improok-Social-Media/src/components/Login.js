@@ -64,7 +64,9 @@ const Login = ({ navigation }) => {
                 } else {
                     Toast.show({
                         type: "error",
-                        text1: "Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu!"
+                        text1: "Đăng nhập thất bại. Sai tài khoản hoặc mật khẩu!",
+                        visibilityTime: 2500,
+                        position: 'bottom',
                     })
                     console.log('Đăng nhập thất bại');
                 }

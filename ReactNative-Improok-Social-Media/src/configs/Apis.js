@@ -5,17 +5,12 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://192.168.2.17:8000"
 // const DJANGO_SERVER = "http://10.17.65.36:8000"
 // const DJANGO_SERVER = "http://192.168.1.28:8000"
-
 // const DJANGO_SERVER = "http://192.168.1.27:8000"
-
 // const DJANGO_SERVER = "http://10.17.49.217:8000"
-
 // const DJANGO_SERVER = "http://10.17.50.108:8000"
-
 // const DJANGO_SERVER = "http://192.168.5.13:8000"
-// TOCO TOCO
-
-const DJANGO_SERVER = "http://192.168.1.26:8000"
+// const DJANGO_SERVER = "http://192.168.1.26:8000"
+const DJANGO_SERVER = "http://10.17.65.33:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
@@ -27,7 +22,7 @@ export const endpoints = {
     "create-comment": `${DJANGO_SERVER}/comment/`,
     "delete-comment": (id) => `${DJANGO_SERVER}/comment/${id}/`,
     "get-comment-by-post": (id) => `${DJANGO_SERVER}/posts/${id}/comments/`,
-    "get-post-by-account": (id) => `${DJANGO_SERVER}/accounts/${id}/posts/`,
+    "get-post-by-account": (id, page) => `${DJANGO_SERVER}/accounts/${id}/posts/?page=${page}`,
     "count-post-reaction": (id) => `${DJANGO_SERVER}/posts/${id}/count_all_reactions/`,
     "count-post-comment": (id) => `${DJANGO_SERVER}/posts/${id}/count_comments/`,
     "check-reacted-to-post": (accountId, postId) => `${DJANGO_SERVER}/accounts/${accountId}/reacted_to_the_post/?post_id=${postId}`,
@@ -55,17 +50,9 @@ export const endpoints = {
     "cache-user": (name) => `${DJANGO_SERVER}/users/search_user_cache/?name=${name}`,
     "survey-result": (id) => `${DJANGO_SERVER}/posts/${id}/get_results_post_survey/`,
     "like-reaction": `${DJANGO_SERVER}/post_reactions/`,
-    "delete-like": (id) => `${DJANGO_SERVER}/post-reactions/${id}/`,
+    "delete-like": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`,
     "get-post-reaction": (postId, reactionId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?reaction_id=${reactionId}&account_id=${accountId}`
 }
-
-// let token;
-
-// const getToken = async () => {
-//     token = await AsyncStorage.getItem('token');
-// };
-
-// getToken();
 
 export const djangoAuthApi = (token) => {
     return axios.create({
