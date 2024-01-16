@@ -11,8 +11,10 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://192.168.5.13:8000"
 // const DJANGO_SERVER = "http://192.168.1.26:8000"
 // const DJANGO_SERVER = "http://10.17.65.33:8000"
+// const DJANGO_SERVER = "http://10.17.49.194:8000"
+// const DJANGO_SERVER = "http://10.17.50.206:8000"
 
-const DJANGO_SERVER = "http://10.17.49.194:8000"
+const DJANGO_SERVER = "http://192.168.1.8:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
@@ -32,6 +34,7 @@ export const endpoints = {
     "create-user": `${DJANGO_SERVER}/users/`,
     "create-account": `${DJANGO_SERVER}/accounts/`,
     "view-invitation-group": `${DJANGO_SERVER}/invitation_groups/`,
+    "create-invitation-group": `${DJANGO_SERVER}/invitation_groups/`,
     "view-member-by-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`,
     "create-alumni": `${DJANGO_SERVER}/users/create_alumni/`,
     "add-account-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/add_or_update_accounts/`,
@@ -54,7 +57,11 @@ export const endpoints = {
     "like-reaction": `${DJANGO_SERVER}/post_reactions/`,
     "delete-like": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`,
     "get-post-reaction": (postId, reactionId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?reaction_id=${reactionId}&account_id=${accountId}`,
-    "lock-comment": (id) => `${DJANGO_SERVER}/posts/${id}/`
+    "lock-comment": (id) => `${DJANGO_SERVER}/posts/${id}/`,
+    "delete-account-from-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/delete_accounts/`,
+    "reaction-on-post": `${DJANGO_SERVER}/post_reactions/`,
+    "check-reaction": (postId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?account_id=${accountId}`,
+    "update-post-reaction": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`
 }
 
 export const djangoAuthApi = (token) => {

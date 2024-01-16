@@ -4,9 +4,9 @@ import { Image, ScrollView, StyleSheet, Text, View, TextInput, TouchableOpacity,
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
-import { RadioButton } from 'react-native-paper';
+// import { RadioButton } from 'react-native-paper';
 import { CheckBox } from '@rneui/themed';
-import { Checkbox } from 'native-base';
+// import { Checkbox } from 'native-base';
 
 const SurveyDetail = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);

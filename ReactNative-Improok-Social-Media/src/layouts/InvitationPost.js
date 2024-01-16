@@ -260,66 +260,94 @@ const InvitationPost = ({ navigation }) => {
                 <View style={styles.dateTimeContainer}>
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày bắt đầu</Text>
-                        <TouchableOpacity onPress={() => showBeginMode("date")}>
-                            {/* <Text style={{ fontSize: 17 }}>{selectedBeginDate.toISOString().slice(0, 10)}</Text> */}
-                            <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
-                            {showBeginDatePicker && (
-                                <DateTimePicker
-                                    value={selectedBeginDate}
-                                    mode={beginMode}
-                                    format="YYYY-MM-DD"
-                                    minimumDate={currentDate}
-                                    is24Hour={true}
-                                    maximumDate={new Date(2100, 0, 1)}
-                                    onChange={handleBeginDateChange} />)}
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TouchableOpacity onPress={() => showBeginMode("date")}>
+                                {/* <Text style={{ fontSize: 17 }}>{selectedBeginDate.toISOString().slice(0, 10)}</Text> */}
+                                <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
+                                {showBeginDatePicker && (
+                                    <DateTimePicker
+                                        value={selectedBeginDate}
+                                        mode={beginMode}
+                                        format="YYYY-MM-DD"
+                                        minimumDate={currentDate}
+                                        is24Hour={true}
+                                        maximumDate={new Date(2100, 0, 1)}
+                                        onChange={handleBeginDateChange} />)}
+                            </TouchableOpacity>
+                            <VectorIcon
+                                name="calendar"
+                                type="AntDesign"
+                                size={17}
+                            />
+                        </View>
                     </View>
                     <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ bắt đầu</Text>
-                        <TouchableOpacity onPress={() => showBeginMode("time")}>
-                            <Text style={{ fontSize: 17 }}>
-                                {String(selectedBeginTime.getHours()).padStart(2, '0')}:
-                                {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
-                            </Text>
-                            {showBeginTimePicker && (
-                                <DateTimePicker
-                                    value={selectedBeginTime}
-                                    mode={beginMode}
-                                    is24Hour={true}
-                                    onChange={handleBeginTimeChange} />)}
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TouchableOpacity onPress={() => showBeginMode("time")}>
+                                <Text style={{ fontSize: 17 }}>
+                                    {String(selectedBeginTime.getHours()).padStart(2, '0')}:
+                                    {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
+                                </Text>
+                                {showBeginTimePicker && (
+                                    <DateTimePicker
+                                        value={selectedBeginTime}
+                                        mode={beginMode}
+                                        is24Hour={true}
+                                        onChange={handleBeginTimeChange} />)}
+                            </TouchableOpacity>
+                            <VectorIcon
+                                name="clockcircleo"
+                                type="AntDesign"
+                                size={17}
+                            />
+                        </View>
                     </View>
                 </View>
                 <View style={styles.dateTimeContainer}>
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
-                        <TouchableOpacity onPress={() => showEndMode("date")}>
-                            <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedEndDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
-                            {showEndDatePicker && (
-                                <DateTimePicker
-                                    value={selectedEndDate}
-                                    mode={endMode}
-                                    format="YYYY-MM-DD"
-                                    minimumDate={currentDate}
-                                    is24Hour={true}
-                                    maximumDate={new Date(2100, 0, 1)}
-                                    onChange={handleEndDateChange} />)}
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TouchableOpacity onPress={() => showEndMode("date")}>
+                                <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedEndDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
+                                {showEndDatePicker && (
+                                    <DateTimePicker
+                                        value={selectedEndDate}
+                                        mode={endMode}
+                                        format="YYYY-MM-DD"
+                                        minimumDate={currentDate}
+                                        is24Hour={true}
+                                        maximumDate={new Date(2100, 0, 1)}
+                                        onChange={handleEndDateChange} />)}
+                            </TouchableOpacity>
+                            <VectorIcon
+                                name="calendar"
+                                type="AntDesign"
+                                size={17}
+                            />
+                        </View>
                     </View>
                     <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ kết thúc</Text>
-                        <TouchableOpacity onPress={() => showEndMode("time")}>
-                            <Text style={{ fontSize: 17 }}>
-                                {String(selectedEndTime.getHours()).padStart(2, '0')}:
-                                {String(selectedEndTime.getMinutes()).padStart(2, '0')}
-                            </Text>
-                            {showEndTimePicker && (
-                                <DateTimePicker
-                                    value={selectedEndTime}
-                                    mode={endMode}
-                                    is24Hour={true}
-                                    onChange={handleEndTimeChange} />)}
-                        </TouchableOpacity>
+                        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TouchableOpacity onPress={() => showEndMode("time")}>
+                                <Text style={{ fontSize: 17 }}>
+                                    {String(selectedEndTime.getHours()).padStart(2, '0')}:
+                                    {String(selectedEndTime.getMinutes()).padStart(2, '0')}
+                                </Text>
+                                {showEndTimePicker && (
+                                    <DateTimePicker
+                                        value={selectedEndTime}
+                                        mode={endMode}
+                                        is24Hour={true}
+                                        onChange={handleEndTimeChange} />)}
+                            </TouchableOpacity>
+                            <VectorIcon
+                                name="clockcircleo"
+                                type="AntDesign"
+                                size={17}
+                            />
+                        </View>
                     </View>
                 </View>
                 <View style={styles.inputContainer}>

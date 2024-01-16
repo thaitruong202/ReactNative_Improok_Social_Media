@@ -18,15 +18,12 @@ const Post = React.forwardRef((props, ref) => {
     const [postHead, setPostHead] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
     const [currentPostId, setCurrentPostId] = useState(null);
-    // const [likedPosts, setLikedPosts] = useState([]);
     const [isPostIdUpdated, setIsPostIdUpdated] = useState(false);
     const [countPostReaction, setCountPostReaction] = useState([]);
     const [countPostComment, setCountPostComment] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);
 
     const [seletedPostId, setSelectedPostId] = useState();
-
-    // const [openModal, setOpenModal] = useState(false);
 
     const [isMenuVisible, setMenuVisible] = useState(false);
 
@@ -113,11 +110,14 @@ const Post = React.forwardRef((props, ref) => {
                     "account": userInfo?.id
                 })
                 console.log("Like thành công", res.data);
+                if (isModalVisible === true) {
+                    setModalVisible(false)
+                }
             }
             else {
                 console.log("Xóa like");
                 console.log(postId, userInfo?.id);
-                let res = await djangoAuthApi(token).get(endpoints['get-post-reaction'](postId, 1, userInfo?.id))
+                let res = await djangoAuthApi(token).get(endpoints['check-reaction'](postId, userInfo?.id))
                 console.log("Tôi xóa reaction");
                 console.log(res.data);
                 console.log(res.data[0].id);
@@ -129,9 +129,61 @@ const Post = React.forwardRef((props, ref) => {
         }
     }
 
+    const reactionPopUp = async (reactionType) => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            console.log(userInfo?.id, seletedPostId)
+            let check = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, seletedPostId))
+            console.log(check.data.reacted);
+            if (check.data.reacted === false) {
+                console.log("Vô if nè")
+                console.log("New reaction")
+                console.log("Loại reaction: ", reactionType)
+                console.log("Bài post số: ", seletedPostId)
+                console.log("User: ", userInfo?.id)
+                console.log(typeof (reactionType))
+                let res = await djangoAuthApi(token).post(endpoints['reaction-on-post'], {
+                    "reaction": reactionType,
+                    "post": seletedPostId,
+                    "account": userInfo?.id
+                })
+                console.log(res.data)
+                if (isModalVisible === true) {
+                    setModalVisible(false)
+                }
+            }
+            else {
+                console.log("Vô else nè")
+                console.log(check.data.data[0].reaction_id)
+                if (check.data.data[0].reaction_id == reactionType) {
+                    console.log("Không có gì xảy ra hết!")
+                    setModalVisible(false)
+                }
+                else {
+                    let res = await djangoAuthApi(token).get(endpoints['check-reaction'](seletedPostId, userInfo?.id))
+                    console.log(res.data[0].id);
+                    let change = await djangoAuthApi(token).patch(endpoints['update-post-reaction'](res.data[0].id), {
+                        "reaction": reactionType,
+                        "post": seletedPostId
+                    })
+                    console.log(change.data)
+                    setModalVisible(false)
+                    console.log("Đổi reaction thành công!")
+                }
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const toggleMenu = (postId) => {
         setMenuVisible(!isMenuVisible);
         setSelectedPostId(postId);
+    }
+
+    const toggleReaction = (postId) => {
+        setModalVisible(!isModalVisible)
+        setSelectedPostId(postId)
     }
 
     const handleScroll = async (event) => {
@@ -320,7 +372,7 @@ const Post = React.forwardRef((props, ref) => {
                                             {checkReaction[index] && checkReaction[index].reacted === true && checkReaction[index].data.length > 0 ? (
                                                 checkReaction[index].data[0].reaction_id === 1 ? (
                                                     <TouchableOpacity
-                                                        onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                        onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id); }}
                                                         // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
@@ -334,7 +386,7 @@ const Post = React.forwardRef((props, ref) => {
                                                     </TouchableOpacity>
                                                 ) : checkReaction[index].data[0].reaction_id === 2 ? (
                                                     <TouchableOpacity
-                                                        onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                        onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id); }}
                                                         // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
@@ -348,7 +400,7 @@ const Post = React.forwardRef((props, ref) => {
                                                     </TouchableOpacity>
                                                 ) : checkReaction[index].data[0].reaction_id === 3 ? (
                                                     <TouchableOpacity
-                                                        onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                        onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id) }}
                                                         // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
@@ -362,7 +414,7 @@ const Post = React.forwardRef((props, ref) => {
                                                     </TouchableOpacity>
                                                 ) : (
                                                     <TouchableOpacity
-                                                        onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                        onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id) }}
                                                         // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
@@ -377,7 +429,7 @@ const Post = React.forwardRef((props, ref) => {
                                                 )
                                             ) : (
                                                 <TouchableOpacity
-                                                    onLongPress={() => { setCurrentPostId(ph.id); setModalVisible(true); }}
+                                                    onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id); }}
                                                     // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                     onPress={() => likeReaction(ph.id)}
                                                     style={styles.row}>
@@ -393,16 +445,16 @@ const Post = React.forwardRef((props, ref) => {
                                             < Modal
                                                 isVisible={isModalVisible}
                                                 backdropColor='transparent'
-                                                onBackdropPress={() => setModalVisible(false)}
+                                                onBackdropPress={() => toggleReaction(index)}
                                                 style={styles.modalReaction}>
                                                 <View style={styles.modalContainer}>
-                                                    <TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => reactionPopUp("1")}>
                                                         <Image source={Like} style={styles.reactionAction} />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => reactionPopUp("2")}>
                                                         <Image source={Love} style={styles.reactionAction} />
                                                     </TouchableOpacity>
-                                                    <TouchableOpacity>
+                                                    <TouchableOpacity onPress={() => reactionPopUp("3")}>
                                                         <Image source={Wow} style={styles.reactionAction} />
                                                     </TouchableOpacity>
                                                 </View>

@@ -3,7 +3,7 @@ import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { MyUserContext } from '../../App';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import VectorIcon from '../utils/VectorIcon';
-import axios from 'axios';
+// import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
@@ -12,7 +12,7 @@ const StatusPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const [text, setText] = useState('');
     const [userInfo, setUserInfo] = useState();
-    const [isPosting, setIsPosting] = useState(false);
+    // const [isPosting, setIsPosting] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
 
     // const [sendImg, setSendImg] = useState([]);

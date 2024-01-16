@@ -70,7 +70,7 @@ const GroupEdit = () => {
         // });
 
         const memberId = `${item.user?.id}`;
-        const isMemberSelected = !!selectedMember.find(member => member.id === memberId);
+        const isMemberSelected = !!selectedMember.find(member => member.id == memberId);
         const isMemberExists = memberList.some(member => {
             const { id } = member;
             const idMember = `${id}`;
@@ -80,16 +80,18 @@ const GroupEdit = () => {
         const handlePress = () => {
             if (!isMemberSelected) {
                 const newMember = {
-                    id: item.user.id,
+                    id: item.user?.id,
                     fullName,
                     avatar: item.avatar,
-                    email: item.user.email
+                    email: item.user?.email
                 };
                 setSelectedMember([...selectedMember, newMember]);
                 setInput('');
                 console.log("tồn tại", isMemberExists);
                 console.log("đã chọn", isMemberSelected);
                 console.log(memberList);
+                console.log(selectedMember);
+                console.log(item.user?.id, memberId);
             }
         };
 
@@ -113,7 +115,6 @@ const GroupEdit = () => {
                     source={{ uri: item.avatar }}
                     style={{ width: 40, height: 40, borderRadius: 20 }}
                 />
-                <Text>{item.user?.id}</Text>
                 <Text style={{ fontSize: 16, marginLeft: 10 }}>{fullName}</Text>
             </Pressable>
         );
@@ -131,18 +132,19 @@ const GroupEdit = () => {
         }
     };
 
-    useEffect(() => {
-        const getMemberList = async () => {
-            try {
-                const token = await AsyncStorage.getItem("token");
-                let res = await djangoAuthApi(token).get(endpoints['view-member-by-invitation-group'](groupId))
-                setMemberList(res.data.accounts);
-                setGroupName(res.data.invitation_group_name);
-                console.log(res.data.accounts);
-            } catch (error) {
-                console.log(error);
-            }
+    const getMemberList = async () => {
+        try {
+            const token = await AsyncStorage.getItem("token");
+            let res = await djangoAuthApi(token).get(endpoints['view-member-by-invitation-group'](groupId))
+            setMemberList(res.data.accounts);
+            setGroupName(res.data.invitation_group_name);
+            console.log(res.data.accounts);
+        } catch (error) {
+            console.log(error);
         }
+    }
+
+    useEffect(() => {
         getMemberList();
     }, [])
 
@@ -164,6 +166,7 @@ const GroupEdit = () => {
                 }
             })
             console.log(res.data, res.status);
+            getMemberList();
             setSelectedMember([]);
         } catch (error) {
             console.log(error)
@@ -175,6 +178,27 @@ const GroupEdit = () => {
         updatedMembers.splice(index, 1);
         setSelectedMember(updatedMembers);
     };
+
+    const deleteMember = async (memberId) => {
+        try {
+            console.info(memberId);
+            const token = await AsyncStorage.getItem("token");
+            let res = await djangoAuthApi(token).post(endpoints['delete-account-from-group'](groupId), {
+                "list_account_id": [
+                    memberId
+                ]
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            })
+            console.log('Sau khi xóa')
+            getMemberList();
+        } catch (error) {
+            getMemberList();
+            console.error(error)
+        }
+    }
 
     return (
         <>
@@ -192,7 +216,7 @@ const GroupEdit = () => {
                                         <Text style={{ fontSize: 18, flex: 7.5, alignItems: 'center' }}>
                                             {ml.user.last_name} {ml.user.first_name}
                                         </Text>
-                                        <TouchableOpacity style={{ flex: 1 }}>
+                                        <TouchableOpacity style={{ flex: 1 }} onPress={() => deleteMember(ml.id)}>
                                             <VectorIcon
                                                 name="delete"
                                                 type="MaterialCommunityIcons"
