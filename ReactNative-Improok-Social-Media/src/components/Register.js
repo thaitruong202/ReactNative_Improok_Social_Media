@@ -93,7 +93,7 @@ const Register = ({ navigation }) => {
         }
         else
             Toast.show({
-                type: "warning",
+                type: "error",
                 text1: "Mật khẩu không khớp"
             })
         console.log("Mật khẩu không khớp!");

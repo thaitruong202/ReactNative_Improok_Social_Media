@@ -42,7 +42,7 @@ export default function App() {
         <NativeRouter>
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen name="Đăng nhập" component={Login} />
+              <Stack.Screen name="Đăng nhập" component={Login} options={{ headerShown: false }} />
               <Stack.Screen name="Đăng ký" component={Register} />
               <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
               <Stack.Screen

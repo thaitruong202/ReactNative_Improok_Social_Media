@@ -10,7 +10,9 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://10.17.50.108:8000"
 // const DJANGO_SERVER = "http://192.168.5.13:8000"
 // const DJANGO_SERVER = "http://192.168.1.26:8000"
-const DJANGO_SERVER = "http://10.17.65.33:8000"
+// const DJANGO_SERVER = "http://10.17.65.33:8000"
+
+const DJANGO_SERVER = "http://10.17.49.194:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,

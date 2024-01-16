@@ -365,7 +365,7 @@ const SurveyDetail = ({ navigation }) => {
 
         return (
             <View key={question.id}>
-                <Text>{question.question_content}</Text>
+                <Text>{question.question_order}. {question.question_content}</Text>
                 {/* <RadioButton.Group
                     onValueChange={(value) => handleRadioOptionSelect(question.id, value)}
                     value={selectedOption}
@@ -411,7 +411,7 @@ const SurveyDetail = ({ navigation }) => {
     const renderCheckboxQuestion = (question) => {
         return (
             <View key={question.id}>
-                <Text>{question.question_content}</Text>
+                <Text>{question.question_order}. {question.question_content}</Text>
                 {question.survey_question_option_list.map((option) => (
                     // <TouchableOpacity
                     //     key={option.id}
@@ -450,7 +450,7 @@ const SurveyDetail = ({ navigation }) => {
     const renderTextInputQuestion = (question) => {
         return (
             <View key={question.id}>
-                <Text>{question.question_content}</Text>
+                <Text>{question.question_order}. {question.question_content}</Text>
                 <TextInput
                     onChangeText={(text) => handleTextInputChange(question.id, text)}
                     placeholder="Enter your answer"

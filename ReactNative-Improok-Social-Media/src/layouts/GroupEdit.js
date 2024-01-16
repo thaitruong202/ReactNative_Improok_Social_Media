@@ -62,12 +62,20 @@ const GroupEdit = () => {
 
     const renderItem = ({ item }) => {
         const fullName = `${item.user.last_name} ${item.user.first_name}`;
-        const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName);
+        // const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName);
+        // const isMemberExists = memberList.some(member => {
+        //     const { first_name, last_name } = member.user;
+        //     const full_name = `${last_name} ${first_name}`;
+        //     return full_name === fullName;
+        // });
+
+        const memberId = `${item.user?.id}`;
+        const isMemberSelected = !!selectedMember.find(member => member.id === memberId);
         const isMemberExists = memberList.some(member => {
-            const { first_name, last_name } = member.user;
-            const full_name = `${last_name} ${first_name}`;
-            return full_name === fullName;
-        });
+            const { id } = member;
+            const idMember = `${id}`;
+            return idMember === memberId;
+        })
 
         const handlePress = () => {
             if (!isMemberSelected) {
@@ -81,6 +89,7 @@ const GroupEdit = () => {
                 setInput('');
                 console.log("tồn tại", isMemberExists);
                 console.log("đã chọn", isMemberSelected);
+                console.log(memberList);
             }
         };
 
@@ -104,6 +113,7 @@ const GroupEdit = () => {
                     source={{ uri: item.avatar }}
                     style={{ width: 40, height: 40, borderRadius: 20 }}
                 />
+                <Text>{item.user?.id}</Text>
                 <Text style={{ fontSize: 16, marginLeft: 10 }}>{fullName}</Text>
             </Pressable>
         );

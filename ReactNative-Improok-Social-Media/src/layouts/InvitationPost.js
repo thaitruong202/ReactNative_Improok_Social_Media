@@ -39,7 +39,10 @@ const InvitationPost = ({ navigation }) => {
 
     const renderItem = ({ item }) => {
         const fullName = `${item.user?.last_name} ${item.user?.first_name}`;
-        const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName);
+        // const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName);
+
+        const memberId = item.user?.id;
+        const isMemberSelected = !!selectedMember.find(member => member.id === memberId);
 
         return (
             <Pressable
