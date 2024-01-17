@@ -1,5 +1,5 @@
 import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, Modal, Button } from 'react-native';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
@@ -9,6 +9,7 @@ import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Post from '../layouts/Post';
+import { SPSheet } from 'react-native-popup-confirm-toast';
 
 const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -70,7 +71,7 @@ const Profile = ({ navigation }) => {
     //     }
     // }
 
-    const changeAvatar = async () => {
+    const changeAvatar = async (spSheet) => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (status !== 'granted') {
@@ -108,6 +109,7 @@ const Profile = ({ navigation }) => {
             console.log("Cái gì dậy?", res.data, res.status);
             // setUserInfo(prevState => ({ ...prevState, avatar: image }));
             getCurrentUser();
+            spSheet.hide()
         }
     }
 
@@ -161,37 +163,89 @@ const Profile = ({ navigation }) => {
         }
     };
 
+    const avtarOption = (props) => {
+        return (
+            <Fragment>
+                <View style={{ padding: 20, flexDirection: 'column', gap: 10 }}>
+                    <TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="user-circle"
+                                type="FontAwesome5"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Xem ảnh đại diện</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => changeAvatar(props.spSheet)}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="images"
+                                type="FontAwesome5"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Chọn ảnh đại diện</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </Fragment>
+        );
+    };
+
     return (
         <>
             <ScrollView onScroll={handleProfileScroll}
                 scrollEventThrottle={16}>
                 <View>
-                    <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
-                    <TouchableOpacity style={styles.coverAvatarChange} onPress={() => changeCoverAvatar()}>
-                        <View>
+                    <TouchableOpacity onPress={() => changeCoverAvatar()}>
+                        <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
+                        <TouchableOpacity style={styles.coverAvatarChange} onPress={() => changeCoverAvatar()}>
                             <VectorIcon
                                 name="camera"
                                 type="FontAwesome5"
                                 size={20}
                             ></VectorIcon>
-                        </View>
+                        </TouchableOpacity>
                     </TouchableOpacity>
                 </View>
-                <View style={styles.avatarContainer}>
+                <TouchableOpacity style={styles.avatarContainer}
+                    onPress={() => {
+                        const spSheet = SPSheet;
+                        spSheet.show({
+                            component: () => avtarOption({ ...this.props, spSheet }),
+                            dragFromTopOnly: true,
+                            height: 0.30 * windowHeight
+                        });
+                    }}>
                     <Image style={styles.avatar} source={{ uri: userInfo?.avatar }} />
-                    <TouchableOpacity style={styles.avatarChange} onPress={() => changeAvatar()}>
-                        <View>
-                            <VectorIcon
-                                name="camera"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
+                    <TouchableOpacity style={styles.avatarChange} >
+                        <VectorIcon
+                            name="camera"
+                            type="FontAwesome5"
+                            size={20}
+                        ></VectorIcon>
                     </TouchableOpacity>
-                </View>
+                </TouchableOpacity>
                 <Text style={styles.name}>{user.last_name} {user.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
-
                 <View style={styles.profileTabsContainer}>
                     <View style={styles.tabContainer}>
                         <View style={styles.tabImageContainer}>
@@ -275,7 +329,7 @@ const styles = StyleSheet.create({
         height: 160,
         width: 160,
         borderRadius: 200,
-        backgroundColor: 'blue',
+        backgroundColor: 'white',
         position: 'absolute',
         alignSelf: 'left',
         marginTop: windowHeight / 10,
@@ -284,8 +338,8 @@ const styles = StyleSheet.create({
         marginLeft: 10
     },
     avatar: {
-        height: '90%',
-        width: '90%',
+        height: '95%',
+        width: '95%',
         borderRadius: 72
     },
     avatarChange: {
@@ -308,7 +362,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         right: 15,
-        bottom: 0
+        bottom: 10
     },
     name: {
         alignSelf: 'flex-start',

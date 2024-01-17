@@ -12,7 +12,7 @@ export const TabNavigation = [
         inactiveIconName: 'home-outline',
         inactiveIconType: 'MaterialCommunityIcons',
         size: 25,
-        unFocusSize: 28,
+        unFocusSize: 25,
     },
     {
         id: 2,

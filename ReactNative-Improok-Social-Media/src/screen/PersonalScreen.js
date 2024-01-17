@@ -249,16 +249,18 @@ const PersonalScreen = ({ navigation }) => {
                                     </View>
                                 </TouchableOpacity>
                                 <Collapsible collapsed={!manageExpanded}>
-                                    <View style={styles.collapsibleSubItem}>
-                                        <VectorIcon
-                                            name="users-cog"
-                                            type="FontAwesome5"
-                                            size={19}
-                                        />
-                                        <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
+                                    <View>
+                                        <TouchableOpacity style={styles.collapsibleSubItem}>
+                                            <VectorIcon
+                                                name="users-cog"
+                                                type="FontAwesome5"
+                                                size={19}
+                                            />
+                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
+                                        </TouchableOpacity>
                                     </View>
                                     <View>
-                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý tài khoản")}>
+                                        <TouchableOpacity style={styles.collapsibleSubItem}>
                                             <VectorIcon
                                                 name="account"
                                                 type="MaterialCommunityIcons"

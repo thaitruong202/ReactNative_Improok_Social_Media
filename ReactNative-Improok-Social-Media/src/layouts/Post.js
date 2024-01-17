@@ -10,9 +10,10 @@ import { windowHeight, windowWidth } from '../utils/Dimensions';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
-import { Actionsheet, Box, Button, HStack, Heading, Icon, Spinner, useDisclose } from 'native-base';
+import { Actionsheet, Box, Button, HStack, Heading, Icon, IconButton, Spinner, useDisclose, Center, Stagger } from 'native-base';
 import { Path } from 'react-native-svg';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Root, SPSheet } from 'react-native-popup-confirm-toast'
@@ -357,7 +358,28 @@ const Post = React.forwardRef((props, ref) => {
                                             </View>
                                         </View>
                                         <View style={styles.row}>
-                                            <TouchableOpacity onPress={() => { toggleMenu(ph.id) }}>
+                                            {/* <TouchableOpacity onPress={() => { toggleMenu(ph.id) }}>
+                                                <VectorIcon
+                                                    name="dots-three-horizontal"
+                                                    type="Entypo"
+                                                    size={25}
+                                                    color="#606770"
+                                                    style={styles.headerIcons}
+                                                />
+                                            </TouchableOpacity> */}
+                                            {/* <View> */}
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    // toggleMenu(ph.id)
+                                                    const spSheet = SPSheet;
+                                                    spSheet.show({
+                                                        component: () => component({ ...this.props, phId: ph.id, spSheet }),
+                                                        dragFromTopOnly: true,
+                                                        height: 0.4 * windowHeight
+                                                    });
+                                                }}
+                                            >
+                                                {/* <Text>Open SPSheet Message</Text> */}
                                                 <VectorIcon
                                                     name="dots-three-horizontal"
                                                     type="Entypo"
@@ -366,21 +388,7 @@ const Post = React.forwardRef((props, ref) => {
                                                     style={styles.headerIcons}
                                                 />
                                             </TouchableOpacity>
-                                            <View>
-                                                <TouchableOpacity
-                                                    onPress={() => {
-                                                        // toggleMenu(ph.id)
-                                                        const spSheet = SPSheet;
-                                                        spSheet.show({
-                                                            component: () => component({ ...this.props, phId: ph.id, spSheet }),
-                                                            dragFromTopOnly: true,
-                                                            height: 0.4 * windowHeight
-                                                        });
-                                                    }}
-                                                >
-                                                    <Text>Open SPSheet Message</Text>
-                                                </TouchableOpacity>
-                                            </View>
+                                            {/* </View> */}
                                             {/* <Modal key={ph.id}
                                                 isVisible={isMenuVisible}
                                                 animationIn={'slideInUp'}

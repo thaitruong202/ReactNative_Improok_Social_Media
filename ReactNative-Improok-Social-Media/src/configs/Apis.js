@@ -62,7 +62,8 @@ export const endpoints = {
     "reaction-on-post": `${DJANGO_SERVER}/post_reactions/`,
     "check-reaction": (postId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?account_id=${accountId}`,
     "update-post-reaction": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`,
-    "delete-post": (id) => `${DJANGO_SERVER}/posts/${id}/`
+    "delete-post": (id) => `${DJANGO_SERVER}/posts/${id}/`,
+    "patch-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`
 }
 
 export const djangoAuthApi = (token) => {

@@ -20,6 +20,9 @@ const GroupEdit = () => {
 
     const [filteredAccountList, setFilteredAccountList] = useState([]);
 
+    const [edit, setEdit] = useState(false)
+    const [tempGroupName, setTempGroupName] = useState("")
+
     // const renderItem = ({ item }) => {
     //     const fullName = `${item.user.last_name} ${item.user.first_name}`;
     //     const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName)
@@ -200,14 +203,74 @@ const GroupEdit = () => {
         }
     }
 
+    const handleEdit = () => {
+        setTempGroupName(groupName); // Lưu trữ giá trị ban đầu trong biến tạm
+        setEdit(true);
+    };
+
+    const handleCancel = () => {
+        setGroupName(tempGroupName); // Khôi phục giá trị ban đầu từ biến tạm
+        setEdit(false);
+    };
+
+    const handleSave = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            let res = await djangoAuthApi(token).patch(endpoints['patch-invitation-group'](groupId), {
+                "invitation_group_name": groupName
+            })
+            console.log(res.data)
+            setEdit(false);
+        } catch (error) {
+            console.log(error)
+        }
+    };
+
     return (
         <>
             <ScrollView>
                 <SafeAreaView>
                     <View style={styles.groupMemberContainer}>
-                        <Text style={styles.groupMemberHeaderText}>
-                            Danh sách thành viên nhóm {groupName}
-                        </Text>
+                        {edit === false ? <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <Text style={styles.groupMemberHeaderText}>
+                                {groupName}
+                            </Text>
+                            <TouchableOpacity onPress={() => handleEdit(true)}>
+                                <VectorIcon
+                                    name="edit"
+                                    type="FontAwesome5"
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                        </View> : <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                            <TextInput
+                                value={groupName}
+                                onChangeText={(newgroupName) => setGroupName(newgroupName)}
+                                style={{
+                                    height: 40,
+                                    marginHorizontal: 10,
+                                    borderWidth: 1,
+                                    padding: 10,
+                                    borderRadius: 5,
+                                    fontSize: 17,
+                                    width: 0.7 * windowWidth
+                                }}
+                            />
+                            <TouchableOpacity onPress={() => handleSave()}>
+                                <VectorIcon
+                                    name="check"
+                                    type="FontAwesome5"
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => handleCancel()}>
+                                <VectorIcon
+                                    name="remove"
+                                    type="FontAwesome"
+                                    size={25}
+                                />
+                            </TouchableOpacity>
+                        </View>}
                         {memberList.map(ml => {
                             return (
                                 <Fragment>

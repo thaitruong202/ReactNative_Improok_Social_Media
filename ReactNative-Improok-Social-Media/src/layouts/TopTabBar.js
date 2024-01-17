@@ -15,9 +15,20 @@ const TopTabBar = () => {
                     tabBarInactiveTintColor: '#3A3A3A',
                     tabBarIndicatorStyle: {
                         backgroundColor: '#591aaf',
-                        height: 2,
-                    },
-                })}>
+                        height: 2
+                    }
+                })}
+            // tabBarOptions={{
+            //     activeTintColor: '#591aaf',
+            //     inactiveTintColor: '#3A3A3A',
+            //     indicatorStyle: {
+            //         backgroundColor: '#591aaf',
+            //         height: 2,
+            //     },
+            //     // tabBarShowLabel: ({ focused }) => focused ? true : false,
+            //     tabBarShowLabel: false,
+            // }}
+            >
                 {TabNavigation.map(tab => (
                     <Tab.Screen
                         key={tab.id}
@@ -30,6 +41,7 @@ const TopTabBar = () => {
                                     name={focused ? tab.activeIconName : tab.inactiveIconName}
                                     size={focused ? tab.size : tab.unFocusSize}
                                     color={color}
+                                    style={{ padding: 0 }}
                                 />
                             ),
                         }}
