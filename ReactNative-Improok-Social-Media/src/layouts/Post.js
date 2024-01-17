@@ -1,16 +1,21 @@
-import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
 import React, { Fragment, useContext, useEffect, useState, useRef, useImperativeHandle } from 'react';
 import VectorIcon from '../utils/VectorIcon';
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
-import Like from '../images/like.jpeg';
-import Wow from '../images/wow.jpeg';
-import Love from '../images/love.jpeg';
+// import Like from '../images/like.jpeg';
+// import Wow from '../images/wow.jpeg';
+// import Love from '../images/love.jpeg';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
-import { HStack, Heading, Spinner } from 'native-base';
+import { Actionsheet, Box, Button, HStack, Heading, Icon, Spinner, useDisclose } from 'native-base';
+import { Path } from 'react-native-svg';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import Ionicons from 'react-native-vector-icons/Ionicons'
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Root, SPSheet } from 'react-native-popup-confirm-toast'
 
 const Post = React.forwardRef((props, ref) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -88,13 +93,13 @@ const Post = React.forwardRef((props, ref) => {
         setLoading(false);
     }
 
-    useEffect(() => {
-        if (isPostIdUpdated) {
-            likeReaction();
-            lockOrUnlock();
-            setIsPostIdUpdated(false);
-        }
-    }, [isPostIdUpdated]);
+    // useEffect(() => {
+    //     if (isPostIdUpdated) {
+    //         likeReaction();
+    //         lockOrUnlock();
+    //         setIsPostIdUpdated(false);
+    //     }
+    // }, [isPostIdUpdated]);
 
     const likeReaction = async (postId) => {
         try {
@@ -211,21 +216,126 @@ const Post = React.forwardRef((props, ref) => {
         handleScroll,
     }));
 
-    const lockOrUnlock = async () => {
+    const lockOrUnlock = async (phId, spSheet) => {
         try {
-            console.log("Khóa bình luận bài post", seletedPostId);
+            console.log("Khóa bình luận bài post", phId);
             const token = await AsyncStorage.getItem("token");
-            let check = await djangoAuthApi(token).get(endpoints['get-post-by-post-id'](seletedPostId))
+            let check = await djangoAuthApi(token).get(endpoints['get-post-by-post-id'](phId))
             console.log(check.data.comment_lock);
-            let res = await djangoAuthApi(token).patch(endpoints['lock-comment'](seletedPostId), {
+            let res = await djangoAuthApi(token).patch(endpoints['lock-comment'](phId), {
                 "comment_lock": check.data.comment_lock === true ? false : true
             })
-            toggleMenu();
-            console.log(res.data);
+            // toggleMenu();
+            spSheet.hide()
+            console.log(res.data)
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
     }
+
+    const deletePost = async (phId, spSheet) => {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            let del = await djangoAuthApi(token).delete(endpoints['delete-post'](phId))
+            console.log(del.data)
+            toggleMenu()
+            spSheet.hide()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const component = (props) => {
+        return (
+            <Fragment>
+                <Box w="100%" h={60} px={4} justifyContent="center">
+                    <Text fontSize="16" color="gray.500" _dark={{
+                        color: "gray.300"
+                    }}>
+                        Actions
+                    </Text>
+                </Box>
+                <View style={{ padding: 20 }}>
+                    <TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="pin"
+                                type="Entypo"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Pin Post</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="edit"
+                                type="MaterialIcons"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Edit Post</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => lockOrUnlock(props.phId, props.spSheet)}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="lock"
+                                type="FontAwesome"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Lock Comment</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => deletePost(props.phId, props.spSheet)}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="delete"
+                                type="MaterialIcons"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Delete Post</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </Fragment>
+        );
+    };
 
     return (
         <Fragment>
@@ -247,7 +357,7 @@ const Post = React.forwardRef((props, ref) => {
                                             </View>
                                         </View>
                                         <View style={styles.row}>
-                                            <TouchableOpacity onPress={() => toggleMenu(ph.id)}>
+                                            <TouchableOpacity onPress={() => { toggleMenu(ph.id) }}>
                                                 <VectorIcon
                                                     name="dots-three-horizontal"
                                                     type="Entypo"
@@ -256,7 +366,22 @@ const Post = React.forwardRef((props, ref) => {
                                                     style={styles.headerIcons}
                                                 />
                                             </TouchableOpacity>
-                                            <Modal key={ph.id}
+                                            <View>
+                                                <TouchableOpacity
+                                                    onPress={() => {
+                                                        // toggleMenu(ph.id)
+                                                        const spSheet = SPSheet;
+                                                        spSheet.show({
+                                                            component: () => component({ ...this.props, phId: ph.id, spSheet }),
+                                                            dragFromTopOnly: true,
+                                                            height: 0.4 * windowHeight
+                                                        });
+                                                    }}
+                                                >
+                                                    <Text>Open SPSheet Message</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                            {/* <Modal key={ph.id}
                                                 isVisible={isMenuVisible}
                                                 animationIn={'slideInUp'}
                                                 animationInTiming={150}
@@ -331,7 +456,7 @@ const Post = React.forwardRef((props, ref) => {
                                                                 <Text>Lock Comment</Text>
                                                             </View>
                                                         </TouchableOpacity>
-                                                        <TouchableOpacity>
+                                                        <TouchableOpacity onPress={() => deletePost()}>
                                                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                                                 <VectorIcon
                                                                     name="delete"
@@ -352,7 +477,7 @@ const Post = React.forwardRef((props, ref) => {
                                                         </TouchableOpacity>
                                                     </View>
                                                 </View>
-                                            </Modal>
+                                            </Modal> */}
                                         </View>
                                     </View>
                                     <Text style={styles.caption}>{ph.post_content}</Text>
@@ -361,9 +486,32 @@ const Post = React.forwardRef((props, ref) => {
                                     <View style={styles.footerReactionSec}>
                                         {countPostReaction[index] > 0 && (
                                             <View style={styles.row}>
-                                                {countPostReaction[index] > 0 && <Image source={Like} style={styles.reactionIcon} />}
+                                                {/* {countPostReaction[index] > 0 && <Image source={Like} style={styles.reactionIcon} />}
                                                 {countPostReaction[index] > 0 && <Image source={Wow} style={styles.reactionIcon} />}
-                                                {countPostReaction[index] > 0 && <Image source={Love} style={styles.reactionIcon} />}
+                                                {countPostReaction[index] > 0 && <Image source={Love} style={styles.reactionIcon} />} */}
+                                                {countPostReaction[index] > 0 && <VectorIcon
+                                                    name="like1"
+                                                    type="AntDesign"
+                                                    size={20}
+                                                    color="blue"
+                                                />}
+                                                {countPostReaction[index] > 0 &&
+                                                    <VectorIcon
+                                                        name="heart"
+                                                        type="AntDesign"
+                                                        size={20}
+                                                        color="red"
+                                                    />
+                                                }
+                                                {countPostReaction[index] > 0 &&
+                                                    <VectorIcon
+                                                        name="laugh-squint"
+                                                        type="FontAwesome5"
+                                                        size={20}
+                                                        color="#f7a339"
+                                                    />
+                                                }
+
                                             </View>
                                         )}
                                     </View>
@@ -409,6 +557,7 @@ const Post = React.forwardRef((props, ref) => {
                                                             type="FontAwesome5"
                                                             size={25}
                                                             color="#f7a339"
+
                                                         />
                                                         <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                     </TouchableOpacity>
@@ -449,13 +598,28 @@ const Post = React.forwardRef((props, ref) => {
                                                 style={styles.modalReaction}>
                                                 <View style={styles.modalContainer}>
                                                     <TouchableOpacity onPress={() => reactionPopUp("1")}>
-                                                        <Image source={Like} style={styles.reactionAction} />
+                                                        <VectorIcon
+                                                            name="like1"
+                                                            type="AntDesign"
+                                                            size={35}
+                                                            color="blue"
+                                                        />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => reactionPopUp("2")}>
-                                                        <Image source={Love} style={styles.reactionAction} />
+                                                        <VectorIcon
+                                                            name="heart"
+                                                            type="AntDesign"
+                                                            size={35}
+                                                            color="red"
+                                                        />
                                                     </TouchableOpacity>
                                                     <TouchableOpacity onPress={() => reactionPopUp("3")}>
-                                                        <Image source={Wow} style={styles.reactionAction} />
+                                                        <VectorIcon
+                                                            name="laugh-squint"
+                                                            type="FontAwesome5"
+                                                            size={35}
+                                                            color="#f7a339"
+                                                        />
                                                     </TouchableOpacity>
                                                 </View>
                                             </Modal>

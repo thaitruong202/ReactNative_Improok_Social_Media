@@ -28,6 +28,7 @@ import { NativeBaseProvider } from 'native-base';
 import Toast from 'react-native-toast-message';
 import PostManagement from './src/layouts/PostManagement';
 import SurveyStats from './src/layouts/SurveyStats';
+import { Root as PopupRootProvider } from 'react-native-popup-confirm-toast';
 // import { NativeBaseConfigProvider } from 'native-base/lib/typescript/core/NativeBaseContext';
 
 export const MyUserContext = createContext();
@@ -39,56 +40,58 @@ export default function App() {
   return (
     <MyUserContext.Provider value={[user, dispatch]}>
       <NativeBaseProvider>
-        <NativeRouter>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Đăng nhập" component={Login} options={{ headerShown: false }} />
-              <Stack.Screen name="Đăng ký" component={Register} />
-              <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
-              <Stack.Screen
-                name="Trang cá nhân"
-                component={Profile}
-                options={{
-                  headerTitleAlign: 'center',
-                  headerTitleStyle: {
-                    color: 'black',
-                    fontSize: 18,
-                  },
-                  headerStyle: {
-                    shadowColor: '#fff',
-                    elevation: 0,
-                  },
-                  headerRight: () => (
-                    <View style={{ marginRight: 10 }}>
-                      <FontAwesome5.Button
-                        name="search"
-                        size={20}
-                        backgroundColor="#fff"
-                        color="black" />
-                    </View>
-                  ),
-                }}
-              />
-              <Stack.Screen name="Post" component={Post} />
-              <Stack.Screen name="Bài đăng" component={StatusPost} />
-              <Stack.Screen name="Bình luận" component={Comment} />
-              <Stack.Screen name="Quản lý tài khoản" component={AccountManagement} />
-              <Stack.Screen name="Quản lý nhóm" component={GroupManagement} />
-              <Stack.Screen name="Thành viên nhóm" component={GroupMember} />
-              <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
-              <Stack.Screen name="Tạo sự kiện" component={InvitationPost} />
-              <Stack.Screen name="Tạo khảo sát" component={SurveyPost} />
-              <Stack.Screen name="Tạo đơn khảo sát" component={SurveyForm} />
-              <Stack.Screen name="Test" component={FormTest} />
-              <Stack.Screen name="Khảo sát" component={Survey} />
-              <Stack.Screen name="Sự kiện" component={Invitation} />
-              <Stack.Screen name="Chi tiết khảo sát" component={SurveyDetail} />
-              <Stack.Screen name="Quản lý bài đăng" component={PostManagement} />
-              <Stack.Screen name="Thống kê khảo sát" component={SurveyStats} />
-            </Stack.Navigator>
-            <Toast />
-          </NavigationContainer>
-        </NativeRouter>
+        <PopupRootProvider>
+          <NativeRouter>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen name="Đăng nhập" component={Login} options={{ headerShown: false }} />
+                <Stack.Screen name="Đăng ký" component={Register} />
+                <Stack.Screen name="Trang chủ" component={MainScreen} options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="Trang cá nhân"
+                  component={Profile}
+                  options={{
+                    headerTitleAlign: 'center',
+                    headerTitleStyle: {
+                      color: 'black',
+                      fontSize: 18,
+                    },
+                    headerStyle: {
+                      shadowColor: '#fff',
+                      elevation: 0,
+                    },
+                    headerRight: () => (
+                      <View style={{ marginRight: 10 }}>
+                        <FontAwesome5.Button
+                          name="search"
+                          size={20}
+                          backgroundColor="#fff"
+                          color="black" />
+                      </View>
+                    ),
+                  }}
+                />
+                <Stack.Screen name="Post" component={Post} />
+                <Stack.Screen name="Bài đăng" component={StatusPost} />
+                <Stack.Screen name="Bình luận" component={Comment} />
+                <Stack.Screen name="Quản lý tài khoản" component={AccountManagement} />
+                <Stack.Screen name="Quản lý nhóm" component={GroupManagement} />
+                <Stack.Screen name="Thành viên nhóm" component={GroupMember} />
+                <Stack.Screen name="Chỉnh sửa nhóm" component={GroupEdit} />
+                <Stack.Screen name="Tạo sự kiện" component={InvitationPost} />
+                <Stack.Screen name="Tạo khảo sát" component={SurveyPost} />
+                <Stack.Screen name="Tạo đơn khảo sát" component={SurveyForm} />
+                <Stack.Screen name="Test" component={FormTest} />
+                <Stack.Screen name="Khảo sát" component={Survey} />
+                <Stack.Screen name="Sự kiện" component={Invitation} />
+                <Stack.Screen name="Chi tiết khảo sát" component={SurveyDetail} />
+                <Stack.Screen name="Quản lý bài đăng" component={PostManagement} />
+                <Stack.Screen name="Thống kê khảo sát" component={SurveyStats} />
+              </Stack.Navigator>
+              <Toast />
+            </NavigationContainer>
+          </NativeRouter>
+        </PopupRootProvider>
       </NativeBaseProvider>
     </MyUserContext.Provider>
   );
