@@ -3,7 +3,6 @@ import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { MyUserContext } from '../../App';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import VectorIcon from '../utils/VectorIcon';
-// import axios from 'axios';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
@@ -24,7 +23,7 @@ const StatusPost = ({ navigation }) => {
     const getCurrentUser = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user?.id))
             setUserInfo(res.data);
         } catch (err) {
             console.log(err)
@@ -33,7 +32,7 @@ const StatusPost = ({ navigation }) => {
 
     useEffect(() => {
         getCurrentUser();
-    }, [user.id])
+    }, [user?.id])
 
     const createPost = async () => {
         try {
@@ -85,7 +84,7 @@ const StatusPost = ({ navigation }) => {
 
     useEffect(() => {
         console.log("Mảng đã chọn", selectedImages);
-        // console.log("Mang URI", imageUri);
+        // console.log("Mảng URI", imageUri);
     }, [selectedImages]);
 
     const createImagePost = async () => {
@@ -95,7 +94,7 @@ const StatusPost = ({ navigation }) => {
                 "post_content": text,
                 "account": userInfo?.id
             })
-            const postId = res.data.id
+            const postId = res.data?.id
 
             // let form = new FormData();
             // const filename = image.split('/').pop();
@@ -175,7 +174,7 @@ const StatusPost = ({ navigation }) => {
                 <View style={styles.profileContainer}>
                     <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
                     <View style={styles.inputBox}>
-                        <Text style={styles.inputStyle}>{user.first_name}</Text>
+                        <Text style={styles.inputStyle}>{user?.last_name} {user?.first_name}</Text>
                     </View>
                 </View>
                 <View>
@@ -188,7 +187,8 @@ const StatusPost = ({ navigation }) => {
                         style={styles.textInputStyle}
                     />
                 </View>
-                <View>
+                <View style={{ marginTop: 20 }}>
+                    <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
                     <TouchableOpacity style={styles.postOption} onPress={openImagePicker}>
                         <VectorIcon
                             name="images"
@@ -198,26 +198,62 @@ const StatusPost = ({ navigation }) => {
                         </VectorIcon>
                         <Text style={styles.inputStyle}>Photo</Text>
                     </TouchableOpacity>
+                    <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
+                    <TouchableOpacity style={styles.postOption}>
+                        <VectorIcon
+                            name="video-camera"
+                            type="Entypo"
+                            size={22}
+                            color="orange">
+                        </VectorIcon>
+                        <Text style={styles.inputStyle}>Livestream</Text>
+                    </TouchableOpacity>
+                    <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
+                    <TouchableOpacity style={styles.postOption}>
+                        <VectorIcon
+                            name="camera"
+                            type="Entypo"
+                            size={22}
+                            color="blue">
+                        </VectorIcon>
+                        <Text style={styles.inputStyle}>Camera</Text>
+                    </TouchableOpacity>
+                    <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
+                    <TouchableOpacity style={styles.postOption}>
+                        <VectorIcon
+                            name="smiley"
+                            type="Fontisto"
+                            size={22}
+                            color="#F2D21E">
+                        </VectorIcon>
+                        <Text style={styles.inputStyle}>Feeling</Text>
+                    </TouchableOpacity>
                     {userInfo?.role.role_name === "Admin" ?
-                        <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo khảo sát")}>
-                            <VectorIcon
-                                name="poll"
-                                type="FontAwesome5"
-                                size={22}>
-                            </VectorIcon>
-                            <Text style={styles.inputStyle}>Survey</Text>
-                        </TouchableOpacity>
+                        <View>
+                            <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
+                            <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo khảo sát")}>
+                                <VectorIcon
+                                    name="poll"
+                                    type="FontAwesome5"
+                                    size={22}>
+                                </VectorIcon>
+                                <Text style={styles.inputStyle}>Survey</Text>
+                            </TouchableOpacity>
+                        </View>
                         : ""}
                     {userInfo?.role.role_name === "Admin" ?
-                        <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo sự kiện")}>
-                            <VectorIcon
-                                name="event"
-                                type="MaterialIcons"
-                                size={22}
-                                color="red">
-                            </VectorIcon>
-                            <Text style={styles.inputStyle}>Event</Text>
-                        </TouchableOpacity>
+                        <View>
+                            <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
+                            <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo sự kiện")}>
+                                <VectorIcon
+                                    name="calendar-day"
+                                    type="FontAwesome5"
+                                    size={22}
+                                    color="red">
+                                </VectorIcon>
+                                <Text style={styles.inputStyle}>Event</Text>
+                            </TouchableOpacity>
+                        </View>
                         : ""}
                     {selectedImages.length > 0 && (
                         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -283,7 +319,8 @@ const styles = StyleSheet.create({
         marginLeft: 8,
         marginRight: 8,
         marginBottom: 8,
-        borderRadius: 10
+        borderRadius: 10,
+        gap: 8
     },
     inputBox: {
         marginLeft: 5
@@ -309,10 +346,11 @@ const styles = StyleSheet.create({
     postOption: {
         flexDirection: 'row',
         padding: 10,
+        gap: 5,
         alignItems: 'center',
     },
     textInputStyle: {
-        borderWidth: 1,
+        // borderWidth: 1,
         borderColor: 'gray',
         padding: 10,
         textAlignVertical: 'top',

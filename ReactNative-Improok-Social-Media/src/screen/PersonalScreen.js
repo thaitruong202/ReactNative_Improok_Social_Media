@@ -52,7 +52,7 @@ const PersonalScreen = ({ navigation }) => {
     return (
         <>
             <ScrollView>
-                <View style={styles.personalContainer}>
+                {/* <View style={styles.personalContainer}>
                     <Text style={{ fontSize: 25, fontWeight: 'bold' }}>Menu</Text>
                     <View style={styles.headerIcons}>
                         <View style={styles.iconBg}>
@@ -70,7 +70,8 @@ const PersonalScreen = ({ navigation }) => {
                             />
                         </View>
                     </View>
-                </View>
+                </View> */}
+                <View style={{ height: 10, backgroundColor: 'transparent' }}></View>
                 <View>
                     <TouchableOpacity onPress={() => navigation.navigate('Trang cá nhân')} style={styles.profileContainer}>
                         <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />

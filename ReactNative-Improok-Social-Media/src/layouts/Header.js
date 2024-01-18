@@ -11,24 +11,24 @@ const Header = () => {
                 <View style={styles.iconBg}>
                     <VectorIcon
                         name="add-circle"
-                        type="MaterialIcons"
-                        size={19}
+                        type="Ionicons"
+                        size={25}
                         color="#3A3A3A"
                     />
                 </View>
                 <View style={styles.iconBg}>
                     <VectorIcon
-                        name="search"
-                        type="FontAwesome5"
-                        size={19}
+                        name="search-sharp"
+                        type="Ionicons"
+                        size={25}
                         color="#3A3A3A"
                     />
                 </View>
                 <View style={styles.iconBg}>
                     <VectorIcon
-                        name="messenger"
-                        type="Fontisto"
-                        size={22}
+                        name="facebook-messenger"
+                        type="MaterialCommunityIcons"
+                        size={25}
                         color="#3A3A3A"
                     />
                 </View>
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
         width: 150,
     },
     iconBg: {
-        backgroundColor: '#EBECF0',
+        // backgroundColor: '#EBECF0',
         height: 35,
         width: 35,
         borderRadius: 50,

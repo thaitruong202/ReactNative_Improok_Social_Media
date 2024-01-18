@@ -1,21 +1,13 @@
 import { View, Image, StyleSheet, Text, TouchableOpacity, ScrollView } from 'react-native';
-import React, { Fragment, useContext, useEffect, useState, useRef, useImperativeHandle } from 'react';
+import React, { Fragment, useContext, useEffect, useState, useImperativeHandle } from 'react';
 import VectorIcon from '../utils/VectorIcon';
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
-// import Like from '../images/like.jpeg';
-// import Wow from '../images/wow.jpeg';
-// import Love from '../images/love.jpeg';
 import Modal from "react-native-modal";
 import { useNavigation } from '@react-navigation/native';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
-import { Actionsheet, Box, Button, HStack, Heading, Icon, IconButton, Spinner, useDisclose, Center, Stagger } from 'native-base';
-import { Path } from 'react-native-svg';
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { Box, HStack, Heading, Spinner } from 'native-base';
 import { Root, SPSheet } from 'react-native-popup-confirm-toast'
 
 const Post = React.forwardRef((props, ref) => {
@@ -377,8 +369,7 @@ const Post = React.forwardRef((props, ref) => {
                                                         dragFromTopOnly: true,
                                                         height: 0.4 * windowHeight
                                                     });
-                                                }}
-                                            >
+                                                }}>
                                                 {/* <Text>Open SPSheet Message</Text> */}
                                                 <VectorIcon
                                                     name="dots-three-horizontal"

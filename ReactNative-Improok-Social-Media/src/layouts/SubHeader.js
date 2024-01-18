@@ -1,15 +1,17 @@
-import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { View, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
-import CameraRoll from '../images/cameraroll.png';
 import * as ImagePicker from 'expo-image-picker';
 import { MyUserContext } from "../../App";
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import VectorIcon from '../utils/VectorIcon';
+import { useNavigation } from '@react-navigation/native';
 
 const SubHeader = () => {
     const [user, dispatch] = useContext(MyUserContext);
     const [userInfo, setUserInfo] = useState();
     const [selectedImages, setSelectedImages] = useState([]);
+    const navigation = useNavigation();
 
     const getCurrentUser = async () => {
         try {
@@ -52,11 +54,16 @@ const SubHeader = () => {
     return (
         <View style={styles.container}>
             <Image source={{ uri: userInfo?.avatar }} style={styles.avatarStyle} />
-            <View style={styles.inputBox}>
+            <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate("Bài đăng")}>
                 <Text style={styles.inputStyle}>What's on your mind, {user?.first_name}?</Text>
-            </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={openImagePicker}>
-                <Image source={CameraRoll} style={styles.cameraRoll} />
+                <VectorIcon
+                    name="images"
+                    type="Ionicons"
+                    size={25}
+                    color="green"
+                />
             </TouchableOpacity>
         </View>
     );
@@ -66,7 +73,8 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        padding: 18,
+        paddingHorizontal: 15,
+        paddingTop: 15,
         backgroundColor: '#FFFFFF',
         alignItems: 'center',
     },

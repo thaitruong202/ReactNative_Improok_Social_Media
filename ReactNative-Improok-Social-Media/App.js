@@ -68,7 +68,7 @@ export default function App() {
                           backgroundColor="#fff"
                           color="black" />
                       </View>
-                    ),
+                    )
                   }}
                 />
                 <Stack.Screen name="Post" component={Post} />

@@ -6,6 +6,7 @@ import axios from "axios";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import VectorIcon from "../utils/VectorIcon";
 import { djangoAuthApi, endpoints } from "../configs/Apis";
+import Header from "../layouts/Header";
 
 const HomeScreen = ({ navigation }) => {
     const [postList, setPostList] = useState([]);
@@ -46,10 +47,15 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <Fragment>
-            <ScrollView refreshControl={
-                <RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />
-            }>
+            <Header />
+            <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={handleRefresh} />}
+                style={{ backgroundColor: 'white' }}
+            >
                 <SubHeader />
+                <View style={{
+                    height: 5, backgroundColor: "lightgrey", marginTop: 15, marginBottom: 15
+                }}>
+                </View>
                 {postList.map((ph, index) => {
                     return (
                         <>

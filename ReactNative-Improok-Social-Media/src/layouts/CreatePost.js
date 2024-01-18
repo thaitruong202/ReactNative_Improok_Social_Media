@@ -59,7 +59,12 @@ const CreatePost = ({ navigation }) => {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={openImagePicker}>
-                    <Image source={CameraRoll} style={styles.cameraRoll} />
+                    <VectorIcon
+                        name="images"
+                        type="Ionicons"
+                        size={25}
+                        color="green"
+                    />
                 </TouchableOpacity>
             </View>
             <View style={styles.container}>

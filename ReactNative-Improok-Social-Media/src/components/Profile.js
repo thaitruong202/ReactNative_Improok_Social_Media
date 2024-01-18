@@ -1,15 +1,15 @@
-import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity, Modal, Button } from 'react-native';
+import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { Fragment, useContext, useEffect, useRef, useState } from 'react';
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import CreatePost from '../layouts/CreatePost';
-import Timeline from '../layouts/Timeline';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from 'expo-image-picker';
 import Post from '../layouts/Post';
 import { SPSheet } from 'react-native-popup-confirm-toast';
+import Modal from "react-native-modal";
 
 const Profile = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -32,6 +32,9 @@ const Profile = ({ navigation }) => {
     useEffect(() => {
         getCurrentUser();
     }, [userInfo])
+
+    const [isVisible, setVisible] = useState(false);
+    const [isAvatarVisible, setAvatarVisible] = useState(false);
 
     // const changeAvatar = async () => {
     //     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -166,8 +169,8 @@ const Profile = ({ navigation }) => {
     const avtarOption = (props) => {
         return (
             <Fragment>
-                <View style={{ padding: 20, flexDirection: 'column', gap: 10 }}>
-                    <TouchableOpacity>
+                <View style={{ padding: 20, flexDirection: 'column', gap: 15 }}>
+                    <TouchableOpacity onPress={() => { setAvatarVisible(true), props.spSheet.hide() }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <VectorIcon
                                 name="user-circle"
@@ -210,14 +213,78 @@ const Profile = ({ navigation }) => {
         );
     };
 
+    const coverOption = (props) => {
+        return (
+            <Fragment>
+                <View style={{ padding: 20, flexDirection: 'column', gap: 15 }}>
+                    <TouchableOpacity onPress={() => { setVisible(true), props.spSheet.hide() }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="image"
+                                type="FontAwesome5"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Xem ảnh bìa</Text>
+                        </View>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => changeCoverAvatar(props.spSheet)}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="upload"
+                                type="FontAwesome5"
+                                size={25}
+                                style={{
+                                    backgroundColor: '#EBECF0',
+                                    height: 40,
+                                    width: 40,
+                                    borderRadius: 50,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginRight: 10,
+                                }}
+                            />
+                            <Text>Chọn ảnh bìa</Text>
+                        </View>
+                    </TouchableOpacity>
+                </View>
+            </Fragment>
+        );
+    };
+
     return (
         <>
             <ScrollView onScroll={handleProfileScroll}
                 scrollEventThrottle={16}>
                 <View>
-                    <TouchableOpacity onPress={() => changeCoverAvatar()}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            const spSheet = SPSheet;
+                            spSheet.show({
+                                component: () => coverOption({ ...this.props, spSheet }),
+                                dragFromTopOnly: true,
+                                height: 0.2 * windowHeight
+                            });
+                        }}>
                         <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
-                        <TouchableOpacity style={styles.coverAvatarChange} onPress={() => changeCoverAvatar()}>
+                        <TouchableOpacity style={styles.coverAvatarChange}
+                            onPress={() => {
+                                const spSheet = SPSheet;
+                                spSheet.show({
+                                    component: () => coverOption({ ...this.props, spSheet }),
+                                    dragFromTopOnly: true,
+                                    height: 0.25 * windowHeight
+                                });
+                            }}
+                        >
                             <VectorIcon
                                 name="camera"
                                 type="FontAwesome5"
@@ -225,6 +292,26 @@ const Profile = ({ navigation }) => {
                             ></VectorIcon>
                         </TouchableOpacity>
                     </TouchableOpacity>
+                    <Modal
+                        isVisible={isVisible}
+                        animationIn={'slideInUp'}
+                        animationInTiming={150}
+                        animationOut={'slideOutDown'}
+                        backdropColor='black'
+                        backdropOpacity={1}
+                        animationOutTiming={150}
+                        swipeDirection='down'
+                        onSwipeComplete={() => {
+                            setVisible(false)
+                        }}
+                        onBackdropPress={() => {
+                            setVisible(false)
+                        }}
+                    >
+                        <View style={{ width: windowWidth }}>
+                            <Image source={{ uri: userInfo?.cover_avatar }} style={{ width: '100%', height: windowHeight / 3 }} />
+                        </View>
+                    </Modal>
                 </View>
                 <TouchableOpacity style={styles.avatarContainer}
                     onPress={() => {
@@ -232,17 +319,45 @@ const Profile = ({ navigation }) => {
                         spSheet.show({
                             component: () => avtarOption({ ...this.props, spSheet }),
                             dragFromTopOnly: true,
-                            height: 0.30 * windowHeight
+                            height: 0.21 * windowHeight
                         });
                     }}>
                     <Image style={styles.avatar} source={{ uri: userInfo?.avatar }} />
-                    <TouchableOpacity style={styles.avatarChange} >
+                    <TouchableOpacity style={styles.avatarChange}
+                        onPress={() => {
+                            const spSheet = SPSheet;
+                            spSheet.show({
+                                component: () => avtarOption({ ...this.props, spSheet }),
+                                dragFromTopOnly: true,
+                                height: 0.21 * windowHeight
+                            });
+                        }}>
                         <VectorIcon
                             name="camera"
                             type="FontAwesome5"
                             size={20}
                         ></VectorIcon>
                     </TouchableOpacity>
+                    <Modal
+                        isVisible={isAvatarVisible}
+                        animationIn={'slideInUp'}
+                        animationInTiming={150}
+                        animationOut={'slideOutDown'}
+                        backdropColor='black'
+                        backdropOpacity={1}
+                        animationOutTiming={150}
+                        swipeDirection='down'
+                        onBackdropPress={() => {
+                            setAvatarVisible(false)
+                        }}
+                        onSwipeComplete={() => {
+                            setAvatarVisible(false)
+                        }}
+                    >
+                        <View style={{ width: windowWidth }}>
+                            <Image source={{ uri: userInfo?.avatar }} style={{ width: '100%', height: windowHeight / 3 }} />
+                        </View>
+                    </Modal>
                 </TouchableOpacity>
                 <Text style={styles.name}>{user.last_name} {user.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
