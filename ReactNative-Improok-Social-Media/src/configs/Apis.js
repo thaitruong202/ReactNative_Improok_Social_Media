@@ -15,7 +15,8 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://10.17.50.206:8000"
 // const DJANGO_SERVER = "http://192.168.1.8:8000"
 // const DJANGO_SERVER = "http://192.168.1.12:8000"
-const DJANGO_SERVER = "http://192.168.1.35:8000"
+// const DJANGO_SERVER = "http://192.168.1.35:8000"
+const DJANGO_SERVER = "http://192.168.1.25:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
@@ -64,7 +65,8 @@ export const endpoints = {
     "check-reaction": (postId, accountId) => `${DJANGO_SERVER}/posts/${postId}/reactions/?account_id=${accountId}`,
     "update-post-reaction": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`,
     "delete-post": (id) => `${DJANGO_SERVER}/posts/${id}/`,
-    "patch-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`
+    "patch-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`,
+    "create-lecturer-account": `${DJANGO_SERVER}/users/create_lecturer/`
 }
 
 export const djangoAuthApi = (token) => {

@@ -261,7 +261,7 @@ const PersonalScreen = ({ navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View>
-                                        <TouchableOpacity style={styles.collapsibleSubItem}>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý tài khoản")}>
                                             <VectorIcon
                                                 name="account"
                                                 type="MaterialCommunityIcons"

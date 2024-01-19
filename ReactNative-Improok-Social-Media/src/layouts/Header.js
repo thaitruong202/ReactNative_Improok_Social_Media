@@ -8,14 +8,14 @@ const Header = () => {
         <View style={styles.headerContainer}>
             <Image source={ImprookLogo} style={styles.improokLogoStyle} />
             <View style={styles.headerIcons}>
-                <View style={styles.iconBg}>
+                {/* <View style={styles.iconBg}>
                     <VectorIcon
                         name="add-circle"
                         type="Ionicons"
                         size={25}
                         color="#3A3A3A"
                     />
-                </View>
+                </View> */}
                 <View style={styles.iconBg}>
                     <VectorIcon
                         name="search-sharp"
