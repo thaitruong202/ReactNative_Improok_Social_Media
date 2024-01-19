@@ -116,7 +116,7 @@ const Profile = ({ navigation }) => {
         }
     }
 
-    const changeCoverAvatar = async () => {
+    const changeCoverAvatar = async (spSheet) => {
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
         if (status !== 'granted') {
@@ -154,6 +154,7 @@ const Profile = ({ navigation }) => {
             console.log("Thành công nha", res.data, res.status);
             // setUserInfo(prevState => ({ ...prevState, cover_avatar: image }));
             getCurrentUser();
+            spSheet.hide()
         }
     }
 

@@ -16,7 +16,9 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://192.168.1.8:8000"
 // const DJANGO_SERVER = "http://192.168.1.12:8000"
 // const DJANGO_SERVER = "http://192.168.1.35:8000"
-const DJANGO_SERVER = "http://192.168.1.25:8000"
+// const DJANGO_SERVER = "http://192.168.1.25:8000"
+
+const DJANGO_SERVER = "http://192.168.1.7:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,

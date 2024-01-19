@@ -8,6 +8,7 @@ import VectorIcon from '../utils/VectorIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity, View } from 'react-native';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
+import ChatScreen from './ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -33,7 +34,7 @@ const MainScreen = () => {
                         />
                     )
                 }} />
-                <Tab.Screen name='Message' component={MessageScreen} options={{
+                <Tab.Screen name='Message' component={ChatScreen} options={{
                     tabBarLabelStyle: { color: '#591aaf' },
                     tabBarIcon: ({ focused }) => (
                         <VectorIcon

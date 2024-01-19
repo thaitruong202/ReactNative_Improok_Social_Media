@@ -44,9 +44,8 @@ const Login = ({ navigation }) => {
             console.log("Lưu current user")
             console.log(data.data);
             setCurrentUser(data.data);
-            console.log(data.data?.confirm_status)
 
-            if (data.data?.confirm_status == 3) {
+            if (data.data?.confirm_status === 3) {
                 // alert("Tài khoản của bạn chưa được xét duyệt!. Vui lòng thử lại sau");
                 Toast.show({
                     type: 'success',
