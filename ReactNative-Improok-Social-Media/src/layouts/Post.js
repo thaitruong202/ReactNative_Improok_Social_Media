@@ -9,6 +9,7 @@ import { useNavigation } from '@react-navigation/native';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { Box, HStack, Heading, Spinner } from 'native-base';
 import { Root, SPSheet } from 'react-native-popup-confirm-toast'
+import Swiper from 'react-native-swiper';
 
 const Post = React.forwardRef((props, ref) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -19,6 +20,7 @@ const Post = React.forwardRef((props, ref) => {
     const [countPostReaction, setCountPostReaction] = useState([]);
     const [countPostComment, setCountPostComment] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);
+    const [imageList, setImageList] = useState([]);
 
     const [seletedPostId, setSelectedPostId] = useState();
 
@@ -61,37 +63,35 @@ const Post = React.forwardRef((props, ref) => {
             const reactionCounts = [];
             const commentCounts = [];
             const reactionChecks = [];
+            const imageLists = [];
             for (let i = 0; i < res.data.results.length; i++) {
                 let postId = postIds[i];
                 let reactionRes = await djangoAuthApi(token).get(endpoints['count-post-reaction'](postId));
                 let commentRes = await djangoAuthApi(token).get(endpoints['count-post-comment'](postId));
                 let resCheck = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
+                let imgs = await djangoAuthApi(token).get(endpoints['get-post-image'](postId));
                 let reactCount = reactionRes.data
                 reactionCounts.push(reactCount);
                 let cmtCounts = commentRes.data
                 commentCounts.push(cmtCounts);
                 let reactedCheck = resCheck.data;
                 reactionChecks.push(reactedCheck);
+                let imgArr = imgs.data;
+                imageLists.push(imgArr)
             }
             setCountPostReaction((prevCountPostReaction) => [...prevCountPostReaction, ...reactionCounts]);
             setCountPostComment((prevCountPostComment) => [...prevCountPostComment, ...commentCounts]);
             setCheckReaction((prevCheckReaction) => [...prevCheckReaction, ...reactionChecks]);
+            setImageList((prevImageList) => [...prevImageList, ...imageLists]);
             console.log(res.data.results);
             console.log(reactionCounts);
             console.log(reactionChecks);
+            console.log(imageLists);
         } catch (error) {
             console.log(error)
         }
         setLoading(false);
     }
-
-    // useEffect(() => {
-    //     if (isPostIdUpdated) {
-    //         likeReaction();
-    //         lockOrUnlock();
-    //         setIsPostIdUpdated(false);
-    //     }
-    // }, [isPostIdUpdated]);
 
     const likeReaction = async (postId) => {
         try {
@@ -370,7 +370,6 @@ const Post = React.forwardRef((props, ref) => {
                                                         height: 0.4 * windowHeight
                                                     });
                                                 }}>
-                                                {/* <Text>Open SPSheet Message</Text> */}
                                                 <VectorIcon
                                                     name="dots-three-horizontal"
                                                     type="Entypo"
@@ -481,13 +480,21 @@ const Post = React.forwardRef((props, ref) => {
                                     </View>
                                     <Text style={styles.caption}>{ph.post_content}</Text>
                                 </View>
+                                {imageList[index] && imageList[index].length !== 0 ?
+                                    <View style={{ width: windowWidth, height: windowHeight / 3 }}>
+                                        <Swiper autoplay={false} loop={false} showsButtons={true}>
+                                            {imageList[index].map((item, itemIndex) => (
+                                                <View key={itemIndex}>
+                                                    <Image source={{ uri: item.post_image_url }} style={styles.image} />
+                                                </View>
+                                            ))}
+                                        </Swiper>
+                                    </View>
+                                    : ""}
                                 <View style={styles.postFooterContainer}>
                                     <View style={styles.footerReactionSec}>
                                         {countPostReaction[index] > 0 && (
                                             <View style={styles.row}>
-                                                {/* {countPostReaction[index] > 0 && <Image source={Like} style={styles.reactionIcon} />}
-                                                {countPostReaction[index] > 0 && <Image source={Wow} style={styles.reactionIcon} />}
-                                                {countPostReaction[index] > 0 && <Image source={Love} style={styles.reactionIcon} />} */}
                                                 {countPostReaction[index] > 0 && <VectorIcon
                                                     name="like1"
                                                     type="AntDesign"
@@ -510,7 +517,6 @@ const Post = React.forwardRef((props, ref) => {
                                                         color="#f7a339"
                                                     />
                                                 }
-
                                             </View>
                                         )}
                                     </View>
@@ -520,7 +526,6 @@ const Post = React.forwardRef((props, ref) => {
                                                 checkReaction[index].data[0].reaction_id === 1 ? (
                                                     <TouchableOpacity
                                                         onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id); }}
-                                                        // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
                                                         <VectorIcon
@@ -548,7 +553,6 @@ const Post = React.forwardRef((props, ref) => {
                                                 ) : checkReaction[index].data[0].reaction_id === 3 ? (
                                                     <TouchableOpacity
                                                         onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id) }}
-                                                        // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
                                                         <VectorIcon
@@ -563,7 +567,6 @@ const Post = React.forwardRef((props, ref) => {
                                                 ) : (
                                                     <TouchableOpacity
                                                         onLongPress={() => { setCurrentPostId(ph.id); toggleReaction(ph.id) }}
-                                                        // onPress={() => { setCurrentPostId(ph.id); setIsPostIdUpdated(true); }}
                                                         onPress={() => likeReaction(ph.id)}
                                                         style={styles.row}>
                                                         <VectorIcon
@@ -762,6 +765,10 @@ const styles = StyleSheet.create({
     reactionAction: {
         width: 50,
         height: 50
+    },
+    image: {
+        width: '100%',
+        height: '100%'
     }
 });
 

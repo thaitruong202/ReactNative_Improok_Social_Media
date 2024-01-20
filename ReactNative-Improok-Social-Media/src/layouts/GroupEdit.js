@@ -5,7 +5,7 @@ import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import VectorIcon from '../utils/VectorIcon';
-import { windowHeight, windowWidth } from '../utils/Dimensions';
+import { windowWidth } from '../utils/Dimensions';
 
 const GroupEdit = () => {
     const [user, dispatch] = useContext(MyUserContext);

@@ -43,7 +43,6 @@ const CreatePost = ({ navigation }) => {
             console.log('User cancelled image picker');
         } else {
             const selectedImages = result.assets;
-            // Xử lý các ảnh đã chọn ở đây
         }
     };
 

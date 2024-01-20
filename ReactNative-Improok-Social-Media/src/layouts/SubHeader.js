@@ -47,7 +47,6 @@ const SubHeader = () => {
             console.log('Hủy chọn ảnh');
         } else {
             const selectedImages = result.assets;
-            // Xử lý các ảnh đã chọn ở đây
         }
     };
 

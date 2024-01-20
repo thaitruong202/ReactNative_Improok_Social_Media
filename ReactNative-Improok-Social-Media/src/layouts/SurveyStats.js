@@ -4,7 +4,7 @@ import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { useRoute } from '@react-navigation/native';
-import { PieChart, BarChart } from "react-native-chart-kit";
+import { PieChart } from "react-native-chart-kit";
 import { windowWidth } from '../utils/Dimensions';
 import { VictoryBar, VictoryChart, VictoryTheme } from 'victory-native';
 

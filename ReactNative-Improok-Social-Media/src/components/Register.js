@@ -2,7 +2,6 @@ import { Fragment, useState } from "react";
 import { Image, StyleSheet, TextInput, TouchableOpacity, Button, Text, View, ScrollView } from "react-native";
 import { windowHeight, windowWidth } from "../utils/Dimensions";
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import Apis, { endpoints } from "../configs/Apis";
 import Toast from "react-native-toast-message";
 

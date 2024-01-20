@@ -70,7 +70,8 @@ export const endpoints = {
     "patch-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`,
     "create-lecturer-account": `${DJANGO_SERVER}/users/create_lecturer/`,
     "get-user-by-status": `${DJANGO_SERVER}/users/get_user_by_status/`,
-    "confirm-user": (id) => `${DJANGO_SERVER}/users/${id}/`
+    "confirm-user": (id) => `${DJANGO_SERVER}/users/${id}/`,
+    "get-post-image": (id) => `${DJANGO_SERVER}/posts/${id}/post-images/`
 }
 
 export const djangoAuthApi = (token) => {
