@@ -68,7 +68,9 @@ export const endpoints = {
     "update-post-reaction": (id) => `${DJANGO_SERVER}/post_reactions/${id}/`,
     "delete-post": (id) => `${DJANGO_SERVER}/posts/${id}/`,
     "patch-invitation-group": (id) => `${DJANGO_SERVER}/invitation_groups/${id}/`,
-    "create-lecturer-account": `${DJANGO_SERVER}/users/create_lecturer/`
+    "create-lecturer-account": `${DJANGO_SERVER}/users/create_lecturer/`,
+    "get-user-by-status": `${DJANGO_SERVER}/users/get_user_by_status/`,
+    "confirm-user": (id) => `${DJANGO_SERVER}/users/${id}/`
 }
 
 export const djangoAuthApi = (token) => {

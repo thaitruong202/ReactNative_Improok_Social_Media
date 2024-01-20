@@ -16,7 +16,6 @@ const Post = React.forwardRef((props, ref) => {
     const [postHead, setPostHead] = useState([]);
     const [isModalVisible, setModalVisible] = useState(false);
     const [currentPostId, setCurrentPostId] = useState(null);
-    const [isPostIdUpdated, setIsPostIdUpdated] = useState(false);
     const [countPostReaction, setCountPostReaction] = useState([]);
     const [countPostComment, setCountPostComment] = useState([]);
     const [checkReaction, setCheckReaction] = useState([]);

@@ -1,11 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { MyUserContext } from '../../App';
-import { Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight } from '../utils/Dimensions';
+import { Button } from 'native-base';
 
 const AccountCreate = () => {
     const [user, dispatch] = useContext(MyUserContext)
@@ -38,9 +38,9 @@ const AccountCreate = () => {
         }
     }
 
-    const checkVar = async () => {
-        console.log(lecturer.username, lecturer.email, lecturer.firstname, lecturer.lastname)
-    }
+    // const checkVar = async () => {
+    //     console.log(lecturer.username, lecturer.email, lecturer.firstname, lecturer.lastname)
+    // }
 
     const change = (e, field) => {
         setLecturer(current => {
@@ -126,7 +126,13 @@ const AccountCreate = () => {
                                 style={styles.inputText}
                             />
                         </View>
-                        <Button title='Submit' onPress={() => createLecturerAccount()} />
+                        <Button style={{ marginTop: 10 }} variant="subtle"
+                            colorScheme='purple'
+                            onPress={() => createLecturerAccount()}
+                            isDisabled={lecturer.email === '' || lecturer.firstname === '' || lecturer.lastname === '' || lecturer.username === ''}>
+                            Create
+                        </Button>
+                        {/* <Button title='Submit' onPress={() => createLecturerAccount()} /> */}
                     </View>
                 </View>
             </ScrollView>

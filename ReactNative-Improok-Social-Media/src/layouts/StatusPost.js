@@ -6,6 +6,7 @@ import VectorIcon from '../utils/VectorIcon';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
+import { Button } from 'native-base';
 
 const StatusPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -281,7 +282,7 @@ const StatusPost = ({ navigation }) => {
                     )}
                 </View>
                 <View>
-                    <TouchableOpacity onPress={() => {
+                    {/* <TouchableOpacity onPress={() => {
                         if (selectedImages.length !== 0) {
                             createImagePost();
                         } else {
@@ -289,7 +290,16 @@ const StatusPost = ({ navigation }) => {
                         }
                     }} disabled={!text} style={styles.postContainer}>
                         <Text style={styles.postStyle}>Post</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <Button onPress={() => {
+                        if (selectedImages.length !== 0) {
+                            createImagePost();
+                        } else {
+                            createPost();
+                        }
+                    }} variant="subtle" colorScheme="darkBlue" isDisabled={!text} style={styles.postContainer}>
+                        Post
+                    </Button>
                 </View>
             </View>
         </>
@@ -328,13 +338,13 @@ const styles = StyleSheet.create({
     },
     postContainer: {
         marginTop: 10,
-        width: '100%',
-        height: windowHeight / 16,
-        backgroundColor: '#2e64e5',
-        padding: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 3,
+        // width: '100%',
+        // height: windowHeight / 16,
+        // backgroundColor: '#2e64e5',
+        // padding: 10,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // borderRadius: 3,
     },
     tabItemText: {
         fontSize: 20
