@@ -115,7 +115,7 @@ const GroupEdit = () => {
                 accessibilityState={{ selected: isMemberSelected }}
             >
                 <Image
-                    source={{ uri: item.avatar }}
+                    source={item.avatar === null ? require('../images/user.png') : { uri: item.avatar }}
                     style={{ width: 40, height: 40, borderRadius: 20 }}
                 />
                 <Text style={{ fontSize: 16, marginLeft: 10 }}>{fullName}</Text>
@@ -275,7 +275,9 @@ const GroupEdit = () => {
                             return (
                                 <Fragment>
                                     <View style={styles.memberItem}>
-                                        <Image source={{ uri: ml.avatar }} style={{ width: 50, height: 50, borderRadius: 25, flex: 1.5 }} />
+                                        <Image
+                                            source={ml.avatar === null ? require('../images/user.png') : { uri: ml.avatar }}
+                                            style={{ width: 50, height: 50, borderRadius: 25, flex: 1.5 }} />
                                         <Text style={{ fontSize: 18, flex: 7.5, alignItems: 'center' }}>
                                             {ml.user.last_name} {ml.user.first_name}
                                         </Text>
@@ -330,7 +332,9 @@ const GroupEdit = () => {
                                     }
                                     {selectedMember.map((member, index) => (
                                         <View key={index} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, marginTop: 10, padding: 8, position: 'relative' }}>
-                                            <Image source={{ uri: member.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                            <Image
+                                                source={member.avatar === null ? require('../images/user.png') : { uri: member.avatar }}
+                                                style={{ width: 40, height: 40, borderRadius: 20 }} />
                                             <Text style={{ marginLeft: 10, fontSize: 16 }}>{member.fullName}</Text>
                                             <TouchableOpacity onPress={() => removeMember(index)} style={{ position: 'absolute', right: 5 }}>
                                                 <VectorIcon name="delete" type="MaterialIcons" size={22} />

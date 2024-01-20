@@ -275,7 +275,9 @@ const Profile = ({ navigation }) => {
                                 height: 0.2 * windowHeight
                             });
                         }}>
-                        <Image source={{ uri: userInfo?.cover_avatar }} style={styles.coverPhoto} />
+                        <Image
+                            source={userInfo?.cover_avatar === null ? require('../images/picture.png') : { uri: userInfo?.cover_avatar }}
+                            style={styles.coverPhoto} />
                         <TouchableOpacity style={styles.coverAvatarChange}
                             onPress={() => {
                                 const spSheet = SPSheet;
@@ -310,7 +312,9 @@ const Profile = ({ navigation }) => {
                         }}
                     >
                         <View style={{ width: windowWidth }}>
-                            <Image source={{ uri: userInfo?.cover_avatar }} style={{ width: '100%', height: windowHeight / 3 }} />
+                            <Image
+                                source={userInfo?.cover_avatar === null ? require('../images/picture.png') : { uri: userInfo?.cover_avatar }}
+                                style={{ width: '100%', height: windowHeight / 3 }} />
                         </View>
                     </Modal>
                 </View>
@@ -323,7 +327,8 @@ const Profile = ({ navigation }) => {
                             height: 0.21 * windowHeight
                         });
                     }}>
-                    <Image style={styles.avatar} source={{ uri: userInfo?.avatar }} />
+                    <Image style={styles.avatar}
+                        source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }} />
                     <TouchableOpacity style={styles.avatarChange}
                         onPress={() => {
                             const spSheet = SPSheet;
@@ -356,7 +361,8 @@ const Profile = ({ navigation }) => {
                         }}
                     >
                         <View style={{ width: windowWidth }}>
-                            <Image source={{ uri: userInfo?.avatar }} style={{ width: '100%', height: windowHeight / 3 }} />
+                            <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                                style={{ width: '100%', height: windowHeight / 3 }} />
                         </View>
                     </Modal>
                 </TouchableOpacity>

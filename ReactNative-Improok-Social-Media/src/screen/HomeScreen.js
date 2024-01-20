@@ -63,7 +63,9 @@ const HomeScreen = ({ navigation }) => {
                                 <View style={styles.postHeaderContainer}>
                                     <View style={styles.postTop}>
                                         <View style={styles.row}>
-                                            <Image source={{ uri: ph.account.avatar }} style={styles.userProfile} />
+                                            <Image
+                                                source={ph.account.avatar === null ? require('../images/user.png') : { uri: ph.account.avatar }}
+                                                style={styles.userProfile} />
                                             <View style={styles.userSection}>
                                                 <Text style={styles.username}>{ph.account.user.last_name} {ph.account.user.first_name}</Text>
                                                 <View style={styles.row}>

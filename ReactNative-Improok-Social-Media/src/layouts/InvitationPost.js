@@ -66,7 +66,7 @@ const InvitationPost = ({ navigation }) => {
                 disabled={isMemberSelected}
                 accessibilityState={{ selected: isMemberSelected }}>
                 <Image
-                    source={{ uri: item.avatar }}
+                    source={item.avatar === null ? require('../images/user.png') : { uri: item.avatar }}
                     style={{ width: 40, height: 40, borderRadius: 20 }} />
                 <Text style={{ fontSize: 16, marginLeft: 10 }}>{fullName}</Text>
             </Pressable>
@@ -244,7 +244,8 @@ const InvitationPost = ({ navigation }) => {
         <>
             <ScrollView style={styles.scrollView}>
                 <View style={styles.profileContainer}>
-                    <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
+                    <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                        style={styles.profileStyle} />
                     <View style={styles.inputBox}>
                         <Text style={styles.inputStyle}>{user?.first_name} {user?.last_name}</Text>
                         <Text style={{ fontSize: 14, marginTop: 3 }}>Host - Administrator</Text>
@@ -405,7 +406,9 @@ const InvitationPost = ({ navigation }) => {
                                     }
                                     {selectedMember.map((member, index) => (
                                         <View key={index} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, marginTop: 10, padding: 8, position: 'relative' }}>
-                                            <Image source={{ uri: member.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                            <Image
+                                                source={member.avatar === null ? require('../images/user.png') : { uri: member.avatar }}
+                                                style={{ width: 40, height: 40, borderRadius: 20 }} />
                                             <Text style={{ marginLeft: 10, fontSize: 16 }}>{member.fullName}</Text>
                                             <TouchableOpacity onPress={() => removeMember(index)} style={{ position: 'absolute', right: 5 }}>
                                                 <VectorIcon name="delete" type="MaterialIcons" size={22} />

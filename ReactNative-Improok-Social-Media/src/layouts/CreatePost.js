@@ -1,6 +1,5 @@
 import { View, TextInput, Image, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
-import CameraRoll from '../images/cameraroll.png';
 import * as ImagePicker from 'expo-image-picker';
 import { MyUserContext } from "../../App";
 import VectorIcon from '../utils/VectorIcon';
@@ -52,7 +51,10 @@ const CreatePost = ({ navigation }) => {
         <View style={styles.wrapper}>
             <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Posts</Text>
             <View style={styles.container}>
-                <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
+                <Image
+                    source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                    style={styles.profileStyle}
+                />
                 <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('Bài đăng')}>
                     <View>
                         <Text style={styles.inputStyle}>Post a status, {user.first_name}?</Text>

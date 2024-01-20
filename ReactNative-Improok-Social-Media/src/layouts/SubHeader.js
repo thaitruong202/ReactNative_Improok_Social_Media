@@ -53,7 +53,8 @@ const SubHeader = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={{ uri: userInfo?.avatar }} style={styles.avatarStyle} />
+            <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                style={styles.avatarStyle} />
             <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate("Bài đăng")}>
                 <Text style={styles.inputStyle}>What's on your mind, {user?.first_name}?</Text>
             </TouchableOpacity>

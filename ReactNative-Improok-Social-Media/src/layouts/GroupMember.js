@@ -39,7 +39,9 @@ const GroupMember = () => {
                         return (
                             <Fragment>
                                 <View style={styles.memberItem}>
-                                    <Image source={{ uri: ml.avatar }} style={{ width: 50, height: 50, borderRadius: 25, flex: 1.5 }} />
+                                    <Image
+                                        source={ml.avatar === null ? require('../images/user.png') : { uri: ml.avatar }}
+                                        style={{ width: 50, height: 50, borderRadius: 25, flex: 1.5 }} />
                                     <Text style={{ fontSize: 18, flex: 8.5, alignItems: 'center' }}>
                                         {ml.user.last_name} {ml.user.first_name}
                                     </Text>

@@ -398,7 +398,9 @@ const SurveyPost = ({ navigation }) => {
         <>
             <ScrollView>
                 <View style={styles.profileContainer}>
-                    <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
+                    <Image
+                        source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                        style={styles.profileStyle} />
                     <View style={styles.inputBox}>
                         <Text style={styles.inputStyle}>{user.first_name} {user.last_name}</Text>
                         <Text style={{ fontSize: 14, marginTop: 3 }}>Host - Administrator</Text>

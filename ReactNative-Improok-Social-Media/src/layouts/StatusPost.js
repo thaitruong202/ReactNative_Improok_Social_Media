@@ -172,7 +172,8 @@ const StatusPost = ({ navigation }) => {
         <>
             <View style={styles.container}>
                 <View style={styles.profileContainer}>
-                    <Image source={{ uri: userInfo?.avatar }} style={styles.profileStyle} />
+                    <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                        style={styles.profileStyle} />
                     <View style={styles.inputBox}>
                         <Text style={styles.inputStyle}>{user?.last_name} {user?.first_name}</Text>
                     </View>

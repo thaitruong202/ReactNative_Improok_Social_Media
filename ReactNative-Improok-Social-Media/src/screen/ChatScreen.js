@@ -3,7 +3,7 @@ import { View, Text, TextInput, Button, ScrollView } from 'react-native';
 
 
 const ChatScreen = () => {
-    const roomName = 'djangoChat'; // Gán giá trị phù hợp cho roomName
+    const roomName = 'djangoChat';
     const [message, setMessage] = useState({
         messagecontent: "",
         whoSent: 1

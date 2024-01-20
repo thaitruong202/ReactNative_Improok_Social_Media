@@ -1,9 +1,9 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { windowWidth, windowHeight } from '../utils/Dimensions'
+import { windowHeight } from '../utils/Dimensions'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MyUserContext } from '../../App';
-import Apis, { djangoAuthApi, endpoints } from "../configs/Apis";
+import Apis, { endpoints } from "../configs/Apis";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
@@ -14,8 +14,6 @@ const Login = ({ navigation }) => {
     const [password, setPassword] = useState('');
 
     const [currentUser, setCurrentUser] = useState();
-
-    // const [isAccountPending, setIsAccountPending] = useState(false);
 
     const nav = useNavigation();
 

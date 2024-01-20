@@ -467,7 +467,9 @@ const SurveyDetail = ({ navigation }) => {
         <>
             <ScrollView>
                 <View style={styles.profileContainer}>
-                    <Image source={{ uri: avatar }} style={styles.profileStyle} />
+                    <Image
+                        source={avatar === null ? require('../images/user.png') : { uri: avatar }}
+                        style={styles.profileStyle} />
                     <View style={styles.inputBox}>
                         <Text style={styles.inputStyle}>{firstName} {lastName}</Text>
                         <Text style={{ fontSize: 14, marginTop: 3 }}>Administrator</Text>

@@ -341,7 +341,8 @@ const Post = React.forwardRef((props, ref) => {
                                 <View style={styles.postHeaderContainer}>
                                     <View style={styles.postTop}>
                                         <View style={styles.row}>
-                                            <Image source={{ uri: userInfo?.avatar }} style={styles.userProfile} />
+                                            <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                                                style={styles.userProfile} />
                                             <View style={styles.userSection}>
                                                 <Text style={styles.username}>{user.last_name} {user.first_name}</Text>
                                                 <View style={styles.row}>

@@ -102,7 +102,9 @@ const Comment = () => {
                         return (
                             <>
                                 <View style={{ display: 'flex', flexDirection: 'row', marginBottom: 5 }}>
-                                    <Image source={{ uri: cl.account.avatar }} style={{ width: 50, height: 50, borderRadius: 25 }} />
+                                    <Image
+                                        source={cl.account.avatar === null ? require('../images/user.png') : { uri: cl.account.avatar }}
+                                        style={{ width: 50, height: 50, borderRadius: 25 }} />
                                     {/* <Text>{cl.account.avatar}</Text> */}
                                     <View>
                                         <Text style={{ fontSize: 17 }}>{cl.account.user.last_name} {cl.account.user.first_name}</Text>

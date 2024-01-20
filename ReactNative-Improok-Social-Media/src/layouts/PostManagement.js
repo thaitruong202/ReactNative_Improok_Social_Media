@@ -90,7 +90,9 @@ const PostManagement = ({ navigation }) => {
                                 <View style={styles.postHeaderContainer}>
                                     <View style={styles.postTop}>
                                         <View style={styles.row}>
-                                            <Image source={{ uri: ps.post.account.avatar }} style={styles.userProfile} />
+                                            <Image
+                                                source={ps.post.account.avatar === null ? require('../images/user.png') : { uri: ps.post.account.avatar }}
+                                                style={styles.userProfile} />
                                             <View style={styles.userSection}>
                                                 <Text style={styles.username}>{ps.post.account.user.last_name} {ps.post.account.user.first_name}</Text>
                                                 <View style={styles.row}>
