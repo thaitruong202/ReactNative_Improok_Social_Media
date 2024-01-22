@@ -1,7 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React, { createContext, useReducer } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { NativeRouter } from 'react-router-native';
 import MyUserReducer from "./src/reducers/MyUserReducer";
 import Login from './src/components/Login';
@@ -29,6 +29,9 @@ import Toast from 'react-native-toast-message';
 import PostManagement from './src/layouts/PostManagement';
 import SurveyStats from './src/layouts/SurveyStats';
 import { Root as PopupRootProvider } from 'react-native-popup-confirm-toast';
+import Search from './src/layouts/Search';
+import ChatScreen from './src/screen/ChatScreen';
+import MessageScreen from './src/screen/MessageScreen';
 // import { NativeBaseConfigProvider } from 'native-base/lib/typescript/core/NativeBaseContext';
 
 export const MyUserContext = createContext();
@@ -87,6 +90,55 @@ export default function App() {
                 <Stack.Screen name="Chi tiết khảo sát" component={SurveyDetail} />
                 <Stack.Screen name="Quản lý bài đăng" component={PostManagement} />
                 <Stack.Screen name="Thống kê khảo sát" component={SurveyStats} />
+                <Stack.Screen name="Tìm kiếm" component={Search} />
+                <Stack.Screen name="Phòng chat" component={MessageScreen}
+                  options={{
+                    headerRight: () => (
+                      <View style={{ flexDirection: 'row', gap: 8 }}>
+                        <TouchableOpacity>
+                          <FontAwesome5.Button
+                            name="cog"
+                            size={20}
+                            backgroundColor="#fff"
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                          <FontAwesome5.Button
+                            name="search"
+                            size={20}
+                            backgroundColor="#fff"
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  }}
+                />
+                <Stack.Screen name="Tin nhắn" component={ChatScreen}
+                  options={{
+                    headerRight: () => (
+                      <View style={{ flexDirection: 'row', gap: 8 }}>
+                        <TouchableOpacity>
+                          <FontAwesome5.Button
+                            name="cog"
+                            size={20}
+                            backgroundColor="#fff"
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                          <FontAwesome5.Button
+                            name="search"
+                            size={20}
+                            backgroundColor="#fff"
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )
+                  }}
+                />
               </Stack.Navigator>
               <Toast />
             </NavigationContainer>
@@ -103,5 +155,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  headerContainer: {
+    backgroundColor: '#F5F5F5',
+    padding: 10,
+  },
+  input: {
+    height: 40,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 8,
+    paddingHorizontal: 10,
   },
 });

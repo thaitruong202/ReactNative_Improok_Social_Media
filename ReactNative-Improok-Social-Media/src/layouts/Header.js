@@ -1,37 +1,35 @@
-import { View, Image, StyleSheet } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import React from 'react';
 import ImprookLogo from '../images/ip_logo.png'
 import VectorIcon from '../utils/VectorIcon.js';
+import { useNavigation } from '@react-navigation/native';
 
 const Header = () => {
+    const navigation = useNavigation()
     return (
         <View style={styles.headerContainer}>
             <Image source={ImprookLogo} style={styles.improokLogoStyle} />
             <View style={styles.headerIcons}>
-                {/* <View style={styles.iconBg}>
-                    <VectorIcon
-                        name="add-circle"
-                        type="Ionicons"
-                        size={25}
-                        color="#3A3A3A"
-                    />
-                </View> */}
-                <View style={styles.iconBg}>
-                    <VectorIcon
-                        name="search-sharp"
-                        type="Ionicons"
-                        size={25}
-                        color="#3A3A3A"
-                    />
-                </View>
-                <View style={styles.iconBg}>
-                    <VectorIcon
-                        name="facebook-messenger"
-                        type="MaterialCommunityIcons"
-                        size={25}
-                        color="#3A3A3A"
-                    />
-                </View>
+                <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Tìm kiếm')}>
+                    <View>
+                        <VectorIcon
+                            name="search-sharp"
+                            type="Ionicons"
+                            size={25}
+                            color="#3A3A3A"
+                        />
+                    </View>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Phòng chat')}>
+                    <View>
+                        <VectorIcon
+                            name="facebook-messenger"
+                            type="MaterialCommunityIcons"
+                            size={25}
+                            color="#3A3A3A"
+                        />
+                    </View>
+                </TouchableOpacity>
             </View>
         </View>
     );

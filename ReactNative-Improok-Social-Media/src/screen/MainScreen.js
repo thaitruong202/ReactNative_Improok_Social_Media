@@ -34,7 +34,7 @@ const MainScreen = () => {
                         />
                     )
                 }} />
-                <Tab.Screen name='Message' component={ChatScreen} options={{
+                <Tab.Screen name='Message' component={MessageScreen} options={{
                     tabBarLabelStyle: { color: '#591aaf' },
                     tabBarIcon: ({ focused }) => (
                         <VectorIcon

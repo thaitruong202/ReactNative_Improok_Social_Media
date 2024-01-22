@@ -83,3 +83,74 @@
 
 
 // export default MessageScreen;
+
+import React, { useContext, useEffect, useState } from 'react';
+import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { MyUserContext } from '../../App';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Apis, { djangoAuthApi, endpoints } from '../configs/Apis';
+
+const MessageScreen = ({ navigation }) => {
+    const [user, dispatch] = useContext(MyUserContext)
+    const [listRoom, setListRoom] = useState([])
+    const [userInfo, setUserInfo] = useState()
+    const [userInfoLoaded, setUserInfoLoaded] = useState(false)
+
+    const getCurrentUser = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
+            setUserInfo(res.data)
+            setUserInfoLoaded(true)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    useEffect(() => {
+        getCurrentUser();
+    }, [])
+
+    useEffect(() => {
+        if (userInfoLoaded && userInfo?.id) {
+            getRooms();
+        }
+    }, [userInfoLoaded, userInfo]);
+
+    const getRooms = async () => {
+        try {
+            // const token = await AsyncStorage.getItem('token')
+            let res = await Apis.get(endpoints['get-room-by-account'](userInfo?.id))
+            setListRoom(res.data.results)
+            console.log(res.data.results)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    return (
+        <>
+            <ScrollView>
+                {/* <Text>
+                    Thông báo
+                </Text> */}
+                <View style={{ flexDirection: 'column', gap: 5, padding: 12 }}>
+                    {listRoom.map((lr) => {
+                        return (
+                            <>
+                                <TouchableOpacity key={lr.id} style={{ borderWidth: 1, borderRadius: 15 }} onPress={() => navigation.navigate('Tin nhắn', { roomId: lr.id })}>
+                                    <View style={{ padding: 10 }}>
+                                        <Text>Room {lr.id}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </>
+                        )
+                    })}
+                </View>
+                <Button title="Check" onPress={() => getRooms()} />
+            </ScrollView>
+        </>
+    );
+};
+
+export default MessageScreen;
