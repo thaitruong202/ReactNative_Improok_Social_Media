@@ -1,7 +1,6 @@
-import React, { Fragment, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MyUserContext } from '../../App';
-import { windowHeight, windowWidth } from '../utils/Dimensions';
 import VectorIcon from '../utils/VectorIcon';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -14,8 +13,6 @@ const StatusPost = ({ navigation }) => {
     const [userInfo, setUserInfo] = useState();
     // const [isPosting, setIsPosting] = useState(false);
     const [selectedImages, setSelectedImages] = useState([]);
-
-    // const [sendImg, setSendImg] = useState([]);
 
     // const [image, setImage] = useState();
 
@@ -43,7 +40,8 @@ const StatusPost = ({ navigation }) => {
                 "account": userInfo?.id
             })
             console.log(res.data, "Đăng bài thành công!")
-            navigation.goBack();
+            setText('')
+            navigation.goBack()
         } catch (error) {
             console.log(error)
         }
@@ -171,7 +169,7 @@ const StatusPost = ({ navigation }) => {
 
     return (
         <>
-            <View style={styles.container}>
+            <ScrollView contentContainerStyle={styles.container}>
                 <View style={styles.profileContainer}>
                     <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
                         style={styles.profileStyle} />
@@ -185,8 +183,9 @@ const StatusPost = ({ navigation }) => {
                         numberOfLines={10}
                         value={text}
                         onChangeText={setText}
-                        placeholder="Bạn đang nghĩ gì..."
+                        placeholder="What's on your mind?"
                         style={styles.textInputStyle}
+                        blurOnSubmit={true}
                     />
                 </View>
                 <View style={{ marginTop: 20 }}>
@@ -203,8 +202,8 @@ const StatusPost = ({ navigation }) => {
                     <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
                     <TouchableOpacity style={styles.postOption}>
                         <VectorIcon
-                            name="video-camera"
-                            type="Entypo"
+                            name="videocam"
+                            type="Ionicons"
                             size={22}
                             color="orange">
                         </VectorIcon>
@@ -214,7 +213,7 @@ const StatusPost = ({ navigation }) => {
                     <TouchableOpacity style={styles.postOption}>
                         <VectorIcon
                             name="camera"
-                            type="Entypo"
+                            type="Ionicons"
                             size={22}
                             color="blue">
                         </VectorIcon>
@@ -223,10 +222,10 @@ const StatusPost = ({ navigation }) => {
                     <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
                     <TouchableOpacity style={styles.postOption}>
                         <VectorIcon
-                            name="smiley"
-                            type="Fontisto"
+                            name="happy"
+                            type="Ionicons"
                             size={22}
-                            color="#F2D21E">
+                            color="#FFBA00">
                         </VectorIcon>
                         <Text style={styles.inputStyle}>Feeling</Text>
                     </TouchableOpacity>
@@ -236,7 +235,7 @@ const StatusPost = ({ navigation }) => {
                             <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo khảo sát")}>
                                 <VectorIcon
                                     name="poll"
-                                    type="FontAwesome5"
+                                    type="MaterialIcons"
                                     size={22}>
                                 </VectorIcon>
                                 <Text style={styles.inputStyle}>Survey</Text>
@@ -248,8 +247,8 @@ const StatusPost = ({ navigation }) => {
                             <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
                             <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo sự kiện")}>
                                 <VectorIcon
-                                    name="calendar-day"
-                                    type="FontAwesome5"
+                                    name="calendar"
+                                    type="Ionicons"
                                     size={22}
                                     color="red">
                                 </VectorIcon>
@@ -301,7 +300,7 @@ const StatusPost = ({ navigation }) => {
                         Post
                     </Button>
                 </View>
-            </View>
+            </ScrollView>
         </>
     );
 };

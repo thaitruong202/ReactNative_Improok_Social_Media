@@ -23,8 +23,8 @@ const Header = () => {
                 <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Phòng chat')}>
                     <View>
                         <VectorIcon
-                            name="facebook-messenger"
-                            type="MaterialCommunityIcons"
+                            name="chatbubble"
+                            type="Ionicons"
                             size={25}
                             color="#3A3A3A"
                         />

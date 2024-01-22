@@ -1,14 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable, TouchableWithoutFeedback, FlatList, Image, Keyboard, Button } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, Pressable, TouchableWithoutFeedback, FlatList, Image, Keyboard } from 'react-native';
 import { MyUserContext } from '../../App';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { windowWidth } from '../utils/Dimensions';
 import Collapsible from 'react-native-collapsible';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import VectorIcon from '../utils/VectorIcon';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Button } from 'native-base';
 
 const InvitationPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -100,7 +100,6 @@ const InvitationPost = ({ navigation }) => {
             // let res = await djangoAuthApi(token).get(endpoints['cache-user'](text));
             console.log("Đây là cache API", res.data);
             setFilteredAccountList(res.data);
-            //console.log(filteredList);
         } else {
             setFilteredAccountList([]);
         }
@@ -255,12 +254,12 @@ const InvitationPost = ({ navigation }) => {
                     <TextInput
                         value={eventName}
                         onChangeText={(eventName) => setEventName(eventName)}
-                        placeholder="Event Name..."
+                        placeholder="Event name"
                         style={[styles.textInputStyle, { fontSize: 17 }]} />
                 </View>
                 <View style={styles.dateTimeContainer}>
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày bắt đầu</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Start date</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => showBeginMode("date")}>
                                 {/* <Text style={{ fontSize: 17 }}>{selectedBeginDate.toISOString().slice(0, 10)}</Text> */}
@@ -278,12 +277,11 @@ const InvitationPost = ({ navigation }) => {
                             <VectorIcon
                                 name="calendar"
                                 type="AntDesign"
-                                size={17}
-                            />
+                                size={17} />
                         </View>
                     </View>
                     <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ bắt đầu</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Start time</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => showBeginMode("time")}>
                                 <Text style={{ fontSize: 17 }}>
@@ -300,14 +298,13 @@ const InvitationPost = ({ navigation }) => {
                             <VectorIcon
                                 name="clockcircleo"
                                 type="AntDesign"
-                                size={17}
-                            />
+                                size={17} />
                         </View>
                     </View>
                 </View>
                 <View style={styles.dateTimeContainer}>
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>End date</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => showEndMode("date")}>
                                 <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedEndDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
@@ -329,7 +326,7 @@ const InvitationPost = ({ navigation }) => {
                         </View>
                     </View>
                     <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ kết thúc</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>End time</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => showEndMode("time")}>
                                 <Text style={{ fontSize: 17 }}>
@@ -346,8 +343,7 @@ const InvitationPost = ({ navigation }) => {
                             <VectorIcon
                                 name="clockcircleo"
                                 type="AntDesign"
-                                size={17}
-                            />
+                                size={17} />
                         </View>
                     </View>
                 </View>
@@ -367,11 +363,11 @@ const InvitationPost = ({ navigation }) => {
                                 name="add-circle"
                                 type="MaterialIcons"
                                 size={22} />
-                            <Text style={styles.collapsibleSubItemHeaderText}>Thêm khách mời</Text>
-                            <AntDesign
-                                name={addExpanded ? 'up' : 'down'}
+                            <Text style={styles.collapsibleSubItemHeaderText}>Add guests</Text>
+                            <VectorIcon
+                                name={addExpanded ? 'chevron-up' : 'chevron-down'}
+                                type="Ionicons"
                                 size={19}
-                                color="black"
                                 style={{ position: 'absolute', right: 5 }} />
                         </View>
                     </TouchableOpacity>
@@ -380,7 +376,7 @@ const InvitationPost = ({ navigation }) => {
                             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                                 <SafeAreaView>
                                     <TextInput
-                                        placeholder='Nhập tài khoản...'
+                                        placeholder='Enter account...'
                                         value={input}
                                         onChangeText={(input) => onChangeText(input)}
                                         style={{
@@ -421,9 +417,13 @@ const InvitationPost = ({ navigation }) => {
                     </Collapsible>
                 </View>
                 <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={styles.createEventButton} onPress={() => createPostInvitation()}>
+                    {/* <TouchableOpacity style={styles.createEventButton} onPress={() => createPostInvitation()}>
                         <Text style={styles.buttonText}>Tạo sự kiện</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
+                    <Button onPress={() => createPostInvitation()}
+                        variant="subtle" colorScheme="darkBlue" style={{ marginHorizontal: 20 }}>
+                        Create event
+                    </Button>
                 </View>
             </ScrollView >
         </>
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     },
     buttonContainer: {
         marginTop: 20,
-        alignItems: 'center'
+        marginVertical: 10
     },
     createEventButton: {
         backgroundColor: 'blue',

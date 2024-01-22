@@ -4,7 +4,6 @@ import VectorIcon from '../utils/VectorIcon';
 import { MyUserContext } from "../../App";
 import { windowWidth } from '../utils/Dimensions';
 import Collapsible from 'react-native-collapsible';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 
@@ -82,8 +81,8 @@ const PersonalScreen = ({ navigation }) => {
                         </View>
                         <TouchableOpacity style={styles.profileExpandIcon}>
                             <VectorIcon
-                                name="expand-more"
-                                type="MaterialIcons"
+                                name="chevron-down"
+                                type="Ionicons"
                                 size={19}
                             />
                         </TouchableOpacity>
@@ -95,32 +94,32 @@ const PersonalScreen = ({ navigation }) => {
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="newspaper"
-                                    type="FontAwesome5"
+                                    type="Ionicons"
                                     size={21}>
                                 </VectorIcon>
-                                <Text style={styles.tabItemText}>Bảng feed</Text>
+                                <Text style={styles.tabItemText}>Feeds</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.tabItemContainer}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
-                                    name="account-group"
-                                    type="MaterialCommunityIcons"
+                                    name="people"
+                                    type="Ionicons"
                                     size={21}>
                                 </VectorIcon>
-                                <Text style={styles.tabItemText}>Nhóm</Text>
+                                <Text style={styles.tabItemText}>Groups</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
                     <View style={styles.utilTabRow}>
-                        <TouchableOpacity style={styles.tabItemContainer}>
+                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate('Phòng chat')}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
-                                    name="facebook-messenger"
-                                    type="MaterialCommunityIcons"
+                                    name="chatbubble"
+                                    type="Ionicons"
                                     size={21}>
                                 </VectorIcon>
-                                <Text style={styles.tabItemText}>Tin nhắn</Text>
+                                <Text style={styles.tabItemText}>Messages</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.tabItemContainer}>
@@ -138,21 +137,21 @@ const PersonalScreen = ({ navigation }) => {
                         <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Sự kiện")}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
-                                    name="event"
-                                    type="MaterialIcons"
+                                    name="calendar"
+                                    type="Ionicons"
                                     size={21}>
                                 </VectorIcon>
-                                <Text style={styles.tabItemText}>Sự kiện</Text>
+                                <Text style={styles.tabItemText}>Events</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Khảo sát")}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="poll"
-                                    type="FontAwesome5"
+                                    type="MaterialIcons"
                                     size={21}>
                                 </VectorIcon>
-                                <Text style={styles.tabItemText}>Khảo sát</Text>
+                                <Text style={styles.tabItemText}>Surveys</Text>
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -162,15 +161,15 @@ const PersonalScreen = ({ navigation }) => {
                         <TouchableOpacity onPress={toggleHelp}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <VectorIcon
-                                    name="question-circle"
-                                    type="FontAwesome5"
-                                    size={20}
+                                    name="help-circle"
+                                    type="Ionicons"
+                                    size={21}
                                 />
-                                <Text style={styles.collapsibleSubItemHeaderText}>Trợ giúp & hỗ trợ</Text>
-                                <AntDesign
-                                    name={helpExpanded ? 'up' : 'down'}
-                                    size={18}
-                                    color="black"
+                                <Text style={styles.collapsibleSubItemHeaderText}>Help & support</Text>
+                                <VectorIcon
+                                    name={helpExpanded ? 'chevron-up' : 'chevron-down'}
+                                    type="Ionicons"
+                                    size={19}
                                     style={{ position: 'absolute', right: 5 }}
                                 />
                             </View>
@@ -178,19 +177,19 @@ const PersonalScreen = ({ navigation }) => {
                         <Collapsible collapsed={!helpExpanded}>
                             <View style={styles.collapsibleSubItem}>
                                 <VectorIcon
-                                    name="account-circle"
-                                    type="MaterialCommunityIcons"
-                                    size={19}
+                                    name="person-circle"
+                                    type="Ionicons"
+                                    size={20}
                                 />
-                                <Text style={styles.collapsibleSubItemBodyText}>Cài đặt</Text>
+                                <Text style={styles.collapsibleSubItemBodyText}>Settings</Text>
                             </View>
                             <View style={styles.collapsibleSubItem}>
                                 <VectorIcon
                                     name="moon"
-                                    type="FontAwesome5"
-                                    size={19}
+                                    type="Ionicons"
+                                    size={20}
                                 />
-                                <Text style={styles.collapsibleSubItemBodyText}>Chế độ ban đêm</Text>
+                                <Text style={styles.collapsibleSubItemBodyText}>Dark mode</Text>
                             </View>
                         </Collapsible>
                     </View>
@@ -199,15 +198,15 @@ const PersonalScreen = ({ navigation }) => {
                         <TouchableOpacity onPress={toggleSetting}>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <VectorIcon
-                                    name="cog"
-                                    type="FontAwesome5"
-                                    size={20}
+                                    name="settings"
+                                    type="Ionicons"
+                                    size={21}
                                 />
-                                <Text style={styles.collapsibleSubItemHeaderText}>Cài đặt & quyền riêng tư</Text>
-                                <AntDesign
-                                    name={settingExpanded ? 'up' : 'down'}
-                                    size={18}
-                                    color="black"
+                                <Text style={styles.collapsibleSubItemHeaderText}>Settings & privacy</Text>
+                                <VectorIcon
+                                    name={helpExpanded ? 'chevron-up' : 'chevron-down'}
+                                    type="Ionicons"
+                                    size={19}
                                     style={{ position: 'absolute', right: 5 }}
                                 />
                             </View>
@@ -215,19 +214,19 @@ const PersonalScreen = ({ navigation }) => {
                         <Collapsible collapsed={!settingExpanded}>
                             <View style={styles.collapsibleSubItem}>
                                 <VectorIcon
-                                    name="life-ring"
-                                    type="FontAwesome5"
-                                    size={19}
+                                    name="help-buoy"
+                                    type="Ionicons"
+                                    size={20}
                                 />
-                                <Text style={styles.collapsibleSubItemBodyText}>Hỗ trợ</Text>
+                                <Text style={styles.collapsibleSubItemBodyText}>Help Center</Text>
                             </View>
                             <View style={styles.collapsibleSubItem}>
                                 <VectorIcon
-                                    name="information"
-                                    type="MaterialCommunityIcons"
-                                    size={19}
+                                    name="information-circle"
+                                    type="Ionicons"
+                                    size={20}
                                 />
-                                <Text style={styles.collapsibleSubItemBodyText}>Về chúng tôi</Text>
+                                <Text style={styles.collapsibleSubItemBodyText}>About</Text>
                             </View>
                         </Collapsible>
                     </View>
@@ -240,19 +239,19 @@ const PersonalScreen = ({ navigation }) => {
                                         <VectorIcon
                                             name="cogs"
                                             type="FontAwesome5"
-                                            size={20}
+                                            size={21}
                                         />
-                                        <Text style={styles.collapsibleSubItemHeaderText}>Quản trị hệ thống</Text>
-                                        <AntDesign
-                                            name={manageExpanded ? 'up' : 'down'}
-                                            size={18}
-                                            color="black"
+                                        <Text style={styles.collapsibleSubItemHeaderText}>System Management</Text>
+                                        <VectorIcon
+                                            name={helpExpanded ? 'chevron-up' : 'chevron-down'}
+                                            type="Ionicons"
+                                            size={19}
                                             style={{ position: 'absolute', right: 5 }}
                                         />
                                     </View>
                                 </TouchableOpacity>
                                 <Collapsible collapsed={!manageExpanded}>
-                                    <View>
+                                    {/* <View>
                                         <TouchableOpacity style={styles.collapsibleSubItem}>
                                             <VectorIcon
                                                 name="users-cog"
@@ -261,25 +260,24 @@ const PersonalScreen = ({ navigation }) => {
                                             />
                                             <Text style={styles.collapsibleSubItemBodyText}>Quản lý hệ thống</Text>
                                         </TouchableOpacity>
-                                    </View>
+                                    </View> */}
                                     <View>
                                         <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý tài khoản")}>
                                             <VectorIcon
-                                                name="account"
-                                                type="MaterialCommunityIcons"
-                                                size={19}
+                                                name="person-circle"
+                                                type="Ionicons"
+                                                size={20}
                                             />
-                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý tài khoản</Text>
+                                            <Text style={styles.collapsibleSubItemBodyText}>Accounts Management</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View>
                                         <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý nhóm")}>
                                             <VectorIcon
-                                                name="account-group"
-                                                type="MaterialCommunityIcons"
-                                                size={19}
-                                            />
-                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý nhóm</Text>
+                                                name="people-circle"
+                                                type="Ionicons"
+                                                size={20} />
+                                            <Text style={styles.collapsibleSubItemBodyText}>Groups Management</Text>
                                         </TouchableOpacity>
                                     </View>
                                     <View>
@@ -287,9 +285,8 @@ const PersonalScreen = ({ navigation }) => {
                                             <VectorIcon
                                                 name="post"
                                                 type="MaterialCommunityIcons"
-                                                size={19}
-                                            />
-                                            <Text style={styles.collapsibleSubItemBodyText}>Quản lý bài đăng</Text>
+                                                size={20} />
+                                            <Text style={styles.collapsibleSubItemBodyText}>Posts Management</Text>
                                         </TouchableOpacity>
                                     </View>
                                 </Collapsible>
@@ -299,7 +296,7 @@ const PersonalScreen = ({ navigation }) => {
                 </View>
                 <View >
                     <TouchableOpacity style={styles.logoutContainer} onPress={() => logout()}>
-                        <Text style={styles.inputStyle}>Đăng xuất</Text>
+                        <Text style={styles.inputStyle}>Log out</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -364,7 +361,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         padding: 18,
         marginTop: 10,
-        backgroundColor: '#EBECF0',
+        backgroundColor: '#E8E8E8',
         alignItems: 'center',
     },
     utilTab: {
@@ -400,8 +397,10 @@ const styles = StyleSheet.create({
         paddingVertical: 16,
         display: 'flex',
         flexDirection: 'row',
-        backgroundColor: 'lightgray',
+        backgroundColor: '#DCDCDC',
+        alignItems: 'center',
         marginTop: 5,
+        gap: 5,
         marginBottom: 5,
         borderRadius: 10
     },

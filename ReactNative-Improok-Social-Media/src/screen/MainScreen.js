@@ -39,7 +39,7 @@ const MainScreen = () => {
                     tabBarIcon: ({ focused }) => (
                         <VectorIcon
                             type={focused ? "Ionicons" : "Ionicons"}
-                            name={focused ? "chatbox" : "chatbox-outline"}
+                            name={focused ? "chatbubble" : "chatbubble-outline"}
                             size={focused ? 26 : 26}
                             color={focused ? "#591aaf" : "#000"}
                         />),

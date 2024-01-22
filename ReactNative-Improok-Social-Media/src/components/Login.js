@@ -1,12 +1,12 @@
 import React, { Fragment, useContext, useState } from 'react';
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, Linking, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { windowHeight } from '../utils/Dimensions'
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { MyUserContext } from '../../App';
 import Apis, { endpoints } from "../configs/Apis";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
+import VectorIcon from '../utils/VectorIcon';
 
 const Login = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -92,17 +92,17 @@ const Login = ({ navigation }) => {
                 <Text style={styles.text}>IM'PROOK SOCIAL APP</Text>
                 <View>
                     <View style={styles.inputView}>
-                        <MaterialIcons name="person" size={24} color="black" style={styles.inputIcon} />
+                        <VectorIcon name="person" type="Ionicons" size={22} color="black" style={styles.inputIcon} />
                         <TextInput style={styles.input}
-                            placeholder="Tên người dùng"
+                            placeholder="Username"
                             value={username}
                             onChangeText={(text) => setUsername(text)}
                             numberOfLines={1} />
                     </View>
                     <View style={styles.inputView}>
-                        <MaterialIcons name="https" size={24} color="black" style={styles.inputIcon} />
+                        <VectorIcon name="lock-closed" type="Ionicons" size={22} color="black" style={styles.inputIcon} />
                         <TextInput style={styles.input}
-                            placeholder="Mật khẩu"
+                            placeholder="Password"
                             value={password}
                             onChangeText={(text) => setPassword(text)}
                             numberOfLines={1}
@@ -110,15 +110,15 @@ const Login = ({ navigation }) => {
                     </View>
                     <View>
                         <TouchableOpacity style={styles.buttonLogin} onPress={login}>
-                            <Text style={styles.buttonLoginText}>Đăng nhập</Text>
+                            <Text style={styles.buttonLoginText}>Log in</Text>
                         </TouchableOpacity>
                     </View>
-                    <TouchableOpacity style={styles.forgotButton}>
-                        <Text style={styles.forgotButtonText}>Bạn quên mật khẩu ư?</Text>
+                    <TouchableOpacity style={styles.forgotButton} onPress={() => Linking.openURL('mailto:support@improok.com?subject=ForgotPassword&body=Description')}>
+                        <Text style={styles.forgotButtonText}>Forget password?</Text>
                     </TouchableOpacity>
                     <View>
                         <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Đăng ký')}>
-                            <Text style={styles.buttonRegisterText}>Đăng ký tài khoản mới</Text>
+                            <Text style={styles.buttonRegisterText}>Create new account</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

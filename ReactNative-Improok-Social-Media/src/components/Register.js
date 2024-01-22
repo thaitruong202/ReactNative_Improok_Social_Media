@@ -1,9 +1,9 @@
 import { Fragment, useState } from "react";
 import { Image, StyleSheet, TextInput, TouchableOpacity, Button, Text, View, ScrollView } from "react-native";
-import { windowHeight, windowWidth } from "../utils/Dimensions";
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { windowHeight } from "../utils/Dimensions";
 import Apis, { endpoints } from "../configs/Apis";
 import Toast from "react-native-toast-message";
+import VectorIcon from "../utils/VectorIcon";
 
 const Register = ({ navigation }) => {
     const [username, setUsername] = useState('');
@@ -103,63 +103,63 @@ const Register = ({ navigation }) => {
             <ScrollView>
                 <View style={styles.registerContainer}>
                     <Image source={require('../images/IMPROOK.png')} style={styles.improokLogo} />
-                    <Text style={styles.text}>TẠO TÀI KHOẢN MỚI</Text>
+                    <Text style={styles.text}>CREATE NEW ACCOUNT</Text>
                     <View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={username} onChangeText={(text) => setUsername(text)} placeholder="Tên người dùng" numberOfLines={1} />
+                            <VectorIcon name="person" type="Ionicons" size={17} color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={username} onChangeText={(text) => setUsername(text)} placeholder="Username" numberOfLines={1} />
                         </View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={lastName} onChangeText={(text) => setLastName(text)} placeholder="Họ" numberOfLines={1} />
+                            <VectorIcon name="person" size={17} type="Ionicons" color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={lastName} onChangeText={(text) => setLastName(text)} placeholder="Last name" numberOfLines={1} />
                         </View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={firstName} onChangeText={(text) => setFirstName(text)} placeholder="Tên" numberOfLines={1} />
+                            <VectorIcon name="person" size={17} type="Ionicons" color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={firstName} onChangeText={(text) => setFirstName(text)} placeholder="First name" numberOfLines={1} />
                         </View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="alternate-email" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={email} onChangeText={(text) => setEmail(text)} placeholder="Địa chỉ email" numberOfLines={1} />
+                            <VectorIcon name="mail" size={17} type="Ionicons" color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={email} onChangeText={(text) => setEmail(text)} placeholder="Email" numberOfLines={1} />
                         </View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="person" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={alumniCode} onChangeText={(text) => setAlumniCode(text)} placeholder="Mã số sinh viên" numberOfLines={1} />
+                            <VectorIcon name="person" size={17} type="Ionicons" color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={alumniCode} onChangeText={(text) => setAlumniCode(text)} placeholder="Alumni code" numberOfLines={1} />
                         </View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={password} onChangeText={(text) => setPassword(text)} placeholder="Mật khẩu" numberOfLines={1} secureTextEntry />
+                            <VectorIcon name="lock-closed" size={17} type="Ionicons" color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={password} onChangeText={(text) => setPassword(text)} placeholder="Password" numberOfLines={1} secureTextEntry />
                         </View>
                         <View style={styles.inputView}>
-                            <MaterialIcons name="https" size={17} color="black" style={styles.inputIcon} />
-                            <TextInput style={styles.input} value={confirmPassword} onChangeText={(text) => setConfirmPassword(text)} placeholder="Xác nhận mật khẩu" numberOfLines={1} secureTextEntry />
+                            <VectorIcon name="lock-closed" size={17} type="Ionicons" color="black" style={styles.inputIcon} />
+                            <TextInput style={styles.input} value={confirmPassword} onChangeText={(text) => setConfirmPassword(text)} placeholder="Confirm password" numberOfLines={1} secureTextEntry />
                         </View>
                         <View>
                             <TouchableOpacity style={styles.buttonRegister} onPress={(evt) => createAlumniAccount(evt)}>
-                                <Text style={styles.buttonRegisterText}>Đăng ký</Text>
+                                <Text style={styles.buttonRegisterText}>Register</Text>
                             </TouchableOpacity>
                         </View>
                         <View style={styles.textPrivate}>
                             <Text style={styles.colorTextPrivate}>
-                                Bằng việc đăng ký, bạn đã đồng ý với IMPROOK về{' '}
+                                By signing up, you agree to IMPROOK's{' '}
                             </Text>
-                            <TouchableOpacity onPress={() => alert('Điều khoản dịch vụ')}>
+                            <TouchableOpacity onPress={() => alert('Term of Service')}>
                                 <Text style={[styles.colorTextPrivate, { color: '#e88832' }]}>
-                                    Điều khoản dịch vụ
+                                    Term of Service
                                 </Text>
                             </TouchableOpacity>
                             <Text style={styles.colorTextPrivate}> & </Text>
-                            <TouchableOpacity onPress={() => alert('Chính sách bảo mật')}>
+                            <TouchableOpacity onPress={() => alert('Privacy Policy')}>
                                 <Text style={[styles.colorTextPrivate, { color: '#e88832' }]}>
-                                    Chính sách bảo mật
+                                    Privacy Policy
                                 </Text>
                             </TouchableOpacity>
                         </View>
                         <TouchableOpacity style={styles.registered}>
-                            <Text style={styles.registeredText}>Bạn đã có tài khoản ư?</Text>
+                            <Text style={styles.registeredText}>Have an account?</Text>
                         </TouchableOpacity>
                         <View>
                             <TouchableOpacity style={styles.buttonLogin} onPress={() => navigation.navigate('Đăng nhập')}>
-                                <Text style={styles.buttonLoginText}>Đăng nhập ngay</Text>
+                                <Text style={styles.buttonLoginText}>Log in now</Text>
                             </TouchableOpacity>
                         </View>
                     </View>

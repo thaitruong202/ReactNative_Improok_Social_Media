@@ -39,7 +39,7 @@ const SurveyPost = ({ navigation }) => {
     const [currentQuestionType, setCurrentQuestionType] = useState('Multiple-Choice'); //Loại câu hỏi hiện tại người dùng đã chọn, mặc định là Multiple-Choice
 
     const [isEditingEnabled, setIsEditingEnabled] = useState(true);
-    const buttonBackgroundColor = isEditingEnabled ? 'yellow' : 'transparent';
+    // const buttonBackgroundColor = isEditingEnabled ? 'yellow' : 'transparent';
 
     const currentDate = new Date();
 
@@ -237,8 +237,7 @@ const SurveyPost = ({ navigation }) => {
                 style={{ flex: 1, marginRight: 10 }}
                 placeholder="Enter option..."
                 value={item.question_option_value}
-                onChangeText={(value) => handleOptionChange(index, value)}
-            />
+                onChangeText={(value) => handleOptionChange(index, value)} />
             <TouchableOpacity onPress={() => handleRemoveOption(index)}>
                 <Text style={{ color: 'red' }}>Remove</Text>
             </TouchableOpacity>
@@ -323,15 +322,13 @@ const SurveyPost = ({ navigation }) => {
                     placeholder="Enter question..."
                     value={questionTitle}
                     onChangeText={(value) => handleEditQuestionTitle(value)}
-                    editable={isEditing}
-                />
+                    editable={isEditing} />
                 <TouchableOpacity onPress={toggleEditingMode} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
                     <VectorIcon
                         name="edit"
                         type="Feather"
                         size={25}
-                        color='white'
-                    />
+                        color='white' />
                     <Text style={{ fontSize: 14, color: 'white' }}>Chỉnh sửa</Text>
                 </TouchableOpacity>
                 {questionOptions.map((option, optionIndex) => {
@@ -345,15 +342,13 @@ const SurveyPost = ({ navigation }) => {
                                 placeholder="Enter option..."
                                 value={option.question_option_value}
                                 onChangeText={(value) => handleOptionChange(optionIndex, value)}
-                                editable={isEditing}
-                            />
+                                editable={isEditing} />
                             {isEditing && (
                                 <TouchableOpacity onPress={() => handleRemoveOptionFromQuestion(optionIndex)}>
                                     <VectorIcon
                                         name="remove-circle"
                                         type="Ionicons"
-                                        size={21}
-                                    />
+                                        size={21} />
                                 </TouchableOpacity>
                             )}
                         </View>
@@ -365,8 +360,7 @@ const SurveyPost = ({ navigation }) => {
                             name="add-circle"
                             type="MaterialIcons"
                             size={25}
-                            color="white"
-                        />
+                            color="white" />
                         <Text style={{ fontSize: 14, color: 'white' }}>Add Option</Text>
                     </TouchableOpacity>
                 )}
@@ -375,8 +369,7 @@ const SurveyPost = ({ navigation }) => {
                         name="delete"
                         type="MaterialCommunityIcons"
                         size={25}
-                        color='white'
-                    />
+                        color='white' />
                     <Text style={{ fontSize: 14, color: 'white' }}>Remove Question</Text>
                 </TouchableOpacity>
                 {isEditing && (
@@ -385,8 +378,7 @@ const SurveyPost = ({ navigation }) => {
                             name="save"
                             type="Entypo"
                             size={25}
-                            color='white'
-                        />
+                            color='white' />
                         <Text style={{ fontSize: 14, color: 'white' }}>Save Changes</Text>
                     </TouchableOpacity>
                 )}
@@ -410,13 +402,12 @@ const SurveyPost = ({ navigation }) => {
                     <TextInput
                         value={surveyName}
                         onChangeText={(surveyName) => setSurveyName(surveyName)}
-                        placeholder="Survey Name..."
-                        style={[styles.textInputStyle, { fontSize: 17 }]}
-                    />
+                        placeholder="Survey name"
+                        style={[styles.textInputStyle, { fontSize: 17 }]} />
                 </View>
                 <View style={styles.dateTimeContainer}>
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày bắt đầu</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Start date</Text>
                         <TouchableOpacity onPress={() => showBeginMode("date")}>
                             <Text style={{ fontSize: 17 }}>
                                 <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
@@ -429,13 +420,12 @@ const SurveyPost = ({ navigation }) => {
                                     minimumDate={currentDate}
                                     is24Hour={true}
                                     maximumDate={new Date(2100, 0, 1)}
-                                    onChange={handleBeginDateChange}
-                                />
+                                    onChange={handleBeginDateChange} />
                             )}
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ bắt đầu</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Start time</Text>
                         <TouchableOpacity onPress={() => showBeginMode("time")}>
                             <Text style={{ fontSize: 17 }}>
                                 {String(selectedBeginTime.getHours()).padStart(2, '0')}:
@@ -446,15 +436,14 @@ const SurveyPost = ({ navigation }) => {
                                     value={selectedBeginTime}
                                     mode={beginMode}
                                     is24Hour={true}
-                                    onChange={handleBeginTimeChange}
-                                />
+                                    onChange={handleBeginTimeChange} />
                             )}
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={styles.dateTimeContainer}>
                     <View style={[styles.textInputStyle, { marginRight: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Ngày kết thúc</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>End date</Text>
                         <TouchableOpacity onPress={() => showEndMode("date")}>
                             <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
                             {showEndDatePicker && (
@@ -465,13 +454,12 @@ const SurveyPost = ({ navigation }) => {
                                     minimumDate={currentDate}
                                     is24Hour={true}
                                     maximumDate={new Date(2100, 0, 1)}
-                                    onChange={handleEndDateChange}
-                                />
+                                    onChange={handleEndDateChange} />
                             )}
                         </TouchableOpacity>
                     </View>
                     <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
-                        <Text style={{ fontSize: 13, marginBottom: 8 }}>Giờ kết thúc</Text>
+                        <Text style={{ fontSize: 13, marginBottom: 8 }}>End time</Text>
                         <TouchableOpacity onPress={() => showEndMode("time")}>
                             <Text style={{ fontSize: 17 }}>
                                 {String(selectedEndTime.getHours()).padStart(2, '0')}:
@@ -482,8 +470,7 @@ const SurveyPost = ({ navigation }) => {
                                     value={selectedEndTime}
                                     mode={endMode}
                                     is24Hour={true}
-                                    onChange={handleEndTimeChange}
-                                />
+                                    onChange={handleEndTimeChange} />
                             )}
                         </TouchableOpacity>
                     </View>
@@ -495,11 +482,10 @@ const SurveyPost = ({ navigation }) => {
                         value={postContent}
                         onChangeText={setPostContent}
                         placeholder="Description..."
-                        style={styles.postInvitationInputStyle}
-                    />
+                        style={styles.postInvitationInputStyle} />
                 </View>
                 <View style={{ alignItems: 'center', marginTop: 10 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 600 }}>Tạo khảo sát</Text>
+                    <Text style={{ fontSize: 20, fontWeight: 600 }}>Create Survey</Text>
                 </View>
                 <View style={styles.inputContainer}>
                     <View style={{ marginTop: 20 }}>
@@ -507,10 +493,9 @@ const SurveyPost = ({ navigation }) => {
                             value={newQuestion}
                             onChangeText={text => setNewQuestion(text)}
                             placeholder="Enter question..."
-                            style={[styles.textInputStyle, { fontSize: 17 }]}
-                        />
+                            style={[styles.textInputStyle, { fontSize: 17 }]} />
                         <View>
-                            <Text style={{ fontSize: 13, marginBottom: 10, marginTop: 10 }}>Chọn loại câu hỏi</Text>
+                            <Text style={{ fontSize: 13, marginBottom: 10, marginTop: 10 }}>Question type</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <RadioButton
                                     value="Multiple-Choice"
@@ -550,15 +535,14 @@ const SurveyPost = ({ navigation }) => {
                         )} */}
                         {currentQuestionType !== 'Text Input' && (
                             <View>
-                                <Text style={{ marginVertical: 8 }}>Thêm lựa chọn</Text>
+                                <Text style={{ marginVertical: 8 }}>Add options</Text>
                                 {newOptions.map((item, index) => (
                                     <View key={index} style={[styles.textInputStyle, { flexDirection: 'row', alignItems: 'center', borderWidth: 1, marginVertical: 3 }]}>
                                         <TextInput
                                             style={{ flex: 1, marginRight: 10, fontSize: 17 }}
                                             placeholder="Enter option..."
                                             value={item.question_option_value}
-                                            onChangeText={(value) => handleOptionChange(index, value)}
-                                        />
+                                            onChangeText={(value) => handleOptionChange(index, value)} />
                                         <TouchableOpacity onPress={() => handleRemoveOption(index)}>
                                             <VectorIcon
                                                 name="delete"
@@ -576,8 +560,7 @@ const SurveyPost = ({ navigation }) => {
                                         flex: 1,
                                         marginVertical: 10
                                     }}
-                                    onPress={handleAddOption}
-                                />
+                                    onPress={handleAddOption} />
                             </View>
                         )}
                         <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-around" }}>
@@ -604,8 +587,7 @@ const SurveyPost = ({ navigation }) => {
                                         marginRight: 10,
                                         marginVertical: 5,
                                     }}
-                                    onPress={handleAddQuestion}
-                                />
+                                    onPress={handleAddQuestion} />
                             </View>
                             <View style={{ width: "46%" }}>
                                 <Button
@@ -628,10 +610,9 @@ const SurveyPost = ({ navigation }) => {
                                         width: "100%",
                                         // marginLeft: 10,
                                         // marginHorizontal: 10,
-                                        marginVertical: 5,
+                                        marginVertical: 5
                                     }}
-                                    onPress={createSurvey}
-                                />
+                                    onPress={createSurvey} />
                             </View>
                         </View>
                     </View>
@@ -652,16 +633,14 @@ const SurveyPost = ({ navigation }) => {
                             width: 200,
                             marginVertical: 10,
                         }}
-                        onPress={() => createPostSurvey()}
-                    />
+                        onPress={() => createPostSurvey()} />
                 </View>
             </ScrollView>
             <FlatList
                 data={questions}
                 renderItem={renderQuestion}
                 keyExtractor={(question, index) => index.toString()}
-                nestedScrollEnabled={true}
-            />
+                nestedScrollEnabled={true} />
         </>
     );
 };
