@@ -229,8 +229,8 @@ const Post = React.forwardRef((props, ref) => {
         try {
             const token = await AsyncStorage.getItem('token')
             let del = await djangoAuthApi(token).delete(endpoints['delete-post'](phId))
-            console.log(del.data)
-            toggleMenu()
+            console.log(del.data, del.status)
+            // toggleMenu()
             spSheet.hide()
         } catch (error) {
             console.log(error)
@@ -247,7 +247,7 @@ const Post = React.forwardRef((props, ref) => {
                         Actions
                     </Text>
                 </Box>
-                <View style={{ padding: 20 }}>
+                <View style={{ padding: 20, flexDirection: 'column', gap: 10 }}>
                     <TouchableOpacity>
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <VectorIcon
@@ -627,7 +627,7 @@ const Post = React.forwardRef((props, ref) => {
                                             </Modal>
                                         </View>
                                         <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Bình luận', { postId: ph.id })}>
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Comment', { postId: ph.id })}>
                                                 <VectorIcon
                                                     name="chatbox-outline"
                                                     type="Ionicons"

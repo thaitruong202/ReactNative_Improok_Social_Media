@@ -103,7 +103,7 @@ const HomeScreen = ({ navigation }) => {
                                             </TouchableOpacity>
                                         </View>
                                         <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Bình luận', { postId: ph.id })}>
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Comment', { postId: ph.id })}>
                                                 <VectorIcon
                                                     name="chatbox-outline"
                                                     type="Ionicons"

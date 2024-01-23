@@ -53,7 +53,7 @@ const AccountCreate = () => {
             <ScrollView>
                 <View style={{ padding: 10 }}>
                     <View style={{ justifyContent: 'center', alignItems: 'center', padding: 10 }}>
-                        <Text style={{ fontSize: 20 }}>Tạo tài khoản mới</Text>
+                        <Text style={{ fontSize: 20 }}>Create new account</Text>
                     </View>
                     <View>
                         <View style={styles.inputView}>
@@ -67,7 +67,7 @@ const AccountCreate = () => {
                                 style={styles.inputText}
                                 value={lecturer.username}
                                 onChangeText={(e) => change(e, "username")}
-                                placeholder='Nhập username'
+                                placeholder='Username'
                                 numberOfLines={1}
                             />
                         </View>
@@ -94,7 +94,7 @@ const AccountCreate = () => {
                             <TextInput
                                 value={lecturer.email}
                                 onChangeText={(e) => change(e, "email")}
-                                placeholder='Nhập email'
+                                placeholder='Email'
                                 style={styles.inputText}
                             />
                         </View>
@@ -108,7 +108,7 @@ const AccountCreate = () => {
                             <TextInput
                                 value={lecturer.firstname}
                                 onChangeText={(e) => change(e, "firstname")}
-                                placeholder='Nhập first name'
+                                placeholder='First name'
                                 style={styles.inputText}
                             />
                         </View>
@@ -122,7 +122,7 @@ const AccountCreate = () => {
                             <TextInput
                                 value={lecturer.lastname}
                                 onChangeText={(e) => change(e, "lastname")}
-                                placeholder='Nhập last name'
+                                placeholder='Last name'
                                 style={styles.inputText}
                             />
                         </View>

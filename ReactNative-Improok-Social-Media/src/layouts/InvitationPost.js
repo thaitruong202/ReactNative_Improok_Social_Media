@@ -233,7 +233,7 @@ const InvitationPost = ({ navigation }) => {
             })
             console.log(mail.status, "Gửi mail nè");
             console.log(res.data, res.status);
-            navigation.navigate('Trang cá nhân');
+            navigation.navigate('Profile');
         } catch (error) {
             console.log(error);
         }

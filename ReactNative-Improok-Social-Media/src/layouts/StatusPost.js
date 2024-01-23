@@ -232,7 +232,7 @@ const StatusPost = ({ navigation }) => {
                     {userInfo?.role.role_name === "Admin" ?
                         <View>
                             <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
-                            <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo khảo sát")}>
+                            <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Create survey")}>
                                 <VectorIcon
                                     name="poll"
                                     type="MaterialIcons"
@@ -245,7 +245,7 @@ const StatusPost = ({ navigation }) => {
                     {userInfo?.role.role_name === "Admin" ?
                         <View>
                             <View style={{ height: 1, backgroundColor: 'lightgray', width: '100%' }}></View>
-                            <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Tạo sự kiện")}>
+                            <TouchableOpacity style={styles.postOption} onPress={() => navigation.navigate("Create event")}>
                                 <VectorIcon
                                     name="calendar"
                                     type="Ionicons"
@@ -296,7 +296,7 @@ const StatusPost = ({ navigation }) => {
                         } else {
                             createPost();
                         }
-                    }} variant="subtle" colorScheme="darkBlue" isDisabled={!text} style={styles.postContainer}>
+                    }} variant="subtle" colorScheme="darkBlue" isDisabled={!text.trim()} style={styles.postContainer}>
                         Post
                     </Button>
                 </View>

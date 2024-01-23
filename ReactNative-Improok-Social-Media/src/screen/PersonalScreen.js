@@ -13,7 +13,7 @@ const PersonalScreen = ({ navigation }) => {
         dispatch({
             "type": "logout"
         })
-        navigation.navigate('Đăng nhập')
+        navigation.navigate('Login')
     }
 
     const [helpExpanded, setHelpExpanded] = useState(false);
@@ -72,7 +72,7 @@ const PersonalScreen = ({ navigation }) => {
                 </View> */}
                 <View style={{ height: 10, backgroundColor: 'transparent' }}></View>
                 <View>
-                    <TouchableOpacity onPress={() => navigation.navigate('Trang cá nhân')} style={styles.profileContainer}>
+                    <TouchableOpacity onPress={() => navigation.navigate('Profile')} style={styles.profileContainer}>
                         <Image
                             source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
                             style={styles.profileStyle} />
@@ -112,7 +112,7 @@ const PersonalScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.utilTabRow}>
-                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate('Phòng chat')}>
+                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate('Chat room')}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="chatbubble"
@@ -134,7 +134,7 @@ const PersonalScreen = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <View style={styles.utilTabRow}>
-                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Sự kiện")}>
+                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Event")}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="calendar"
@@ -144,7 +144,7 @@ const PersonalScreen = ({ navigation }) => {
                                 <Text style={styles.tabItemText}>Events</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Khảo sát")}>
+                        <TouchableOpacity style={styles.tabItemContainer} onPress={() => navigation.navigate("Survey")}>
                             <View style={{ paddingTop: 20, paddingBottom: 20, paddingLeft: 10 }}>
                                 <VectorIcon
                                     name="poll"
@@ -262,7 +262,7 @@ const PersonalScreen = ({ navigation }) => {
                                         </TouchableOpacity>
                                     </View> */}
                                     <View>
-                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý tài khoản")}>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Account management")}>
                                             <VectorIcon
                                                 name="person-circle"
                                                 type="Ionicons"
@@ -272,7 +272,7 @@ const PersonalScreen = ({ navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View>
-                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý nhóm")}>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Group management")}>
                                             <VectorIcon
                                                 name="people-circle"
                                                 type="Ionicons"
@@ -281,7 +281,7 @@ const PersonalScreen = ({ navigation }) => {
                                         </TouchableOpacity>
                                     </View>
                                     <View>
-                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Quản lý bài đăng")}>
+                                        <TouchableOpacity style={styles.collapsibleSubItem} onPress={() => navigation.navigate("Post management")}>
                                             <VectorIcon
                                                 name="post"
                                                 type="MaterialCommunityIcons"

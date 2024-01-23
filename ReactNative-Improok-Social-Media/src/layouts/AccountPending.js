@@ -5,6 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import VectorIcon from '../utils/VectorIcon';
 import { Button } from 'native-base';
+import { Image } from 'react-native';
 
 const AccountPending = () => {
     const [user, dispatch] = useContext(MyUserContext)
@@ -67,12 +68,15 @@ const AccountPending = () => {
                     {listPendingUser.length > 0 ? (
                         listPendingUser.map((lpu) => (
                             <View key={lpu.id} style={{ borderWidth: 1, borderRadius: 10 }}>
-                                <View style={{ padding: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <View style={{ flexDirection: 'row', gap: 5 }}>
-                                        <Text style={{ fontSize: 16 }}>{lpu.last_name}</Text>
-                                        <Text style={{ fontSize: 16 }}>{lpu.first_name}</Text>
+                                <View style={{ padding: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Image source={lpu.avatar === null ? require('../images/user.png') : { uri: lpu.avatar }} style={{ width: 30, height: 30, alignItems: 'center', borderRadius: 15 }} />
                                     </View>
-                                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                                    <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+                                        <Text style={{ fontSize: 16 }}>{lpu.user?.last_name}</Text>
+                                        <Text style={{ fontSize: 16 }}>{lpu.user?.first_name}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
                                         <TouchableOpacity onPress={() => acceptUser(lpu.id)}>
                                             <VectorIcon
                                                 name="checkmark-circle"
@@ -95,7 +99,7 @@ const AccountPending = () => {
                         ))
                     ) : (
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Chưa có user nào</Text>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>No user here now</Text>
                         </View>
                     )}
                     {hasMorePages && (

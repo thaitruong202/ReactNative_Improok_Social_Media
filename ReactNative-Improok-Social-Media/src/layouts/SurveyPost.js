@@ -141,7 +141,7 @@ const SurveyPost = ({ navigation }) => {
             })
             console.log(res.data, res.status);
             console.log('Tạo khảo sát thành công')
-            navigation.navigate('Trang cá nhân');
+            navigation.navigate('Profile');
         } catch (error) {
             console.log(error);
         }

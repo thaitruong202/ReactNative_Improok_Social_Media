@@ -138,7 +138,7 @@ const MessageScreen = ({ navigation }) => {
                     {listRoom.map((lr) => {
                         return (
                             <>
-                                <TouchableOpacity key={lr.id} style={{ borderWidth: 1, borderRadius: 15 }} onPress={() => navigation.navigate('Tin nhắn', { roomId: lr.id })}>
+                                <TouchableOpacity key={lr.id} style={{ borderWidth: 1, borderRadius: 15 }} onPress={() => navigation.navigate('Message', { roomId: lr.id })}>
                                     <View style={{ padding: 10 }}>
                                         <Text>Room {lr.id}</Text>
                                     </View>

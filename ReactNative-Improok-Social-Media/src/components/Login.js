@@ -59,10 +59,10 @@ const Login = ({ navigation }) => {
 
                 if (res.status === 200) {
                     console.log('Đăng nhập thành công');
-                    // navigation.navigate('Trang chủ');
+                    // navigation.navigate('Homepage');
                     nav.reset({
                         index: 0,
-                        routes: [{ name: 'Trang chủ' }],
+                        routes: [{ name: 'Homepage' }],
                     });
                     setUsername('');
                     setPassword('');
@@ -114,10 +114,10 @@ const Login = ({ navigation }) => {
                         </TouchableOpacity>
                     </View>
                     <TouchableOpacity style={styles.forgotButton} onPress={() => Linking.openURL('mailto:support@improok.com?subject=ForgotPassword&body=Description')}>
-                        <Text style={styles.forgotButtonText}>Forget password?</Text>
+                        <Text style={styles.forgotButtonText}>Forgot password?</Text>
                     </TouchableOpacity>
                     <View>
-                        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Đăng ký')}>
+                        <TouchableOpacity style={styles.buttonRegister} onPress={() => navigation.navigate('Register')}>
                             <Text style={styles.buttonRegisterText}>Create new account</Text>
                         </TouchableOpacity>
                     </View>

@@ -299,7 +299,7 @@ const Survey = ({ navigation }) => {
                                             </Modal>
                                         </View>
                                         <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Bình luận', { postId: ps.post.id })}>
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Comment', { postId: ps.post.id })}>
                                                 <VectorIcon
                                                     name="chatbox-outline"
                                                     type="Ionicons"
@@ -309,7 +309,7 @@ const Survey = ({ navigation }) => {
                                                 <Text style={styles.reactionCount}>{countPostComment[index]}</Text>
                                             </TouchableOpacity>
                                         </View>
-                                        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Chi tiết khảo sát', {
+                                        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Survey detail', {
                                             postId: ps.post.id, firstName: ps.post.account.user.first_name,
                                             lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar
                                         })}>

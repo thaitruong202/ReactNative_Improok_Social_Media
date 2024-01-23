@@ -17,8 +17,8 @@ const AccountManagement = () => {
                         height: 2
                     }
                 })}>
-                <Tab.Screen name='Tạo tài khoản' component={AccountCreate} />
-                <Tab.Screen name='Xác nhận tài khoản' component={AccountConfirm} />
+                <Tab.Screen name='Create account' component={AccountCreate} />
+                <Tab.Screen name='Confirm account' component={AccountConfirm} />
             </Tab.Navigator>
         </>
     );

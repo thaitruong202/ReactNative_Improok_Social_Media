@@ -10,7 +10,7 @@ const Header = () => {
         <View style={styles.headerContainer}>
             <Image source={ImprookLogo} style={styles.improokLogoStyle} />
             <View style={styles.headerIcons}>
-                <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Tìm kiếm')}>
+                <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Search')}>
                     <View>
                         <VectorIcon
                             name="search-sharp"
@@ -20,7 +20,7 @@ const Header = () => {
                         />
                     </View>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Phòng chat')}>
+                <TouchableOpacity style={styles.iconBg} onPress={() => navigation.navigate('Chat room')}>
                     <View>
                         <VectorIcon
                             name="chatbubble"

@@ -54,7 +54,7 @@ const CreatePost = ({ navigation }) => {
                     source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
                     style={styles.profileStyle}
                 />
-                <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('Bài đăng')}>
+                <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate('Post')}>
                     <View>
                         <Text style={styles.inputStyle}>Post a status, {user.first_name}?</Text>
                     </View>

@@ -214,7 +214,7 @@ const PostManagement = ({ navigation }) => {
                                 <View style={styles.postFooterContainer}>
                                     <View style={styles.userActionSec}>
                                         <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Thống kê khảo sát', {
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Survey stats', {
                                                 postId: ps.post.id, firstName: ps.post.account.user.first_name,
                                                 lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar
                                             })}>
@@ -226,7 +226,7 @@ const PostManagement = ({ navigation }) => {
                                                 />
                                             </TouchableOpacity>
                                         </View>
-                                        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Chi tiết khảo sát', {
+                                        <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Survey detail', {
                                             postId: ps.post.id, firstName: ps.post.account.user.first_name,
                                             lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar
                                         })}>

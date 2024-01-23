@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Text, View, ScrollView, TouchableOpacity } from 'react-native';
+import { Text, View, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
@@ -43,12 +43,15 @@ const AccountAccept = () => {
                     {listAcceptUser.length > 0 ? (
                         listAcceptUser.map((lau) => (
                             <View key={lau.id} style={{ borderWidth: 1, borderRadius: 10 }}>
-                                <View style={{ padding: 15, flexDirection: 'row', justifyContent: 'space-between' }}>
-                                    <View style={{ flexDirection: 'row', gap: 5 }}>
-                                        <Text style={{ fontSize: 16 }}>{lau.last_name}</Text>
-                                        <Text style={{ fontSize: 16 }}>{lau.first_name}</Text>
+                                <View style={{ padding: 15, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <Image source={lau.avatar === null ? require('../images/user.png') : { uri: lau.avatar }} style={{ width: 30, height: 30, alignItems: 'center', borderRadius: 15 }} />
                                     </View>
-                                    <View style={{ flexDirection: 'row', gap: 8 }}>
+                                    <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
+                                        <Text style={{ fontSize: 16 }}>{lau.user?.last_name}</Text>
+                                        <Text style={{ fontSize: 16 }}>{lau.user?.first_name}</Text>
+                                    </View>
+                                    <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
                                         <VectorIcon
                                             name="checkmark-circle"
                                             type="Ionicons"
@@ -69,7 +72,7 @@ const AccountAccept = () => {
                         ))
                     ) : (
                         <View style={{ alignItems: 'center' }}>
-                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Chưa có user nào</Text>
+                            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>No user here now</Text>
                         </View>
                     )}
                     {hasMorePages && (

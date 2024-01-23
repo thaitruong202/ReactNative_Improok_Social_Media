@@ -91,14 +91,14 @@ const GroupManagement = ({ navigation }) => {
                                 <View style={styles.groupItem}>
                                     <Text style={{ fontSize: 18, flex: 7.5 }}>{lg.invitation_group_name}</Text>
                                     <View style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', flex: 2.5 }}>
-                                        <TouchableOpacity onPress={() => navigation.navigate('Thành viên nhóm', { groupId: lg.id })}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('Group member', { groupId: lg.id })}>
                                             <VectorIcon
                                                 name="eye"
                                                 type="AntDesign"
                                                 size={19}
                                             />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => navigation.navigate('Chỉnh sửa nhóm', { groupId: lg.id })}>
+                                        <TouchableOpacity onPress={() => navigation.navigate('Alter group', { groupId: lg.id })}>
                                             <VectorIcon
                                                 name="mode-edit"
                                                 type="MaterialIcons"
