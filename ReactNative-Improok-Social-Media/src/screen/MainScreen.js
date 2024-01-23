@@ -8,11 +8,12 @@ import VectorIcon from '../utils/VectorIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity, View } from 'react-native';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
-import ChatScreen from './ChatScreen';
+import { useNavigation } from '@react-navigation/native';
 
 const Tab = createBottomTabNavigator();
 
 const MainScreen = () => {
+    const navigation = useNavigation()
     return (
         <Fragment>
             <Tab.Navigator
@@ -46,7 +47,7 @@ const MainScreen = () => {
                     headerRight: () => {
                         return (
                             <View style={{ flexDirection: 'row', gap: 8 }}>
-                                <TouchableOpacity>
+                                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                                     <FontAwesome5Icon.Button
                                         name="cog"
                                         size={20}
@@ -101,7 +102,7 @@ const MainScreen = () => {
                                             color="black"
                                         />
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                                         <FontAwesome5Icon.Button
                                             name="search"
                                             size={20}
@@ -136,7 +137,7 @@ const MainScreen = () => {
                                             color="black"
                                         />
                                     </TouchableOpacity>
-                                    <TouchableOpacity>
+                                    <TouchableOpacity onPress={() => navigation.navigate('Search')}>
                                         <FontAwesome5Icon.Button
                                             name="search"
                                             size={20}

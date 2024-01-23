@@ -26,7 +26,6 @@ const Post = React.forwardRef((props, ref) => {
 
     const [isMenuVisible, setMenuVisible] = useState(false);
 
-
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(null);
 

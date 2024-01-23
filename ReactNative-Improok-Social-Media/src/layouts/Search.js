@@ -59,7 +59,7 @@ const Search = ({ navigation }) => {
                                 return (
                                     <>
                                         <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', gap: 15, marginBottom: 15 }}
-                                            onPress={() => navigation.navigate('User profile', { uid: lu.user?.id })}
+                                            onPress={() => navigation.navigate(user.id === lu.user?.id ? 'Profile' : 'User profile', { uid: lu.user?.id })}
                                         >
                                             <Image source={lu.avatar === null ? require('../images/user.png') : { uri: lu.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
                                             <View style={{ flexDirection: 'row' }}>

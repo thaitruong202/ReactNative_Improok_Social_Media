@@ -6,8 +6,8 @@ import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Post from '../layouts/Post';
 import Modal from "react-native-modal";
+import PostUser from '../layouts/PostUser';
 
 const ProfileUser = () => {
     const [user, dispatch] = useContext(MyUserContext)
@@ -183,7 +183,7 @@ const ProfileUser = () => {
                     </Text>
                 </View>
                 <View style={styles.divider}></View>
-                <Post ref={postRef} />
+                <PostUser ref={postRef} userId={uid} />
             </ScrollView>
         </>
     );
@@ -214,28 +214,6 @@ const styles = StyleSheet.create({
         height: '95%',
         width: '95%',
         borderRadius: 72
-    },
-    avatarChange: {
-        height: 40,
-        width: 40,
-        backgroundColor: 'lightgray',
-        borderRadius: 30,
-        position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'center',
-        right: 5,
-        bottom: 5
-    },
-    coverAvatarChange: {
-        height: 40,
-        width: 40,
-        backgroundColor: 'lightgray',
-        borderRadius: 30,
-        position: 'absolute',
-        justifyContent: 'center',
-        alignItems: 'center',
-        right: 15,
-        bottom: 10
     },
     name: {
         alignSelf: 'flex-start',
@@ -339,7 +317,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-evenly',
         width: '100%',
-    },
+    }
 });
 
 export default ProfileUser;
