@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import PersonalScreen from './PersonalScreen';
 import NotificationScreen from './NotificationScreen';
 import StatusPost from '../layouts/StatusPost';
-import MessageScreen from './MessageScreen';
 import HomeScreen from './HomeScreen';
+import MessageScreen from './MessageScreen'
 import VectorIcon from '../utils/VectorIcon';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { TouchableOpacity, View } from 'react-native';
@@ -35,7 +35,7 @@ const MainScreen = () => {
                         />
                     )
                 }} />
-                <Tab.Screen name='Message' component={MessageScreen} options={{
+                <Tab.Screen name='Chat room' component={MessageScreen} options={{
                     tabBarLabelStyle: { color: '#591aaf' },
                     tabBarIcon: ({ focused }) => (
                         <VectorIcon
@@ -47,7 +47,7 @@ const MainScreen = () => {
                     headerRight: () => {
                         return (
                             <View style={{ flexDirection: 'row', gap: 8 }}>
-                                <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                                <TouchableOpacity>
                                     <FontAwesome5Icon.Button
                                         name="cog"
                                         size={20}
@@ -102,7 +102,7 @@ const MainScreen = () => {
                                             color="black"
                                         />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                                    <TouchableOpacity>
                                         <FontAwesome5Icon.Button
                                             name="search"
                                             size={20}
@@ -137,7 +137,7 @@ const MainScreen = () => {
                                             color="black"
                                         />
                                     </TouchableOpacity>
-                                    <TouchableOpacity onPress={() => navigation.navigate('Search')}>
+                                    <TouchableOpacity>
                                         <FontAwesome5Icon.Button
                                             name="search"
                                             size={20}

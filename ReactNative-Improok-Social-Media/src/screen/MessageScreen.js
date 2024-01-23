@@ -89,12 +89,13 @@ import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Apis, { djangoAuthApi, endpoints } from '../configs/Apis';
+import { useNavigation } from '@react-navigation/native';
 
 const MessageScreen = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext)
     const [listRoom, setListRoom] = useState([])
     const [userInfo, setUserInfo] = useState()
-    const [userInfoLoaded, setUserInfoLoaded] = useState(false)
+    const [userInfoLoaded, setUserInfoLoaded] = useState()
 
     const getCurrentUser = async () => {
         try {

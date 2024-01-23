@@ -559,7 +559,6 @@ const Post = React.forwardRef((props, ref) => {
                                                             type="FontAwesome5"
                                                             size={25}
                                                             color="#f7a339"
-
                                                         />
                                                         <Text style={styles.reactionCount}>{countPostReaction[index]}</Text>
                                                     </TouchableOpacity>
