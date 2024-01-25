@@ -10,7 +10,7 @@ const AccountDeny = () => {
     const [user, dispatch] = useContext(MyUserContext)
     const [listDenyUser, setListDenyUser] = useState([])
     const [page, setPage] = useState(1)
-    const [hasMorePages, setHasMorePages] = useState(true);
+    const [hasMorePages, setHasMorePages] = useState(true)
 
     const getDenyUser = async () => {
         try {

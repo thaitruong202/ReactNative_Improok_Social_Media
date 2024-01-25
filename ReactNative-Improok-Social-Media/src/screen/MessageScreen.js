@@ -85,11 +85,12 @@
 // export default MessageScreen;
 
 import React, { useContext, useEffect, useState } from 'react';
-import { Button, ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import { Button, ScrollView, Text, TouchableOpacity, View, Image } from 'react-native';
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Apis, { djangoAuthApi, endpoints } from '../configs/Apis';
 import { useNavigation } from '@react-navigation/native';
+import VectorIcon from '../utils/VectorIcon';
 
 const MessageScreen = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext)
@@ -100,7 +101,7 @@ const MessageScreen = ({ navigation }) => {
     const getCurrentUser = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
-            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user?.id))
             setUserInfo(res.data)
             setUserInfoLoaded(true)
         } catch (err) {
@@ -131,10 +132,7 @@ const MessageScreen = ({ navigation }) => {
 
     return (
         <>
-            <ScrollView>
-                {/* <Text>
-                    Thông báo
-                </Text> */}
+            {/* <ScrollView>
                 <View style={{ flexDirection: 'column', gap: 5, padding: 12 }}>
                     {listRoom.map((lr) => {
                         return (
@@ -149,6 +147,52 @@ const MessageScreen = ({ navigation }) => {
                     })}
                 </View>
                 <Button title="Check" onPress={() => getRooms()} />
+            </ScrollView> */}
+            <ScrollView>
+                <View style={{ flexDirection: 'column', gap: 5, padding: 12 }}>
+                    {listRoom.length > 0 ? (
+                        listRoom.map((lr) => {
+                            return (
+                                <>
+                                    <View key={lr.id} style={{ borderBottomWidth: 1, borderBottomColor: 'lightgray' }}>
+                                        <View style={{ padding: 10 }}>
+                                            {user?.id === lr.first_user?.id ?
+                                                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 5 }} onPress={() => navigation.navigate('Message', { roomId: lr.id, firstName: lr.second_user?.user?.first_name, lastName: lr.second_user?.user?.last_name, avatar: lr.second_user?.avatar })}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, width: '90%' }}>
+                                                        <Image source={lr.second_user?.avatar === null ? require('../images/user.png') : { uri: lr.second_user?.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                                        <Text style={{ fontSize: 17 }}>{lr.second_user?.user?.last_name} {lr.second_user?.user?.first_name}</Text>
+                                                    </View>
+                                                    <TouchableOpacity onPress={() => navigation.navigate('Message', { roomId: lr.id, firstName: lr.second_user?.user?.first_name, lastName: lr.second_user?.user?.last_name, avatar: lr.second_user?.avatar })}>
+                                                        <VectorIcon
+                                                            name="chatbubble-ellipses-outline"
+                                                            type="Ionicons"
+                                                            size={24} />
+                                                    </TouchableOpacity>
+                                                </TouchableOpacity>
+                                                :
+                                                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 5 }} onPress={() => navigation.navigate('Message', { roomId: lr.id, firstName: lr.first_user?.user?.first_name, lastName: lr.first_user?.user?.last_name, avatar: lr.first_user?.avatar })}>
+                                                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 20, width: '90%' }}>
+                                                        <Image source={lr.first_user?.avatar === null ? require('../images/user.png') : { uri: lr.first_user?.avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                                        <Text style={{ fontSize: 17 }}>{lr.first_user?.user?.last_name} {lr.first_user?.user?.first_name}</Text>
+                                                    </View>
+                                                    <TouchableOpacity onPress={() => navigation.navigate('Message', { roomId: lr.id, firstName: lr.first_user?.user?.first_name, lastName: lr.first_user?.user?.last_name, avatar: lr.first_user?.avatar })}>
+                                                        <VectorIcon
+                                                            name="chatbubble-ellipses-outline"
+                                                            type="Ionicons"
+                                                            size={24} />
+                                                    </TouchableOpacity>
+                                                </TouchableOpacity>
+                                            }
+                                        </View>
+                                    </View>
+                                </>
+                            );
+                        })
+                    ) : (
+                        <Text>No rooms available</Text>
+                    )}
+                </View>
+                {/* <Button title="Check" onPress={() => getRooms()} /> */}
             </ScrollView>
         </>
     );

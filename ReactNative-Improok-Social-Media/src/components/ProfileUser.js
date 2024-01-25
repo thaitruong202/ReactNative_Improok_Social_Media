@@ -58,6 +58,15 @@ const ProfileUser = () => {
         }
     };
 
+    const createRoom = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token')
+            let res = await djangoAuthApi(token).post(endpoints['create-room'])
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
         <>
             <ScrollView onScroll={handleProfileScroll}
@@ -121,48 +130,25 @@ const ProfileUser = () => {
                 <Text style={styles.name}>{profile?.last_name} {profile?.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
                 <View style={styles.profileTabsContainer}>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="plus"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>Add Story</Text>
-                    </View>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="user"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>Edit Profile</Text>
-                    </View>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="list"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>Activity Log</Text>
-                    </View>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="dots-horizontal-circle"
-                                type="MaterialCommunityIcons"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>More</Text>
-                    </View>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: '#591aaf' }]}>
+                        <VectorIcon
+                            name="chatbubble-ellipses-outline"
+                            type="Ionicons"
+                            size={22}
+                            color='white'
+                        ></VectorIcon>
+                        <Text style={[styles.tabText, { color: 'white' }]}>Message</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]}>
+                        <VectorIcon
+                            name="ellipsis-horizontal-circle-outline"
+                            type="Ionicons"
+                            size={22}
+                            color='black'
+                        ></VectorIcon>
+                        <Text style={[styles.tabText, { color: 'black' }]}>More</Text>
+                    </TouchableOpacity>
                 </View>
-                {/* <View style={styles.divider}></View> */}
                 <View style={styles.aboutheadingContainer}>
                     <Text style={styles.aboutText}>About</Text>
                     <Text style={styles.seeAllText}>See All</Text>
@@ -233,30 +219,26 @@ const styles = StyleSheet.create({
         height: 100,
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-around',
+        justifyContent: 'space-evenly',
     },
     tabContainer: {
-        height: 90,
-        width: windowWidth / 4.2,
+        height: 40,
+        width: windowWidth / 2.5,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
+        borderRadius: 10,
+        gap: 8
     },
     tabImage: {
         height: 30,
         width: 30,
     },
-    tabImageContainer: {
-        height: 50,
-        width: 50,
-        backgroundColor: 'lightgray',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 60,
-    },
     tabText: {
         fontSize: 16,
         fontWeight: 'bold',
         marginTop: 5,
+        alignItems: 'center'
     },
     divider: {
         height: 2,

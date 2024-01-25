@@ -13,7 +13,7 @@ import { useRoute } from '@react-navigation/native';
 const Comment = () => {
     const [user, dispatch] = useContext(MyUserContext)
     const route = useRoute()
-    const { postId } = route.params
+    const { postId, accountId } = route.params
     const [content, setContent] = useState('')
     const [commentList, setCommentList] = useState([])
 
@@ -123,6 +123,21 @@ const Comment = () => {
             }
             console.log(res.data)
             setContent('')
+            const newComment = {
+                "id": res.data.id,
+                "comment_image_url": res.data.comment_image_url,
+                "account": {
+                    "id": user.id,
+                    "user": {
+                        "first_name": user.first_name,
+                        "last_name": user.last_name
+                    },
+                    "avatar": userInfo?.avatar
+                },
+                "comment_content": res.data.comment_content,
+                "post": res.data.post
+            }
+            setCommentList(prevComments => [...prevComments, newComment]);
         } catch (error) {
             console.log("Lỗi ở đây");
             console.log("Lỗi error gì", error)
@@ -134,6 +149,7 @@ const Comment = () => {
             console.log(clId)
             const token = await AsyncStorage.getItem('token')
             let res = await djangoAuthApi(token).delete(endpoints['delete-comment'](clId))
+            setCommentList(prevCommentList => prevCommentList.filter(comment => comment.id !== clId));
             console.log(res.status)
             spSheet.hide()
         } catch (error) {
@@ -222,14 +238,21 @@ const Comment = () => {
                     {commentList.map(cl => {
                         return (
                             <>
-                                <TouchableOpacity style={{ display: 'flex', flexDirection: 'row', marginBottom: 5, gap: 8 }}
+                                <TouchableOpacity
+                                    style={{ display: 'flex', flexDirection: 'row', marginBottom: 5, gap: 8 }}
                                     onLongPress={() => {
-                                        const spSheet = SPSheet;
-                                        spSheet.show({
-                                            component: () => component({ ...this.props, clId: cl.id, spSheet }),
-                                            dragFromTopOnly: true,
-                                            height: 0.3 * windowHeight
-                                        });
+                                        if (
+                                            userInfo?.id == cl.account.id ||
+                                            userInfo?.role.id == 1 ||
+                                            userInfo?.id == accountId
+                                        ) {
+                                            const spSheet = SPSheet;
+                                            spSheet.show({
+                                                component: () => component({ ...this.props, clId: cl.id, spSheet }),
+                                                dragFromTopOnly: true,
+                                                height: 0.3 * windowHeight,
+                                            });
+                                        }
                                     }}>
                                     <Image
                                         source={cl.account?.avatar === null ? require('../images/user.png') : { uri: cl.account?.avatar }}
@@ -237,10 +260,11 @@ const Comment = () => {
                                     <View style={{ flexShrink: 1 }}>
                                         <View style={{ backgroundColor: 'lightgray', borderRadius: 20 }}>
                                             <View style={{ padding: 10 }}>
-                                                <Text style={{ fontSize: 17, fontWeight: '700' }}>{cl.account.user.last_name} {cl.account.user.first_name}</Text>
+                                                <Text style={{ fontSize: 17, fontWeight: '700' }}>{cl.account.user?.last_name} {cl.account.user?.first_name}</Text>
                                                 <Text style={{ fontSize: 16 }} ellipsizeMode="tail" numberOfLines={2}>
                                                     {cl.comment_content}
                                                 </Text>
+                                                {/* <Text>Id {userInfo?.id} comment {cl.account.id} role {userInfo?.role.id} account {accountId}</Text> */}
                                             </View>
                                         </View>
                                         {cl.comment_image_url === null ? "" :
@@ -251,7 +275,7 @@ const Comment = () => {
                                             </>
                                         }
                                     </View>
-                                </TouchableOpacity>
+                                </TouchableOpacity >
                             </>
                         )
                     })}
@@ -318,7 +342,7 @@ const Comment = () => {
                         </View>
                     </View>
                 }
-            </View>
+            </View >
         </>
     );
 };
@@ -331,6 +355,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
         paddingHorizontal: 10,
         paddingBottom: 20,
+        paddingTop: 15,
         gap: 8
     },
     replyArea: {
@@ -357,7 +382,6 @@ const styles = StyleSheet.create({
     selectedImageStyle: {
         width: 100,
         aspectRatio: 1,
-        // resizeMode: 'stretch',
         marginRight: 5,
     },
     deleteBg: {

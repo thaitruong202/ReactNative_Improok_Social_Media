@@ -1,14 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRoute } from '@react-navigation/native';
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, Button, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { View, Text, TextInput, Button, ScrollView, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import Apis, { djangoAuthApi, endpoints } from '../configs/Apis';
 import { MyUserContext } from '../../App';
+import { windowWidth } from '../utils/Dimensions';
+import VectorIcon from '../utils/VectorIcon';
 
 const ChatScreen = () => {
     const [user, dispatch] = useContext(MyUserContext)
     const route = useRoute()
-    const { roomId } = route.params
+    const { roomId, firstName, lastName, avatar } = route.params
     // const roomName = 'djangoChat';
     const [message, setMessage] = useState({
         "content": "",
@@ -17,8 +19,10 @@ const ChatScreen = () => {
     })
 
     const [userInfo, setUserInfo] = useState()
-
     const [messageList, setMessageList] = useState([])
+    const [initialScroll, setInitialScroll] = useState(false)
+
+    const scrollViewRef = useRef()
 
     const change = (e, field) => {
         setMessage(current => {
@@ -38,7 +42,6 @@ const ChatScreen = () => {
 
     const getMessage = async () => {
         try {
-            // const token = await AsyncStorage.getItem('token')
             let res = await Apis.get(endpoints['get-message-by-room'](roomId))
             setMessageList(res.data.results)
             console.log(res.data.results)
@@ -49,7 +52,7 @@ const ChatScreen = () => {
     }
 
     const chatSocket = new WebSocket(
-        'ws://' + '192.168.1.7:8000' + '/ws/chat/' + roomId + '/'
+        'ws://' + '192.168.1.18:8000' + '/ws/chat/' + roomId + '/'
     );
 
     const showMessage = () => {
@@ -58,7 +61,6 @@ const ChatScreen = () => {
 
     const sendMessage = async () => {
         try {
-            // const token = await AsyncStorage.setItem('token')
             let res = await Apis.post(endpoints['send-message'], {
                 "content": message.content,
                 "who_sent": userInfo?.id,
@@ -88,46 +90,133 @@ const ChatScreen = () => {
             const receivedMessage = JSON.parse(e.data).message; // Giải pháp 1
             // const receivedMessage = JSON.parse(e.data); // Giải pháp 2
             setMessageList((prevMessageList) => [...prevMessageList, receivedMessage]);
+            // setMessageList((prevMessageList) => [receivedMessage, ...prevMessageList]);
         }
     }, [])
 
     useEffect(() => {
+        setInitialScroll(true)
         getMessage()
     }, [])
 
+    // useEffect(() => {
+    //     if (initialScroll && scrollViewRef.current) {
+    //         scrollViewRef.current.scrollToEnd({ animated: true });
+    //         console.log("Scroll")
+    //     }
+    // }, [initialScroll]);
+
     return (
-        <View>
-            <ScrollView>
-                <Text>Tin nhắn của room {roomId}</Text>
+        <View style={styles.container}>
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 10,
+                marginVertical: 15,
+                marginHorizontal: 20,
+                backgroundColor: 'white',
+                shadowColor: '#000',
+                shadowOffset: { width: 2, height: 2 },
+                shadowOpacity: 0.3,
+                shadowRadius: 4,
+                elevation: 5,
+                padding: 12,
+                borderRadius: 12
+            }}>
+                <Image source={avatar === null ? require('../images/user.png') : { uri: avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                <View style={{ flexDirection: 'row', gap: 5 }}>
+                    <Text style={{ fontSize: 16 }}>{lastName}</Text>
+                    <Text style={{ fontSize: 16 }}>{firstName}</Text>
+                </View>
+            </View>
+            <ScrollView contentContainerStyle={styles.scrollContainer}
+            >
                 <View>
                     {messageList.map((ml, index) => {
                         const isSentByCurrentUser = ml.who_sent === userInfo?.id;
                         const messageStyle = {
-                            backgroundColor: isSentByCurrentUser ? "yellow" : "red",
+                            backgroundColor: isSentByCurrentUser ? "lightblue" : "lightgray",
                             alignSelf: isSentByCurrentUser ? 'flex-end' : 'flex-start',
                             marginBottom: 10,
                             paddingHorizontal: 10,
-                            paddingVertical: 5,
+                            paddingVertical: 10,
                             borderRadius: 10,
+                            flexDirection: 'row',
+
                         };
 
                         return (
+                            // <View key={index} style={messageStyle}>
+                            //     <Image source={avatar === null ? require('../images/user.png') : { uri: avatar }} style={{ width: 40, height: 40, borderRadius: 20 }} />
+                            //     <Text style={{ fontSize: 16 }}>{ml.content}</Text>
+                            // </View>
                             <View key={index} style={messageStyle}>
-                                <Text>{ml.content}</Text>
+                                {/* {avatar === null || !isSentByCurrentUser && (
+                                    <Image
+                                        source={require('../images/user.png')}
+                                        style={{ width: 40, height: 40, borderRadius: 20 }}
+                                    />
+                                )} */}
+                                <Text style={{ fontSize: 16 }}>{ml.content}</Text>
                             </View>
                         );
                     })}
                 </View>
             </ScrollView>
-            <TextInput
-                value={message.content}
-                onChangeText={(e) => change(e, "content")}
-                placeholder="Enter your message"
-            />
-            <Button title='Send' onPress={sendMessage} />
-            <Button title='Check' onPress={getMessage} />
+            <View style={styles.replyMessage}>
+                <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderRadius: 15, justifyContent: 'space-between' }}>
+                    <TextInput
+                        placeholder="Enter your message..."
+                        value={message.content}
+                        onChangeText={(e) => change(e, "content")}
+                        numberOfLines={1}
+                        style={message.content.length > 0 ? styles.inputComment : styles.emptyInputComment} />
+                    {message.content.length > 0 &&
+                        <TouchableOpacity style={{ width: "10%" }} onPress={() => sendMessage()}>
+                            <VectorIcon
+                                name="send"
+                                type="Ionicons"
+                                size={22}
+                                color="blue" />
+                        </TouchableOpacity>}
+                </View>
+            </View>
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    scrollContainer: {
+        justifyContent: 'flex-end',
+        paddingHorizontal: 20,
+        paddingBottom: 60,
+        paddingTop: 10,
+        gap: 8
+    },
+    replyMessage: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        padding: 15,
+        backgroundColor: '#f2f2f2',
+        justifyContent: 'space-between',
+        position: 'absolute',
+        bottom: 1,
+        width: windowWidth,
+        gap: 8
+    },
+    emptyInputComment: {
+        width: '85%',
+        paddingHorizontal: 10,
+        paddingVertical: 3
+    },
+    inputComment: {
+        width: '85%',
+        paddingHorizontal: 10,
+        paddingVertical: 3
+    }
+});
 
 export default ChatScreen;

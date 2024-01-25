@@ -625,7 +625,7 @@ const Post = React.forwardRef((props, ref) => {
                                             </Modal>
                                         </View>
                                         <View>
-                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Comment', { postId: ph.id })}>
+                                            <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Comment', { postId: ph.id, accountId: ph.account })}>
                                                 <VectorIcon
                                                     name="chatbox-outline"
                                                     type="Ionicons"

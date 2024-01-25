@@ -47,6 +47,7 @@ const AccountPending = () => {
 
     const rejectUser = async (userId) => {
         try {
+            console.log(userId)
             const token = await AsyncStorage.getItem('token');
             let res = await djangoAuthApi(token).patch(endpoints['confirm-user'](userId), {
                 "confirm_status": 2
@@ -75,9 +76,10 @@ const AccountPending = () => {
                                     <View style={{ flexDirection: 'row', gap: 5, alignItems: 'center' }}>
                                         <Text style={{ fontSize: 16 }}>{lpu.user?.last_name}</Text>
                                         <Text style={{ fontSize: 16 }}>{lpu.user?.first_name}</Text>
+                                        <Text>{lpu.id}</Text>
                                     </View>
                                     <View style={{ flexDirection: 'row', gap: 8, alignItems: 'center' }}>
-                                        <TouchableOpacity onPress={() => acceptUser(lpu.id)}>
+                                        <TouchableOpacity onPress={() => acceptUser(lpu.user?.id)}>
                                             <VectorIcon
                                                 name="checkmark-circle"
                                                 type="Ionicons"
@@ -85,7 +87,7 @@ const AccountPending = () => {
                                                 color="green"
                                             />
                                         </TouchableOpacity>
-                                        <TouchableOpacity onPress={() => rejectUser(lpu.id)}>
+                                        <TouchableOpacity onPress={() => rejectUser(lpu.user?.id)}>
                                             <VectorIcon
                                                 name="close-circle"
                                                 type="Ionicons"
