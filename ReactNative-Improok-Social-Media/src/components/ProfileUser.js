@@ -1,10 +1,10 @@
 import { MyUserContext } from '../../App';
-import { useRoute } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { ScrollView, Image, StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import VectorIcon from '../utils/VectorIcon';
 import { windowHeight, windowWidth } from '../utils/Dimensions';
-import { djangoAuthApi, endpoints } from '../configs/Apis';
+import Apis, { djangoAuthApi, endpoints } from '../configs/Apis';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from "react-native-modal";
 import PostUser from '../layouts/PostUser';
@@ -19,6 +19,7 @@ const ProfileUser = () => {
     const [profile, setProfile] = useState()
 
     const postRef = useRef(null);
+    const navigation = useNavigation()
 
     const getCurrentUser = async () => {
         try {
@@ -58,10 +59,130 @@ const ProfileUser = () => {
         }
     };
 
+    // const createRoom = async () => {
+    //     try {
+    //         const token = await AsyncStorage.getItem('token')
+    //         console.log("", user.id, profile.id)
+    //         let res = await djangoAuthApi(token).post(endpoints['create-room'], {
+    //             "first_user": user.id,
+    //             "second_user": profile.id
+    //         })
+    //         console.log(res.data)
+    //     } catch (error) {
+    //         const token = await AsyncStorage.getItem('token')
+    //         console.log(error.response.data.error)
+    //         console.log("first_user:", user.id, "second_user:", profile.id)
+    //         try {
+    //             if (error.response.data.error === "Room already exists.") {
+    //                 let res = await Apis.get(endpoints['find-room'], {
+    //                     "first_user": user.id,
+    //                     "second_user": profile.id
+    //                 });
+    //                 console.log("Phòng", res.data.results[0])
+    //                 const roomInfo = res.data.results[0]
+    //                 if (roomInfo.first_user.id === user.id) {
+    //                     navigation.navigate('Message', {
+    //                         roomId: roomInfo.id,
+    //                         firstName: roomInfo.second_user?.user?.first_name,
+    //                         lastName: roomInfo.second_user?.user?.last_name,
+    //                         avatar: roomInfo.second_user?.avatar,
+    //                     });
+    //                     console.log(roomInfo.id, roomInfo.second_user?.user?.first_name, roomInfo.second_user?.user?.last_name, roomInfo.second_user?.avatar)
+    //                 } else {
+    //                     navigation.navigate('Message', {
+    //                         roomId: roomInfo.id,
+    //                         firstName: roomInfo.first_user?.user?.first_name,
+    //                         lastName: roomInfo.first_user?.user?.last_name,
+    //                         avatar: roomInfo.first_user?.avatar,
+    //                     });
+    //                     console.log(roomInfo.id, roomInfo.first_user?.user?.first_name, roomInfo.first_user?.user?.last_name, roomInfo.first_user?.avatar)
+    //                 }
+    //             }
+    //         } catch (error) {
+    //             console.log(error.response.data.error)
+    //         }
+    //     }
+    // }
+
     const createRoom = async () => {
         try {
             const token = await AsyncStorage.getItem('token')
-            let res = await djangoAuthApi(token).post(endpoints['create-room'])
+            console.log(user.id, profile.id)
+            let res = await djangoAuthApi(token).post(endpoints['create-room'], {
+                "first_user": user.id,
+                "second_user": profile.id
+            })
+            console.log(res.data)
+            let nav = await Apis.post(endpoints['find-room'], {
+                "first_user": user.id,
+                "second_user": profile.id
+            });
+            console.log("Phòng", nav.data[0])
+            const roomInfo = nav.data[0]
+            if (roomInfo.first_user.id === user.id) {
+                navigation.navigate('Message', {
+                    roomId: roomInfo.id,
+                    firstName: roomInfo.second_user?.user?.first_name,
+                    lastName: roomInfo.second_user?.user?.last_name,
+                    avatar: roomInfo.second_user?.avatar,
+                });
+                // console.log(roomInfo.id, roomInfo.second_user?.user?.first_name, roomInfo.second_user?.user?.last_name, roomInfo.second_user?.avatar)
+            } else {
+                navigation.navigate('Message', {
+                    roomId: roomInfo.id,
+                    firstName: roomInfo.first_user?.user?.first_name,
+                    lastName: roomInfo.first_user?.user?.last_name,
+                    avatar: roomInfo.first_user?.avatar,
+                });
+                // console.log(roomInfo.id, roomInfo.first_user?.user?.first_name, roomInfo.first_user?.user?.last_name, roomInfo.first_user?.avatar)
+            }
+        } catch (error) {
+            const token = await AsyncStorage.getItem('token')
+            console.log(error.response.data.error)
+            console.log("first_user:", user.id, "second_user:", profile.id)
+            try {
+                if (error.response.data.error === "Room already exists.") {
+                    let res = await Apis.post(endpoints['find-room'], {
+                        "first_user": user.id,
+                        "second_user": profile.id
+                    });
+                    console.log("Phòng", res.data[0])
+                    const roomInfo = res.data[0]
+                    if (roomInfo.first_user.id === user.id) {
+                        navigation.navigate('Message', {
+                            roomId: roomInfo.id,
+                            firstName: roomInfo.second_user?.user?.first_name,
+                            lastName: roomInfo.second_user?.user?.last_name,
+                            avatar: roomInfo.second_user?.avatar,
+                        });
+                        // console.log(roomInfo.id, roomInfo.second_user?.user?.first_name, roomInfo.second_user?.user?.last_name, roomInfo.second_user?.avatar)
+                    } else {
+                        navigation.navigate('Message', {
+                            roomId: roomInfo.id,
+                            firstName: roomInfo.first_user?.user?.first_name,
+                            lastName: roomInfo.first_user?.user?.last_name,
+                            avatar: roomInfo.first_user?.avatar,
+                        });
+                        // console.log(roomInfo.id, roomInfo.first_user?.user?.first_name, roomInfo.first_user?.user?.last_name, roomInfo.first_user?.avatar)
+                    }
+                }
+            } catch (error) {
+                console.log(error.response.data.error)
+            }
+        }
+    }
+
+    const checkvar = async () => {
+        try {
+            let res = await Apis.get(endpoints['find-room'], {
+                "first_user": 1,
+                "second_user": 2
+            }, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            console.log(res.data.results)
         } catch (error) {
             console.log(error)
         }
@@ -130,7 +251,8 @@ const ProfileUser = () => {
                 <Text style={styles.name}>{profile?.last_name} {profile?.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
                 <View style={styles.profileTabsContainer}>
-                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: '#591aaf' }]}>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: '#591aaf' }]}
+                        onPress={() => createRoom()}>
                         <VectorIcon
                             name="chatbubble-ellipses-outline"
                             type="Ionicons"
@@ -139,7 +261,7 @@ const ProfileUser = () => {
                         ></VectorIcon>
                         <Text style={[styles.tabText, { color: 'white' }]}>Message</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]}>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]} onPress={() => checkvar()}>
                         <VectorIcon
                             name="ellipsis-horizontal-circle-outline"
                             type="Ionicons"

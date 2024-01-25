@@ -18,8 +18,8 @@ import axios from "axios";
 // const DJANGO_SERVER = "http://192.168.1.35:8000"
 // const DJANGO_SERVER = "http://192.168.1.25:8000"
 
-// const DJANGO_SERVER = "http://192.168.1.7:8000"
-const DJANGO_SERVER = "http://192.168.1.18:8000"
+const DJANGO_SERVER = "http://192.168.1.6:8000"
+// const DJANGO_SERVER = "http://192.168.1.18:8000"
 
 export const endpoints = {
     "current-user": `${DJANGO_SERVER}/users/current-user/`,
@@ -77,7 +77,8 @@ export const endpoints = {
     "get-message-by-room": (id) => `${DJANGO_SERVER}/rooms/${id}/messages/`,
     "send-message": `${DJANGO_SERVER}/messages/`,
     "get-user-by-id": (id) => `${DJANGO_SERVER}/users/${id}/`,
-    "create-room": `${DJANGO_SERVER}/rooms/`
+    "create-room": `${DJANGO_SERVER}/rooms/`,
+    "find-room": `${DJANGO_SERVER}/rooms/find_room/`
 }
 
 export const djangoAuthApi = (token) => {
