@@ -77,7 +77,8 @@ export const endpoints = {
     "send-message": `${DJANGO_SERVER}/messages/`,
     "get-user-by-id": (id) => `${DJANGO_SERVER}/users/${id}/`,
     "create-room": `${DJANGO_SERVER}/rooms/`,
-    "find-room": `${DJANGO_SERVER}/rooms/find_room/`
+    "find-room": `${DJANGO_SERVER}/rooms/find_room/`,
+    "search-group": (group) => `${DJANGO_SERVER}/invitation_groups/search_group_cache/?invitation_group_name=${group}`
 }
 
 export const djangoAuthApi = (token) => {

@@ -231,43 +231,46 @@ const GroupEdit = () => {
             <ScrollView>
                 <SafeAreaView>
                     <View style={styles.groupMemberContainer}>
-                        {edit === false ? <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                            <Text style={styles.groupMemberHeaderText}>
-                                {groupName}
-                            </Text>
-                            <TouchableOpacity onPress={() => handleEdit(true)}>
-                                <VectorIcon
-                                    name="edit"
-                                    type="FontAwesome5"
-                                    size={25}
-                                />
-                            </TouchableOpacity>
-                        </View> : <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                        {edit === false ? <View>
+                            <View style={{ flexDirection: 'row', justifyContent: 'space-between', padding: 10 }}>
+                                <Text style={styles.groupMemberHeaderText}>
+                                    {groupName}
+                                </Text>
+                                <TouchableOpacity onPress={() => handleEdit(true)}>
+                                    <VectorIcon
+                                        name="create-outline"
+                                        type="Ionicons"
+                                        size={23}
+                                    />
+                                </TouchableOpacity>
+                            </View>
+                        </View> : <View style={{ flexDirection: 'row', justifyContent: 'space-between', borderBottomWidth: 1, borderRadius: 5, alignItems: 'center' }}>
                             <TextInput
                                 value={groupName}
                                 onChangeText={(newgroupName) => setGroupName(newgroupName)}
                                 style={{
                                     height: 40,
                                     marginHorizontal: 10,
-                                    borderWidth: 1,
                                     padding: 10,
                                     borderRadius: 5,
                                     fontSize: 17,
-                                    width: 0.7 * windowWidth
+                                    width: '70%'
                                 }}
                             />
-                            <TouchableOpacity onPress={() => handleSave()}>
+                            <TouchableOpacity onPress={() => handleSave()} style={{ width: '14%' }}>
                                 <VectorIcon
-                                    name="check"
-                                    type="FontAwesome5"
-                                    size={25}
+                                    name="checkmark-circle-outline"
+                                    type="Ionicons"
+                                    size={23}
+                                    color="green"
                                 />
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={() => handleCancel()}>
+                            <TouchableOpacity onPress={() => handleCancel()} style={{ width: '14%' }}>
                                 <VectorIcon
-                                    name="remove"
-                                    type="FontAwesome"
-                                    size={25}
+                                    name="close-circle-outline"
+                                    type="Ionicons"
+                                    size={23}
+                                    color="red"
                                 />
                             </TouchableOpacity>
                         </View>}
@@ -277,7 +280,7 @@ const GroupEdit = () => {
                                     <View style={styles.memberItem}>
                                         <Image
                                             source={ml.avatar === null ? require('../images/user.png') : { uri: ml.avatar }}
-                                            style={{ width: 50, height: 50, borderRadius: 25, flex: 1.5 }} />
+                                            style={{ width: 40, height: 40, borderRadius: 20, flex: 1.5 }} />
                                         <Text style={{ fontSize: 18, flex: 7.5, alignItems: 'center' }}>
                                             {ml.user.last_name} {ml.user.first_name}
                                         </Text>
@@ -353,12 +356,12 @@ const GroupEdit = () => {
 
 const styles = StyleSheet.create({
     groupMemberContainer: {
-        padding: 8,
+        padding: 10,
         marginTop: 5
     },
     groupMemberHeaderText: {
         textAlign: 'center',
-        fontSize: 24,
+        fontSize: 21,
         fontWeight: '600',
         textTransform: 'uppercase',
         marginBottom: 10
@@ -369,8 +372,11 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 8,
         borderRadius: 10,
-        borderWidth: 1,
-        marginBottom: 7
+        borderBottomWidth: 1,
+        marginBottom: 7,
+        borderBottomColor: 'lightgray',
+        alignItems: 'center',
+        gap: 10
     },
     addMemberButt: {
         display: 'flex',

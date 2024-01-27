@@ -30,12 +30,18 @@ const InvitationPost = ({ navigation }) => {
     const [postContent, setPostContent] = useState('');
 
     const [addExpanded, setAddExpanded] = useState(false);
+    const [addExpanded1, setAddExpanded1] = useState(false)
 
     const [input, setInput] = useState('');
+    const [groupInput, setGroupInput] = useState('')
 
     const [selectedMember, setSelectedMember] = useState([]);
+    const [selectedGroup, setSelectedGroup] = useState([])
 
     const [filteredAccountList, setFilteredAccountList] = useState([]);
+    const [filteredGroupList, setFilteredGroupList] = useState([]);
+
+    const [mailList, setMailList] = useState([])
 
     const renderItem = ({ item }) => {
         const fullName = `${item.user?.last_name} ${item.user?.first_name}`;
@@ -73,6 +79,50 @@ const InvitationPost = ({ navigation }) => {
         );
     };
 
+    const renderGroup = ({ item }) => {
+        // const fullName = `${item.user?.last_name} ${item.user?.first_name}`;
+        // const isMemberSelected = !!selectedMember.find(member => member.fullName === fullName);
+
+        // const memberId = item.user?.id;
+        // const isMemberSelected = !!selectedMember.find(member => member.id === memberId);
+
+        return (
+            <Pressable
+                onPress={() => {
+                    {
+                        const newGroup = item.accounts;
+                        if (newGroup.length !== 0) {
+                            setSelectedGroup([...selectedGroup, ...newGroup]);
+                            setGroupInput('');
+                            for (let i = 0; i < item.accounts_info.length; i++) {
+                                const isValidEmail = emailRegex.test(item.accounts_info[i]?.user.email)
+                                if (isValidEmail) {
+                                    console.log(item.accounts_info[i]?.user.email)
+                                    setMailList((mailList) => [...mailList, item.accounts_info[i]?.user.email])
+                                }
+                            }
+                            console.log("Group mới", newGroup)
+                        }
+                    }
+                }}
+                style={({ pressed }) => [
+                    {
+                        display: 'flex',
+                        flexDirection: 'row',
+                        marginVertical: 10,
+                        paddingHorizontal: 20,
+                        alignItems: 'center'
+                    },
+                    // isMemberSelected && { opacity: 0.5 },
+                ]}
+            // disabled={isMemberSelected}
+            // accessibilityState={{ selected: isMemberSelected }}
+            >
+                <Text style={{ fontSize: 16, marginLeft: 10 }}>{item.invitation_group_name}</Text>
+            </Pressable>
+        );
+    };
+
     // const onChangeText = async (text) => {
     //     setInput(text);
     //     if (text.length > 0) {
@@ -105,10 +155,26 @@ const InvitationPost = ({ navigation }) => {
         }
     };
 
+    const onGroupText = async (text) => {
+        setGroupInput(text)
+        if (text.length > 0) {
+            const token = await AsyncStorage.getItem("token")
+            let res = await djangoAuthApi(token).get(endpoints['search-group'](text))
+            console.log("Đây là các group", res.data)
+            setFilteredGroupList(res.data)
+        } else {
+            setFilteredGroupList([]);
+        }
+    }
+
     const currentDate = new Date();
 
     const toggleAdd = () => {
         setAddExpanded(!addExpanded);
+    };
+
+    const toggleAdd1 = () => {
+        setAddExpanded1(!addExpanded1);
     };
 
     const handleBeginDateChange = (event, date) => {
@@ -133,6 +199,11 @@ const InvitationPost = ({ navigation }) => {
         }
         console.log(selectedBeginDate.toISOString().slice(0, 10), selectedBeginTime.getHours(), selectedBeginTime.getMinutes())
     };
+
+    useEffect(() => {
+        console.log("Đây là list các group", selectedGroup)
+        console.log("Đây là list các mail", mailList)
+    }, [selectedGroup])
 
     const combinedBeginDateTime = new Date(
         selectedBeginDate.getFullYear(),
@@ -191,6 +262,8 @@ const InvitationPost = ({ navigation }) => {
         getCurrentUser();
     }, [])
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const removeMember = (index) => {
         const updatedMembers = [...selectedMember];
         updatedMembers.splice(index, 1);
@@ -219,18 +292,20 @@ const InvitationPost = ({ navigation }) => {
                 let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](id));
                 memberAccountId.push(res.data.id);
             }
-            console.log(memberAccountId);
+            console.log("Danh sách member", memberAccountId);
+            console.log("Member từ group", selectedGroup)
             const postInvitationId = res.data.id;
             let member = await djangoAuthApi(token).post(endpoints['invitation-posts-accounts'](postInvitationId), {
-                "list_account_id": memberAccountId
+                "list_account_id": memberAccountId.length === 0 ? selectedGroup : memberAccountId
             })
             console.log(member.status);
             const recipientList = selectedMember.map(member => member.email);
+            console.log("Danh sách mail", recipientList)
             let mail = await djangoAuthApi(token).post(endpoints['send-email'], {
                 "subject": "Thư mời đến sự kiện" + " " + "[" + eventName + "]",
                 "message": "Trân trọng mới các bạn đến tham dự sự kiện" + "\n" +
                     postContent + " " + "vào lúc" + " " + `${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`,
-                "recipient_list": recipientList
+                "recipient_list": recipientList.length === 0 ? mailList : recipientList
             })
             console.log(mail.status, "Gửi mail nè");
             console.log(res.data, res.status);
@@ -362,7 +437,7 @@ const InvitationPost = ({ navigation }) => {
                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <VectorIcon
                                 name="add-circle"
-                                type="MaterialIcons"
+                                type="Ionicons"
                                 size={22} />
                             <Text style={styles.collapsibleSubItemHeaderText}>Add guests</Text>
                             <VectorIcon
@@ -412,6 +487,66 @@ const InvitationPost = ({ navigation }) => {
                                             </TouchableOpacity>
                                         </View>
                                     ))}
+                                </SafeAreaView>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </Collapsible>
+                </View>
+                <View style={styles.collapsibleContainer}>
+                    <TouchableOpacity onPress={toggleAdd1}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <VectorIcon
+                                name="people"
+                                type="Ionicons"
+                                size={22} />
+                            <Text style={styles.collapsibleSubItemHeaderText}>Add groups</Text>
+                            <VectorIcon
+                                name={addExpanded1 ? 'chevron-up' : 'chevron-down'}
+                                type="Ionicons"
+                                size={19}
+                                style={{ position: 'absolute', right: 5 }} />
+                        </View>
+                    </TouchableOpacity>
+                    <Collapsible collapsed={!addExpanded1}>
+                        <View style={styles.collapsibleSubItem}>
+                            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                                <SafeAreaView>
+                                    <TextInput
+                                        placeholder='Enter group...'
+                                        value={groupInput}
+                                        onChangeText={(groupInput) => onGroupText(groupInput)}
+                                        style={{
+                                            height: 40,
+                                            marginHorizontal: 10,
+                                            borderWidth: 1,
+                                            padding: 10,
+                                            borderRadius: 5,
+                                            fontSize: 17
+                                        }} />
+                                    {
+                                        groupInput.length > 0 ? <FlatList
+                                            data={filteredGroupList}
+                                            renderItem={renderGroup}
+                                            keyExtractor={item => item.id}
+                                            nestedScrollEnabled={true}
+                                            scrollEnabled={false}
+                                            style={{
+                                                borderWidth: 1,
+                                                marginHorizontal: 20,
+                                                paddingHorizontal: 20
+                                            }} /> : ""
+                                    }
+                                    {/* {selectedMember.map((member, index) => (
+                                        <View key={index} style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, marginTop: 10, padding: 8, position: 'relative' }}>
+                                            <Image
+                                                source={member.avatar === null ? require('../images/user.png') : { uri: member.avatar }}
+                                                style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                            <Text style={{ marginLeft: 10, fontSize: 16 }}>{member.fullName}</Text>
+                                            <TouchableOpacity onPress={() => removeMember(index)} style={{ position: 'absolute', right: 5 }}>
+                                                <VectorIcon name="delete" type="MaterialIcons" size={22} />
+                                            </TouchableOpacity>
+                                        </View>
+                                    ))} */}
                                 </SafeAreaView>
                             </TouchableWithoutFeedback>
                         </View>
