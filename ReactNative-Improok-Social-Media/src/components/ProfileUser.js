@@ -14,24 +14,25 @@ const ProfileUser = () => {
     const route = useRoute()
     const { uid } = route.params
 
-    const [userInfo, setUserInfo] = useState();
+    const [userInfo, setUserInfo] = useState()
+    const [profileInfo, setProfileInfo] = useState()
 
     const [profile, setProfile] = useState()
 
     const postRef = useRef(null);
     const navigation = useNavigation()
 
-    const getCurrentUser = async () => {
+    const getCurrentProfile = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
             let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](uid))
-            setUserInfo(res.data);
+            setProfileInfo(res.data);
         } catch (err) {
             console.log(err)
         }
     }
 
-    const getUser = async () => {
+    const getProfile = async () => {
         try {
             const token = await AsyncStorage.getItem('token')
             let res = await djangoAuthApi(token).get(endpoints['get-user-by-id'](uid))
@@ -42,9 +43,20 @@ const ProfileUser = () => {
         }
     }
 
+    const getCurrentUser = async () => {
+        try {
+            const token = await AsyncStorage.getItem('token');
+            let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user.id))
+            setUserInfo(res.data);
+        } catch (error) {
+            consolelog(error)
+        }
+    }
+
     useEffect(() => {
+        getCurrentProfile()
+        getProfile()
         getCurrentUser()
-        getUser()
     }, [])
 
     const [isVisible, setVisible] = useState(false);
@@ -109,13 +121,13 @@ const ProfileUser = () => {
             const token = await AsyncStorage.getItem('token')
             console.log(user.id, profile.id)
             let res = await djangoAuthApi(token).post(endpoints['create-room'], {
-                "first_user": user.id,
-                "second_user": profile.id
+                "first_user": userInfo?.id,
+                "second_user": profileInfo?.id
             })
             console.log(res.data)
             let nav = await Apis.post(endpoints['find-room'], {
-                "first_user": user.id,
-                "second_user": profile.id
+                "first_user": userInfo?.id,
+                "second_user": profileInfo?.id
             });
             console.log("Phòng", nav.data[0])
             const roomInfo = nav.data[0]
@@ -143,8 +155,8 @@ const ProfileUser = () => {
             try {
                 if (error.response.data.error === "Room already exists.") {
                     let res = await Apis.post(endpoints['find-room'], {
-                        "first_user": user.id,
-                        "second_user": profile.id
+                        "first_user": userInfo?.id,
+                        "second_user": profileInfo?.id
                     });
                     console.log("Phòng", res.data[0])
                     const roomInfo = res.data[0]
@@ -172,21 +184,21 @@ const ProfileUser = () => {
         }
     }
 
-    const checkvar = async () => {
-        try {
-            let res = await Apis.get(endpoints['find-room'], {
-                "first_user": 1,
-                "second_user": 2
-            }, {
-                headers: {
-                    "Content-Type": "application/json"
-                }
-            });
-            console.log(res.data.results)
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    // const checkvar = async () => {
+    //     try {
+    //         let res = await Apis.get(endpoints['find-room'], {
+    //             "first_user": 1,
+    //             "second_user": 2
+    //         }, {
+    //             headers: {
+    //                 "Content-Type": "application/json"
+    //             }
+    //         });
+    //         console.log(res.data.results)
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
     return (
         <>
@@ -196,7 +208,7 @@ const ProfileUser = () => {
                     <TouchableOpacity
                         onPress={() => setVisible(true)}>
                         <Image
-                            source={userInfo?.cover_avatar === null ? require('../images/picture.png') : { uri: userInfo?.cover_avatar }}
+                            source={profileInfo?.cover_avatar === null ? require('../images/picture.png') : { uri: profileInfo?.cover_avatar }}
                             style={styles.coverPhoto} />
                     </TouchableOpacity>
                     <Modal
@@ -217,7 +229,7 @@ const ProfileUser = () => {
                     >
                         <View style={{ width: windowWidth }}>
                             <Image
-                                source={userInfo?.cover_avatar === null ? require('../images/picture.png') : { uri: userInfo?.cover_avatar }}
+                                source={profileInfo?.cover_avatar === null ? require('../images/picture.png') : { uri: profileInfo?.cover_avatar }}
                                 style={{ width: '100%', height: windowHeight / 3 }} />
                         </View>
                     </Modal>
@@ -225,7 +237,7 @@ const ProfileUser = () => {
                 <TouchableOpacity style={styles.avatarContainer}
                     onPress={() => setAvatarVisible(true)}>
                     <Image style={styles.avatar}
-                        source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }} />
+                        source={profileInfo?.avatar === null ? require('../images/user.png') : { uri: profileInfo?.avatar }} />
                     <Modal
                         isVisible={isAvatarVisible}
                         animationIn={'slideInUp'}
@@ -243,7 +255,7 @@ const ProfileUser = () => {
                         }}
                     >
                         <View style={{ width: windowWidth }}>
-                            <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                            <Image source={profileInfo?.avatar === null ? require('../images/user.png') : { uri: profileInfo?.avatar }}
                                 style={{ width: '100%', height: windowHeight / 3 }} />
                         </View>
                     </Modal>
@@ -261,14 +273,14 @@ const ProfileUser = () => {
                         ></VectorIcon>
                         <Text style={[styles.tabText, { color: 'white' }]}>Message</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]} onPress={() => checkvar()}>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]}>
                         <VectorIcon
-                            name="ellipsis-horizontal-circle-outline"
+                            name="information-circle-outline"
                             type="Ionicons"
                             size={22}
                             color='black'
                         ></VectorIcon>
-                        <Text style={[styles.tabText, { color: 'black' }]}>More</Text>
+                        <Text style={[styles.tabText, { color: 'black' }]}>Information</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.aboutheadingContainer}>
@@ -287,7 +299,7 @@ const ProfileUser = () => {
                     ></VectorIcon>
                     <Text style={{ fontSize: 18, marginLeft: 10 }}>Lives in</Text>
                     <Text style={{ fontSize: 18, fontWeight: 'bold', marginLeft: 5 }}>
-                        Binh Thanh
+                        Hau Giang
                     </Text>
                 </View>
                 <View style={styles.divider}></View>

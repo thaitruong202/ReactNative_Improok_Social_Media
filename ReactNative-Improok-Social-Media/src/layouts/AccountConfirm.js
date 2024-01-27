@@ -20,6 +20,7 @@ const AccountConfirm = () => {
                 <Tab.Screen name="Accept" component={AccountAccept}
                     options={{
                         headerShown: false,
+                        unmountOnBlur: true,
                         tabBarLabelStyle: { color: '#591aaf' },
                         tabBarIcon: ({ focused }) => (
                             <VectorIcon
@@ -33,6 +34,7 @@ const AccountConfirm = () => {
                 <Tab.Screen name="Deny" component={AccountDeny}
                     options={{
                         headerShown: false,
+                        unmountOnBlur: true,
                         tabBarLabelStyle: { color: '#591aaf' },
                         tabBarIcon: ({ focused }) => (
                             <VectorIcon
@@ -46,6 +48,7 @@ const AccountConfirm = () => {
                 <Tab.Screen name="Pending" component={AccountPending}
                     options={{
                         headerShown: false,
+                        unmountOnBlur: true,
                         tabBarLabelStyle: { color: '#591aaf' },
                         tabBarIcon: ({ focused }) => (
                             <VectorIcon

@@ -52,7 +52,7 @@ const ChatScreen = () => {
     }
 
     const chatSocket = new WebSocket(
-        'ws://' + '192.168.1.18:8000' + '/ws/chat/' + roomId + '/'
+        'ws://' + '192.168.1.8:8000' + '/ws/chat/' + roomId + '/'
     );
 
     const showMessage = () => {

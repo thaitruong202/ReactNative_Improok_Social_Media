@@ -1,35 +1,17 @@
-import React, { useState, useEffect, useLayoutEffect, useCallback } from 'react';
-import { TouchableOpacity, Text, Button, Image, View } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect, useCallback, createContext } from 'react';
+import { TouchableOpacity, Text, Button, Image, View, ScrollView } from 'react-native';
 import { collection, addDoc, orderBy, query, onSnapshot } from 'firebase/firestore';
 import { database } from '../configs/Firebase';
 import { useNavigation } from '@react-navigation/native';
 
+export const NotificationsContext = createContext([]);
+
 export default function NotificationScreen() {
 
-    const [notifications, setNotifications] = useState([]);
-    const navigation = useNavigation();
+    const [notifications, setNotifications] = useState([])
+    const navigation = useNavigation()
 
     const [date, setDate] = useState()
-
-    // useLayoutEffect(() => {
-
-    //     const collectionRef = collection(database, 'notifications');
-    //     const q = query(collectionRef, orderBy('createAt', 'desc'));
-
-    //     const unsubscribe = onSnapshot(q, querySnapshot => {
-    //         console.log('querySnapshot unsusbscribe');
-    //         setNotifications(
-    //             querySnapshot.docs.map(doc => ({
-    //                 // _id: doc.data()._id,
-    //                 createAt: doc.data().createAt.toDate(),
-    //                 // text: doc.data().text,
-    //                 // user: doc.data().user
-    //                 content: doc.data().content
-    //             }))
-    //         );
-    //     });
-    //     return unsubscribe;
-    // }, []);
 
     useLayoutEffect(() => {
         const collectionRef = collection(database, 'notifications');
@@ -68,13 +50,15 @@ export default function NotificationScreen() {
 
     return (
         <>
-            {notifications.map(notification => (
-                <View>
-                    <Image source={{ uri: notification.avatar }} style={{ width: 40, height: 40 }} />
-                    <Text>{notification.content} {notification.createAt}</Text>
-                </View>
-            ))}
-            <Button title="Send" onPress={() => onSend()} />
+            <ScrollView>
+                {notifications.map(notification => (
+                    <View>
+                        <Image source={{ uri: notification.avatar }} style={{ width: 40, height: 40 }} />
+                        <Text>{notification.content} {notification.createAt}</Text>
+                    </View>
+                ))}
+                {/* <Button title="Send" onPress={() => onSend()} /> */}
+            </ScrollView>
         </>
     );
 }

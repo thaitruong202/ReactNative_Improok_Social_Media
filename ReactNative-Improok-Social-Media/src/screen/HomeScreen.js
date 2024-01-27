@@ -36,9 +36,52 @@ const HomeScreen = () => {
     const [refreshing, setRefreshing] = useState(false);
 
     const handleRefresh = async () => {
-        setRefreshing(true);
+        setRefreshing(true)
         if (userInfo?.id) {
-            getPost(1);
+            const getPostAgain = async (pageNumber) => {
+                setLoading(true);
+                try {
+                    const token = await AsyncStorage.getItem('token');
+                    let res = await djangoAuthApi(token).get(endpoints['get-all-post'](pageNumber))
+                    setPostList(res.data.results);
+                    setPage(pageNumber);
+                    setPageSize(res.data.count);
+                    console.log(res.data.results.length);
+                    const postIds = res.data.results.map(post => post.id);
+                    const reactionCounts = [];
+                    const commentCounts = [];
+                    const reactionChecks = [];
+                    const imageLists = [];
+                    for (let i = 0; i < res.data.results.length; i++) {
+                        let postId = postIds[i];
+                        let reactionRes = await djangoAuthApi(token).get(endpoints['count-post-reaction'](postId));
+                        let commentRes = await djangoAuthApi(token).get(endpoints['count-post-comment'](postId));
+                        let resCheck = await djangoAuthApi(token).get(endpoints['check-reacted-to-post'](userInfo?.id, postId));
+                        let imgs = await djangoAuthApi(token).get(endpoints['get-post-image'](postId));
+                        let reactCount = reactionRes.data
+                        reactionCounts.push(reactCount);
+                        let cmtCounts = commentRes.data
+                        commentCounts.push(cmtCounts);
+                        let reactedCheck = resCheck.data;
+                        reactionChecks.push(reactedCheck);
+                        let imgArr = imgs.data;
+                        imageLists.push(imgArr)
+                    }
+                    setCountPostReaction(reactionCounts);
+                    setCountPostComment(commentCounts);
+                    setCheckReaction(reactionChecks);
+                    setImageList(imageLists);
+                    console.log(res.data.results);
+                    console.log(reactionCounts);
+                    console.log(reactionChecks);
+                    console.log(imageLists);
+                    console.log("Refresh")
+                } catch (error) {
+                    console.log(error)
+                }
+                setLoading(false);
+            }
+            getPostAgain(1)
         }
         setRefreshing(false);
     };
@@ -102,7 +145,7 @@ const HomeScreen = () => {
         } catch (error) {
             console.log(error)
         }
-        setLoading(false);
+        setLoading(false)
     }
 
     const likeReaction = async (postId) => {

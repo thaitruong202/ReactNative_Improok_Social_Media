@@ -52,8 +52,10 @@ const SubHeader = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
-                style={styles.avatarStyle} />
+            <TouchableOpacity onPress={() => navigation.navigate('Profile')}>
+                <Image source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                    style={styles.avatarStyle} />
+            </TouchableOpacity>
             <TouchableOpacity style={styles.inputBox} onPress={() => navigation.navigate("Post")}>
                 <Text style={styles.inputStyle}>What's on your mind, {user?.first_name}?</Text>
             </TouchableOpacity>

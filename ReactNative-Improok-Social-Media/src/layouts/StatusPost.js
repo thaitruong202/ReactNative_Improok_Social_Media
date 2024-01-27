@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
@@ -6,18 +6,20 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { Button } from 'native-base';
+import { collection, addDoc } from 'firebase/firestore';
+import { database } from '../configs/Firebase';
 
 const StatusPost = ({ navigation }) => {
-    const [user, dispatch] = useContext(MyUserContext);
-    const [text, setText] = useState('');
-    const [userInfo, setUserInfo] = useState();
-    const [selectedImages, setSelectedImages] = useState([]);
+    const [user, dispatch] = useContext(MyUserContext)
+    const [text, setText] = useState('')
+    const [userInfo, setUserInfo] = useState()
+    const [selectedImages, setSelectedImages] = useState([])
 
     const getCurrentUser = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
+            const token = await AsyncStorage.getItem('token')
             let res = await djangoAuthApi(token).get(endpoints['get-account-by-user'](user?.id))
-            setUserInfo(res.data);
+            setUserInfo(res.data)
         } catch (err) {
             console.log(err)
         }
@@ -35,6 +37,7 @@ const StatusPost = ({ navigation }) => {
                 "account": userInfo?.id
             })
             console.log(res.data, "Đăng bài thành công!")
+            await onSend()
             setText('')
             navigation.goBack()
         } catch (error) {
@@ -43,11 +46,11 @@ const StatusPost = ({ navigation }) => {
     }
 
     const openImagePicker = async () => {
-        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
 
         if (status !== 'granted') {
-            console.log('Permission not granted');
-            return;
+            console.log('Permission not granted')
+            return
         }
 
         const options = {
@@ -55,13 +58,13 @@ const StatusPost = ({ navigation }) => {
             allowsMultipleSelection: true,
         };
 
-        const result = await ImagePicker.launchImageLibraryAsync(options);
+        const result = await ImagePicker.launchImageLibraryAsync(options)
 
         if (result.canceled) {
-            console.log('User canceled image picker');
+            console.log('User canceled image picker')
         } else {
             const newSelectedImages = result.assets;
-            setSelectedImages(prevSelectedImages => [...prevSelectedImages, ...newSelectedImages]);
+            setSelectedImages(prevSelectedImages => [...prevSelectedImages, ...newSelectedImages])
         }
     };
 
@@ -79,15 +82,14 @@ const StatusPost = ({ navigation }) => {
             })
             const postId = res.data?.id
 
-            let form = new FormData();
+            let form = new FormData()
 
             for (let i = 0; i < selectedImages.length; i++) {
-                const image = selectedImages[i].uri;
-                const filename = image.split('/').pop();
-                const match = /\.(\w+)$/.exec(filename);
-                const type = match ? `image/${match[1]}` : 'image';
-                form.append('multi_images', { uri: image, name: filename, type });
-                // form.append('post', postId);
+                const image = selectedImages[i].uri
+                const filename = image.split('/').pop()
+                const match = /\.(\w+)$/.exec(filename)
+                const type = match ? `image/${match[1]}` : 'image'
+                form.append('multi_images', { uri: image, name: filename, type })
             }
             form.append('post', postId);
 
@@ -96,13 +98,10 @@ const StatusPost = ({ navigation }) => {
                     'Content-Type': 'multipart/form-data',
                 }
             })
-
-            // console.log('Thông tin', image, filename, type);
-            // console.log(postId);
-            // console.log('Mảng đã gửi', img.data, img.status);
-
+            await onSend()
+            setText('')
             console.log(res.data, "Đăng bài thành công!")
-            navigation.goBack();
+            navigation.goBack()
         }
         catch (error) {
             console.log(error)
@@ -111,11 +110,25 @@ const StatusPost = ({ navigation }) => {
 
     const handleDeleteImage = (index) => {
         setSelectedImages((prevSelectedImages) => {
-            const updatedSelectedImages = [...prevSelectedImages];
-            updatedSelectedImages.splice(index, 1);
+            const updatedSelectedImages = [...prevSelectedImages]
+            updatedSelectedImages.splice(index, 1)
             return updatedSelectedImages;
         });
     };
+
+    const onSend = useCallback((messages = []) => {
+        // setMessages([...messages, ...messages]);
+        const { createAt, content, avatar } = {
+            createAt: new Date(),
+            content: `${user.last_name} ${user.first_name}` + " đã đăng bài viết mới: " + `${text}` + " ",
+            avatar: userInfo?.avatar.toString()
+        };
+        addDoc(collection(database, 'notifications'), {
+            createAt,
+            content,
+            avatar
+        });
+    }, []);
 
     return (
         <>
@@ -233,9 +246,9 @@ const StatusPost = ({ navigation }) => {
                 <View>
                     <Button onPress={() => {
                         if (selectedImages.length !== 0) {
-                            createImagePost();
+                            createImagePost()
                         } else {
-                            createPost();
+                            createPost()
                         }
                     }} variant="subtle" colorScheme="darkBlue" isDisabled={!text.trim()} style={styles.postContainer}>
                         Post
