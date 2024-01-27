@@ -1,6 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { MyUserContext } from '../../App';
+import { MyAccountContext, MyUserContext } from '../../App';
 import VectorIcon from '../utils/VectorIcon';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,7 @@ import { database } from '../configs/Firebase';
 
 const StatusPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext)
+    const [account, accountDispatch] = useContext(MyAccountContext)
     const [text, setText] = useState('')
     const [userInfo, setUserInfo] = useState()
     const [selectedImages, setSelectedImages] = useState([])
@@ -37,7 +38,11 @@ const StatusPost = ({ navigation }) => {
                 "account": userInfo?.id
             })
             console.log(res.data, "Đăng bài thành công!")
-            await onSend()
+            // setContent(res.data.post_content)
+            // if (res.data.post_content !== "") {
+            //     onSend()
+            // }
+            onSend(res.data.post_content)
             navigation.goBack()
         } catch (error) {
             console.log(error)
@@ -79,6 +84,7 @@ const StatusPost = ({ navigation }) => {
                 "post_content": text,
                 "account": userInfo?.id
             })
+            onSend(res.data.post_content)
             const postId = res.data?.id
 
             let form = new FormData()
@@ -97,7 +103,6 @@ const StatusPost = ({ navigation }) => {
                     'Content-Type': 'multipart/form-data',
                 }
             })
-            await onSend()
             setSelectedImages([])
             console.log(res.data, "Đăng bài thành công!")
             navigation.goBack()
@@ -115,12 +120,14 @@ const StatusPost = ({ navigation }) => {
         });
     };
 
-    const onSend = useCallback((messages = []) => {
+    const onSend = useCallback((detail) => {
         // setMessages([...messages, ...messages]);
+        // console.log(userInfo?.avatar)
+        // console.log(typeof (text), text)
         const { createAt, content, avatar } = {
             createAt: new Date(),
-            content: `${user.last_name} ${user.first_name}` + " posted a new post: " + `${text}` + " ",
-            avatar: userInfo?.avatar === null ? "https://res.cloudinary.com/dhwuwy0to/image/upload/v1706324215/dehgk4ybya4iwy4epduw.png" : userInfo?.avatar
+            content: `${user.last_name} ${user.first_name}` + " posted a new post: " + `${detail}` + " ",
+            avatar: account.avatar === null ? "https://res.cloudinary.com/dhwuwy0to/image/upload/v1706324215/dehgk4ybya4iwy4epduw.png" : account.avatar
         };
         addDoc(collection(database, 'notifications'), {
             createAt,

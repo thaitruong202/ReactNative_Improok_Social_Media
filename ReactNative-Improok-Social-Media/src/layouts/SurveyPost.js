@@ -1,13 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, Image } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View, FlatList, Image, TouchableWithoutFeedback, SafeAreaView, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { MyUserContext } from '../../App';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { windowWidth } from '../utils/Dimensions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 import { RadioButton } from 'react-native-paper';
-import { Button } from '@rneui/themed';
+// import { Button } from '@rneui/themed';
 import VectorIcon from '../utils/VectorIcon';
+import Collapsible from 'react-native-collapsible';
+import { Button } from 'native-base';
 
 const SurveyPost = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
@@ -348,7 +350,7 @@ const SurveyPost = ({ navigation }) => {
                                     <VectorIcon
                                         name="remove-circle"
                                         type="Ionicons"
-                                        size={21} />
+                                        size={22} />
                                 </TouchableOpacity>
                             )}
                         </View>
@@ -386,10 +388,20 @@ const SurveyPost = ({ navigation }) => {
         );
     };
 
+    const [addExpanded, setAddExpanded] = useState(false);
+    const toggleAdd = () => {
+        setAddExpanded(!addExpanded);
+    };
+
+    const [addExpanded1, setAddExpanded1] = useState(false);
+    const toggleAdd1 = () => {
+        setAddExpanded1(!addExpanded1);
+    };
+
     return (
         <>
             <ScrollView>
-                <View style={styles.profileContainer}>
+                {/* <View style={styles.profileContainer}>
                     <Image
                         source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
                         style={styles.profileStyle} />
@@ -483,8 +495,134 @@ const SurveyPost = ({ navigation }) => {
                         onChangeText={setPostContent}
                         placeholder="Description..."
                         style={styles.postInvitationInputStyle} />
+                </View> */}
+                <View style={styles.profileContainer}>
+                    <Image
+                        source={userInfo?.avatar === null ? require('../images/user.png') : { uri: userInfo?.avatar }}
+                        style={styles.profileStyle} />
+                    <View style={styles.inputBox}>
+                        <Text style={styles.inputStyle}>{user.first_name} {user.last_name}</Text>
+                        <Text style={{ fontSize: 14, marginTop: 3 }}>Host - Administrator</Text>
+                    </View>
                 </View>
-                <View style={{ alignItems: 'center', marginTop: 10 }}>
+                <View style={styles.collapsibleContainer}>
+                    <TouchableOpacity onPress={toggleAdd}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15 }}>
+                            <VectorIcon
+                                name="information-circle"
+                                type="Ionicons"
+                                size={22} />
+                            <Text style={styles.collapsibleSubItemHeaderText}>Survey infomation</Text>
+                            <VectorIcon
+                                name={addExpanded ? 'chevron-up' : 'chevron-down'}
+                                type="Ionicons"
+                                size={19}
+                                style={{ position: 'absolute', right: 20 }} />
+                        </View>
+                    </TouchableOpacity>
+                    <Collapsible collapsed={!addExpanded}>
+                        <View style={styles.collapsibleSubItem}>
+                            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                                <SafeAreaView>
+                                    <View style={styles.inputContainer}>
+                                        <TextInput
+                                            value={surveyName}
+                                            onChangeText={(surveyName) => setSurveyName(surveyName)}
+                                            placeholder="Survey name"
+                                            style={{
+                                                borderWidth: 1,
+                                                borderColor: 'gray',
+                                                padding: 8,
+                                                // textAlignVertical: 'top',
+                                                fontSize: 17,
+                                                borderRadius: 10
+                                            }} />
+                                    </View>
+                                    <View style={styles.dateTimeContainer}>
+                                        <View style={[styles.textInputStyle, { marginRight: 8 }]}>
+                                            <Text style={{ fontSize: 13, marginBottom: 8 }}>Start date</Text>
+                                            <TouchableOpacity onPress={() => showBeginMode("date")}>
+                                                <Text style={{ fontSize: 17 }}>
+                                                    <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
+                                                </Text>
+                                                {showBeginDatePicker && (
+                                                    <DateTimePicker
+                                                        value={selectedBeginDate}
+                                                        mode={beginMode}
+                                                        format="YYYY-MM-DD"
+                                                        minimumDate={currentDate}
+                                                        is24Hour={true}
+                                                        maximumDate={new Date(2100, 0, 1)}
+                                                        onChange={handleBeginDateChange} />
+                                                )}
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
+                                            <Text style={{ fontSize: 13, marginBottom: 8 }}>Start time</Text>
+                                            <TouchableOpacity onPress={() => showBeginMode("time")}>
+                                                <Text style={{ fontSize: 17 }}>
+                                                    {String(selectedBeginTime.getHours()).padStart(2, '0')}:
+                                                    {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
+                                                </Text>
+                                                {showBeginTimePicker && (
+                                                    <DateTimePicker
+                                                        value={selectedBeginTime}
+                                                        mode={beginMode}
+                                                        is24Hour={true}
+                                                        onChange={handleBeginTimeChange} />
+                                                )}
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <View style={styles.dateTimeContainer}>
+                                        <View style={[styles.textInputStyle, { marginRight: 8 }]}>
+                                            <Text style={{ fontSize: 13, marginBottom: 8 }}>End date</Text>
+                                            <TouchableOpacity onPress={() => showEndMode("date")}>
+                                                <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
+                                                {showEndDatePicker && (
+                                                    <DateTimePicker
+                                                        value={selectedEndDate}
+                                                        mode={endMode}
+                                                        format="YYYY-MM-DD"
+                                                        minimumDate={currentDate}
+                                                        is24Hour={true}
+                                                        maximumDate={new Date(2100, 0, 1)}
+                                                        onChange={handleEndDateChange} />
+                                                )}
+                                            </TouchableOpacity>
+                                        </View>
+                                        <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
+                                            <Text style={{ fontSize: 13, marginBottom: 8 }}>End time</Text>
+                                            <TouchableOpacity onPress={() => showEndMode("time")}>
+                                                <Text style={{ fontSize: 17 }}>
+                                                    {String(selectedEndTime.getHours()).padStart(2, '0')}:
+                                                    {String(selectedEndTime.getMinutes()).padStart(2, '0')}
+                                                </Text>
+                                                {showEndTimePicker && (
+                                                    <DateTimePicker
+                                                        value={selectedEndTime}
+                                                        mode={endMode}
+                                                        is24Hour={true}
+                                                        onChange={handleEndTimeChange} />
+                                                )}
+                                            </TouchableOpacity>
+                                        </View>
+                                    </View>
+                                    <View style={styles.inputContainer}>
+                                        <TextInput
+                                            multiline
+                                            numberOfLines={3}
+                                            value={postContent}
+                                            onChangeText={setPostContent}
+                                            placeholder="Description..."
+                                            style={styles.postInvitationInputStyle} />
+                                    </View>
+                                </SafeAreaView>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </Collapsible>
+                </View>
+                {/* <View style={{ alignItems: 'center', marginTop: 10 }}>
                     <Text style={{ fontSize: 20, fontWeight: 600 }}>Create Survey</Text>
                 </View>
                 <View style={styles.inputContainer}>
@@ -521,7 +659,7 @@ const SurveyPost = ({ navigation }) => {
                                 <Text style={{ fontSize: 16 }}>CheckBox</Text>
                             </View>
                         </View>
-                        {/* {currentQuestionType !== 'Text Input' && (
+                        {currentQuestionType !== 'Text Input' && (
                             <View>
                                 <Text>Options:</Text>
                                 <FlatList
@@ -529,10 +667,10 @@ const SurveyPost = ({ navigation }) => {
                                     renderItem={renderOption}
                                     keyExtractor={(option, index) => index.toString()}
                                 />
-                                
+
                                 <Button title="Add Option" onPress={handleAddOption} />
                             </View>
-                        )} */}
+                        )}
                         {currentQuestionType !== 'Text Input' && (
                             <View>
                                 <Text style={{ marginVertical: 8 }}>Add options</Text>
@@ -553,87 +691,194 @@ const SurveyPost = ({ navigation }) => {
                                     </View>
                                 ))}
                                 <Button
-                                    title="Add Option"
-                                    buttonStyle={{
-                                        backgroundColor: 'rgba(78, 116, 289, 1)',
-                                        borderRadius: 3,
-                                        flex: 1,
-                                        marginVertical: 10
-                                    }}
-                                    onPress={handleAddOption} />
+                                    variant='subtle'
+                                    colorScheme='purple'
+                                    onPress={() => handleAddOption()}
+                                    style={{ alignItems: 'center', padding: 15 }}
+                                >
+                                    Add options
+                                </Button>
                             </View>
                         )}
                         <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-around" }}>
                             <View style={{ width: "46%" }}>
                                 <Button
-                                    title="Add Question"
-                                    icon={{
-                                        name: 'question-circle',
-                                        type: 'font-awesome',
-                                        size: 16,
-                                        color: 'white'
-                                    }}
-                                    iconContainerStyle={{ marginRight: 10 }}
-                                    titleStyle={{ fontWeight: '700' }}
-                                    buttonStyle={{
-                                        backgroundColor: 'rgba(90, 154, 230, 1)',
-                                        borderColor: 'transparent',
-                                        borderWidth: 0,
-                                        borderRadius: 30,
-                                    }}
-                                    containerStyle={{
-                                        width: "100%",
-                                        // marginHorizontal: 10,
-                                        marginRight: 10,
-                                        marginVertical: 5,
-                                    }}
-                                    onPress={handleAddQuestion} />
+                                    variant='subtle'
+                                    colorScheme='purple'
+                                    onPress={() => handleAddQuestion()}
+                                    style={{ alignItems: 'center', padding: 15 }}
+                                >
+                                    Add question
+                                </Button>
                             </View>
                             <View style={{ width: "46%" }}>
                                 <Button
-                                    title="Create Survey"
-                                    icon={{
-                                        name: 'create',
-                                        type: 'ionicons',
-                                        size: 16,
-                                        color: 'white',
-                                    }}
-                                    iconContainerStyle={{ marginRight: 10 }}
-                                    titleStyle={{ fontWeight: '700' }}
-                                    buttonStyle={{
-                                        backgroundColor: 'rgba(90, 154, 230, 1)',
-                                        borderColor: 'transparent',
-                                        borderWidth: 0,
-                                        borderRadius: 30,
-                                    }}
-                                    containerStyle={{
-                                        width: "100%",
-                                        // marginLeft: 10,
-                                        // marginHorizontal: 10,
-                                        marginVertical: 5
-                                    }}
-                                    onPress={createSurvey} />
+                                    variant='subtle'
+                                    colorScheme='purple'
+                                    onPress={() => createSurvey()}
+                                    style={{ alignItems: 'center', padding: 15 }}
+                                >
+                                    Check survey
+                                </Button>
                             </View>
                         </View>
                     </View>
                 </View>
                 <View>
                     <Button
-                        title="Tạo khảo sát"
-                        loading={false}
-                        loadingProps={{ size: 'small', color: 'white' }}
-                        buttonStyle={{
-                            backgroundColor: 'rgba(111, 202, 186, 1)',
-                            borderRadius: 5,
-                        }}
-                        titleStyle={{ fontWeight: 'bold', fontSize: 23 }}
-                        containerStyle={{
-                            marginHorizontal: 50,
-                            height: 50,
-                            width: 200,
-                            marginVertical: 10,
-                        }}
-                        onPress={() => createPostSurvey()} />
+                        variant='subtle'
+                        colorScheme='purple'
+                        onPress={() => createPostSurvey()}
+                        style={{ alignItems: 'center', padding: 15 }}
+                        isDisabled={questions.length === 0}
+                    >
+                        Create survey
+                    </Button>
+                </View> */}
+                <View style={styles.collapsibleContainer}>
+                    <TouchableOpacity onPress={toggleAdd1}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15 }}>
+                            <VectorIcon
+                                name="add-circle"
+                                type="Ionicons"
+                                size={22} />
+                            <Text style={styles.collapsibleSubItemHeaderText}>Create survey</Text>
+                            <VectorIcon
+                                name={addExpanded1 ? 'chevron-up' : 'chevron-down'}
+                                type="Ionicons"
+                                size={19}
+                                style={{ position: 'absolute', right: 20 }} />
+                        </View>
+                    </TouchableOpacity>
+                    <Collapsible collapsed={!addExpanded1}>
+                        <View style={styles.collapsibleSubItem}>
+                            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                                <SafeAreaView>
+                                    <View style={styles.inputContainer}>
+                                        <View style={{ marginTop: 5 }}>
+                                            <TextInput
+                                                value={newQuestion}
+                                                onChangeText={text => setNewQuestion(text)}
+                                                placeholder="Enter question..."
+                                                style={{
+                                                    borderWidth: 1,
+                                                    borderColor: 'gray',
+                                                    padding: 7,
+                                                    fontSize: 17,
+                                                    borderRadius: 10
+                                                }} />
+                                            <View>
+                                                <Text style={{ fontSize: 13, marginBottom: 10, marginTop: 10 }}>Question type</Text>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <RadioButton
+                                                        value="Multiple-Choice"
+                                                        status={currentQuestionType === 'Multiple-Choice' ? 'checked' : 'unchecked'}
+                                                        onPress={() => setCurrentQuestionType('Multiple-Choice')}
+                                                    />
+                                                    <Text style={{ fontSize: 16 }}>Multiple Choice</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <RadioButton
+                                                        value="Text Input"
+                                                        status={currentQuestionType === 'Text Input' ? 'checked' : 'unchecked'}
+                                                        onPress={() => setCurrentQuestionType('Text Input')}
+                                                    />
+                                                    <Text style={{ fontSize: 16 }}>Text Input</Text>
+                                                </View>
+                                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                                    <RadioButton
+                                                        value="CheckBox"
+                                                        status={currentQuestionType === 'CheckBox' ? 'checked' : 'unchecked'}
+                                                        onPress={() => setCurrentQuestionType('CheckBox')}
+                                                    />
+                                                    <Text style={{ fontSize: 16 }}>CheckBox</Text>
+                                                </View>
+                                            </View>
+                                            {currentQuestionType !== 'Text Input' && (
+                                                <View>
+                                                    <Text style={{ marginVertical: 8 }}>Add options</Text>
+                                                    {newOptions.map((item, index) => (
+                                                        <View key={index} style={{
+                                                            borderWidth: 1,
+                                                            borderColor: 'gray',
+                                                            padding: 7,
+                                                            fontSize: 18,
+                                                            borderRadius: 10,
+                                                            flexDirection: 'row', alignItems: 'center', borderWidth: 1, marginVertical: 3
+                                                        }}>
+                                                            <TextInput
+                                                                style={{ flex: 1, marginRight: 10, fontSize: 16 }}
+                                                                placeholder="Enter option..."
+                                                                value={item.question_option_value}
+                                                                onChangeText={(value) => handleOptionChange(index, value)} />
+                                                            <TouchableOpacity onPress={() => handleRemoveOption(index)}>
+                                                                <VectorIcon
+                                                                    name="trash"
+                                                                    type="Ionicons"
+                                                                    size={22}>
+                                                                </VectorIcon>
+                                                            </TouchableOpacity>
+                                                        </View>
+                                                    ))}
+                                                    <Button
+                                                        variant='subtle'
+                                                        colorScheme='blue'
+                                                        onPress={() => handleAddOption()}
+                                                        style={{ alignItems: 'center', padding: 15, marginTop: 10 }}>
+                                                        Add options
+                                                    </Button>
+                                                </View>
+                                            )}
+                                            <View style={{ flexDirection: "row", width: "100%", justifyContent: "space-around", marginTop: 10 }}>
+                                                <View style={{ width: "48%" }}>
+                                                    <Button
+                                                        variant='subtle'
+                                                        colorScheme='purple'
+                                                        onPress={() => handleAddQuestion()}
+                                                        style={{ alignItems: 'center', padding: 15 }}
+                                                    >
+                                                        Add question
+                                                    </Button>
+                                                </View>
+                                                {/* <View style={{ width: "48%" }}>
+                                                    <Button
+                                                        variant='subtle'
+                                                        colorScheme='purple'
+                                                        onPress={() => createSurvey()}
+                                                        style={{ alignItems: 'center', padding: 15 }}
+                                                    >
+                                                        Check survey
+                                                    </Button>
+                                                </View> */}
+                                                <View style={{ width: "48%" }}>
+                                                    <Button
+                                                        variant='subtle'
+                                                        colorScheme='purple'
+                                                        onPress={() => createPostSurvey()}
+                                                        style={{ alignItems: 'center', padding: 15 }}
+                                                        isDisabled={questions.length === 0 || !postContent.trim() || !surveyName.trim()}
+                                                    >
+                                                        Create survey
+                                                    </Button>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                    {/* <View>
+                                        <Button
+                                            variant='subtle'
+                                            colorScheme='purple'
+                                            onPress={() => createPostSurvey()}
+                                            style={{ alignItems: 'center', padding: 15 }}
+                                            isDisabled={questions.length === 0}
+                                        >
+                                            Create survey
+                                        </Button>
+                                    </View> */}
+                                </SafeAreaView>
+                            </TouchableWithoutFeedback>
+                        </View>
+                    </Collapsible>
                 </View>
             </ScrollView>
             <FlatList
@@ -823,7 +1068,15 @@ const styles = StyleSheet.create({
     },
     inputBox: {
         marginLeft: 10
-    }
+    },
+    collapsibleContainer: {
+        marginVertical: 10,
+        // paddingHorizontal: 10,
+    },
+    collapsibleSubItemHeaderText: {
+        marginLeft: 5,
+        fontSize: 17
+    },
 });
 
 export default SurveyPost;

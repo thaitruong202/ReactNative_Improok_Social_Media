@@ -227,8 +227,9 @@ const InvitationPost = ({ navigation }) => {
             console.log(member.status);
             const recipientList = selectedMember.map(member => member.email);
             let mail = await djangoAuthApi(token).post(endpoints['send-email'], {
-                "subject": "Thư mời đến sự kiện" + " " + eventName,
-                "message": "Mời các bạn đến dự sự kiện của trường nha",
+                "subject": "Thư mời đến sự kiện" + " " + "[" + eventName + "]",
+                "message": "Trân trọng mới các bạn đến tham dự sự kiện" + "\n" +
+                    postContent + " " + "vào lúc" + " " + `${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`,
                 "recipient_list": recipientList
             })
             console.log(mail.status, "Gửi mail nè");
@@ -307,7 +308,7 @@ const InvitationPost = ({ navigation }) => {
                         <Text style={{ fontSize: 13, marginBottom: 8 }}>End date</Text>
                         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
                             <TouchableOpacity onPress={() => showEndMode("date")}>
-                                <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedEndDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
+                                <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedEndDate.getDate()).padStart(2, '0')}/${String(selectedEndDate.getMonth() + 1).padStart(2, '0')}/${selectedEndDate.getFullYear()}`}</Text></Text>
                                 {showEndDatePicker && (
                                     <DateTimePicker
                                         value={selectedEndDate}
@@ -421,7 +422,9 @@ const InvitationPost = ({ navigation }) => {
                         <Text style={styles.buttonText}>Tạo sự kiện</Text>
                     </TouchableOpacity> */}
                     <Button onPress={() => createPostInvitation()}
-                        variant="subtle" colorScheme="darkBlue" style={{ marginHorizontal: 20 }}>
+                        variant="subtle" colorScheme="darkBlue" style={{ marginHorizontal: 20 }}
+                        isDisabled={!postContent.trim() || !eventName.trim()}
+                    >
                         Create event
                     </Button>
                 </View>

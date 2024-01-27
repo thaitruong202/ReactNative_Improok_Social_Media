@@ -1,8 +1,8 @@
 import React, { Fragment, useContext, useState } from 'react';
 import { Image, Linking, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { windowHeight } from '../utils/Dimensions'
-import { MyUserContext } from '../../App';
-import Apis, { endpoints } from "../configs/Apis";
+import { MyAccountContext, MyUserContext } from '../../App';
+import Apis, { djangoAuthApi, endpoints } from "../configs/Apis";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
 import { useNavigation } from '@react-navigation/native';
@@ -10,6 +10,7 @@ import VectorIcon from '../utils/VectorIcon';
 
 const Login = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
+    const [account, accountDispatch] = useContext(MyAccountContext)
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
@@ -38,10 +39,13 @@ const Login = ({ navigation }) => {
                     'Authorization': res.data.token_type + " " + res.data.access_token,
                 }
             });
+            const account = await djangoAuthApi(res.data.access_token).get(endpoints['get-account-by-user'](data.data.id))
             await AsyncStorage.setItem('user', JSON.stringify(data));
+            await AsyncStorage.setItem('account', JSON.stringify(account))
             console.log("Lưu current user")
-            console.log(data.data);
-            setCurrentUser(data.data);
+            console.log(data.data)
+            console.log(account.data)
+            setCurrentUser(data.data)
 
             if (data.data?.confirm_status === 3) {
                 // alert("Tài khoản của bạn chưa được xét duyệt!. Vui lòng thử lại sau");
@@ -56,6 +60,10 @@ const Login = ({ navigation }) => {
                     "type": "login",
                     "payload": data.data
                 });
+                accountDispatch({
+                    "type": "login",
+                    "payload": account.data
+                })
 
                 if (res.status === 200) {
                     console.log('Đăng nhập thành công');
