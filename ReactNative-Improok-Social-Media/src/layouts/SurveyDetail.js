@@ -1,17 +1,18 @@
 import { useRoute } from '@react-navigation/native';
 import React, { useContext, useEffect, useState } from 'react';
-import { Image, ScrollView, StyleSheet, Text, View, TextInput, TouchableOpacity, Button } from 'react-native';
+import { Image, ScrollView, StyleSheet, Text, View, TextInput, TouchableOpacity } from 'react-native';
 import { MyUserContext } from '../../App';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { djangoAuthApi, endpoints } from '../configs/Apis';
 // import { RadioButton } from 'react-native-paper';
 import { CheckBox } from '@rneui/themed';
+import { Button } from 'native-base';
 // import { Checkbox } from 'native-base';
 
 const SurveyDetail = ({ navigation }) => {
     const [user, dispatch] = useContext(MyUserContext);
     const route = useRoute();
-    const { postId, firstName, lastName, avatar } = route.params;
+    const { postId, firstName, lastName, avatar, postTitle } = route.params;
 
     const [userInfo, setUserInfo] = useState();
 
@@ -27,7 +28,7 @@ const SurveyDetail = ({ navigation }) => {
 
     const [selectedOptions, setSelectedOptions] = useState({});
 
-    const sumbitPostSurvey = async () => {
+    const submitPostSurvey = async () => {
         try {
             const token = await AsyncStorage.getItem('token');
             let res = await djangoAuthApi(token).post(endpoints['answer-post-survey'], {
@@ -364,9 +365,10 @@ const SurveyDetail = ({ navigation }) => {
         const selectedOption = selectedOptions[question.id];
 
         return (
-            <View key={question.id}>
-                <Text>{question.question_order}. {question.question_content}</Text>
-                {/* <RadioButton.Group
+            <View key={question.id} style={{ backgroundColor: 'white', borderRadius: 15 }}>
+                <View style={{ padding: 8 }}>
+                    <Text style={{ fontSize: 17, fontWeight: 'bold' }}>{question.question_order}. {question.question_content}</Text>
+                    {/* <RadioButton.Group
                     onValueChange={(value) => handleRadioOptionSelect(question.id, value)}
                     value={selectedOption}
                     style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}
@@ -383,85 +385,91 @@ const SurveyDetail = ({ navigation }) => {
                         </TouchableOpacity>
                     ))}
                 </RadioButton.Group> */}
-                {question.survey_question_option_list.map((option) => (
-                    // <TouchableOpacity
-                    //     key={option.id}
-                    //     onPress={() => handleRadioOptionSelect(question.id, option.id)}
-                    // >
-                    //     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                    //         <RadioButton value={option.id} />
-                    //         <Text>{option.question_option_value}</Text>
-                    //     </View>
-                    // </TouchableOpacity>
-                    <CheckBox
-                        checked={selectedOption === option.id}
-                        onPress={() => handleRadioOptionSelect(question.id, option.id)}
-                        checkedIcon="dot-circle-o"
-                        uncheckedIcon="circle-o"
-                        wrapperStyle={{ backgroundColor: 'transparent' }}
-                        containerStyle={{ backgroundColor: 'transparent' }}
-                        title={option.question_option_value}
-                        checkedColor='#591aaf'
-                    />
-                ))}
+                    {question.survey_question_option_list.map((option) => (
+                        // <TouchableOpacity
+                        //     key={option.id}
+                        //     onPress={() => handleRadioOptionSelect(question.id, option.id)}
+                        // >
+                        //     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        //         <RadioButton value={option.id} />
+                        //         <Text>{option.question_option_value}</Text>
+                        //     </View>
+                        // </TouchableOpacity>
+                        <CheckBox
+                            checked={selectedOption === option.id}
+                            onPress={() => handleRadioOptionSelect(question.id, option.id)}
+                            checkedIcon="dot-circle-o"
+                            uncheckedIcon="circle-o"
+                            wrapperStyle={{ backgroundColor: 'transparent' }}
+                            containerStyle={{ backgroundColor: 'transparent' }}
+                            title={option.question_option_value}
+                            checkedColor='#591aaf'
+                        />
+                    ))}
+                </View>
             </View>
         );
     };
 
     const renderCheckboxQuestion = (question) => {
         return (
-            <View key={question.id}>
-                <Text>{question.question_order}. {question.question_content}</Text>
-                {question.survey_question_option_list.map((option) => (
-                    // <TouchableOpacity
-                    //     key={option.id}
-                    //     onPress={() => handleCheckboxOptionToggle(question.id, option.id)}
-                    // >
-                    //     <CheckBox
-                    //         checked={checkboxStates.some(
-                    //             (state) => state.questionId === question.id && state.optionId === option.id
-                    //         )}
-                    //         iconType="material-community"
-                    //         checkedIcon="checkbox-marked"
-                    //         uncheckedIcon="checkbox-blank-outline"
-                    //         title={option.question_option_value}
-                    //     />
-                    //     {/* <Text>{option.question_option_value}</Text> */}
-                    // </TouchableOpacity>
-                    <CheckBox
-                        checked={checkboxStates.some(
-                            (state) => state.questionId === question.id && state.optionId === option.id
-                        )}
-                        key={option.id}
-                        iconType="material-community"
-                        checkedIcon="checkbox-marked"
-                        uncheckedIcon="checkbox-blank-outline"
-                        title={option.question_option_value}
-                        wrapperStyle={{ backgroundColor: 'transparent' }}
-                        containerStyle={{ backgroundColor: 'transparent' }}
-                        onPress={() => handleCheckboxOptionToggle(question.id, option.id)}
-                        checkedColor='#591aaf'
-                    />
-                ))}
+            <View key={question.id} style={{ backgroundColor: 'white', borderRadius: 15 }}>
+                <View style={{ padding: 8 }}>
+                    <Text style={{ fontSize: 17, fontWeight: 'bold' }}>{question.question_order}. {question.question_content}</Text>
+                    {question.survey_question_option_list.map((option) => (
+                        // <TouchableOpacity
+                        //     key={option.id}
+                        //     onPress={() => handleCheckboxOptionToggle(question.id, option.id)}
+                        // >
+                        //     <CheckBox
+                        //         checked={checkboxStates.some(
+                        //             (state) => state.questionId === question.id && state.optionId === option.id
+                        //         )}
+                        //         iconType="material-community"
+                        //         checkedIcon="checkbox-marked"
+                        //         uncheckedIcon="checkbox-blank-outline"
+                        //         title={option.question_option_value}
+                        //     />
+                        //     {/* <Text>{option.question_option_value}</Text> */}
+                        // </TouchableOpacity>
+                        <CheckBox
+                            checked={checkboxStates.some(
+                                (state) => state.questionId === question.id && state.optionId === option.id
+                            )}
+                            key={option.id}
+                            iconType="material-community"
+                            checkedIcon="checkbox-marked"
+                            uncheckedIcon="checkbox-blank-outline"
+                            title={option.question_option_value}
+                            wrapperStyle={{ backgroundColor: 'transparent' }}
+                            containerStyle={{ backgroundColor: 'transparent' }}
+                            onPress={() => handleCheckboxOptionToggle(question.id, option.id)}
+                            checkedColor='#591aaf'
+                        />
+                    ))}
+                </View>
             </View>
         );
     };
 
     const renderTextInputQuestion = (question) => {
         return (
-            <View key={question.id}>
-                <Text>{question.question_order}. {question.question_content}</Text>
-                <TextInput
-                    onChangeText={(text) => handleTextInputChange(question.id, text)}
-                    placeholder="Enter your answer"
-                />
+            <View key={question.id} style={{ backgroundColor: 'white', borderRadius: 15 }}>
+                <View style={{ padding: 10, flexDirection: 'column', gap: 8 }}>
+                    <Text style={{ fontSize: 17, fontWeight: 'bold' }}>{question.question_order}. {question.question_content}</Text>
+                    <TextInput
+                        onChangeText={(text) => handleTextInputChange(question.id, text)}
+                        placeholder="Enter your answer"
+                        style={{ borderBottomWidth: 1, fontSize: 15, paddingVertical: 5, paddingHorizontal: 8, borderRadius: 10 }}
+                    />
+                </View>
             </View>
         );
     };
 
-    const checkAnswer = async () => {
-        console.log(surveyAnswers);
-    }
+    // const checkAnswer = async () => {
+    //     console.log(surveyAnswers);
+    // }
 
     return (
         <>
@@ -475,15 +483,24 @@ const SurveyDetail = ({ navigation }) => {
                         <Text style={{ fontSize: 14, marginTop: 3 }}>Administrator</Text>
                     </View>
                 </View>
-                <View>
-
+                <View style={{ alignItems: 'center', paddingBottom: 15 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{postTitle}</Text>
                 </View>
-                <View>
+                <View style={{ padding: 5, display: 'flex', flexDirection: 'column', gap: 10 }}>
                     {postSurveyDetail?.survey_question_list.map((question) => renderQuestion(question))}
                 </View>
-                <Button title='Submit' onPress={() => sumbitPostSurvey()} />
-                <Button title='Check' onPress={() => checkAnswer()} />
-            </ScrollView>
+                {/* <Button title='Submit' onPress={() => submitPostSurvey()} /> */}
+                <Button
+                    variant='subtle'
+                    colorScheme='purple'
+                    onPress={() => submitPostSurvey()}
+                    style={{ alignItems: 'center', padding: 15 }}
+                    isDisabled={surveyAnswers.length === 0}
+                >
+                    Submit
+                </Button>
+                {/* <Button title='Check' onPress={() => checkAnswer()} /> */}
+            </ScrollView >
         </>
     );
 };

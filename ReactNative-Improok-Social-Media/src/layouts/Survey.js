@@ -311,7 +311,8 @@ const Survey = ({ navigation }) => {
                                         </View>
                                         <TouchableOpacity style={styles.row} onPress={() => navigation.navigate('Survey detail', {
                                             postId: ps.post.id, firstName: ps.post.account.user.first_name,
-                                            lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar
+                                            lastName: ps.post.account.user.last_name, avatar: ps.post.account.avatar,
+                                            postTitle: ps.post_survey_title
                                         })}>
                                             <View>
                                                 <VectorIcon

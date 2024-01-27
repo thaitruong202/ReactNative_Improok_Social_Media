@@ -71,6 +71,7 @@ const MainScreen = () => {
                 <Tab.Screen name='Post' component={StatusPost}
                     options={{
                         tabBarLabelStyle: { color: '#591aaf' },
+                        unmountOnBlur: true,
                         tabBarIcon: ({ focused }) => (
                             <VectorIcon
                                 type={focused ? "Ionicons" : "Ionicons"}
@@ -83,6 +84,7 @@ const MainScreen = () => {
                 <Tab.Screen name='Notification' component={NotificationScreen}
                     options={{
                         tabBarLabelStyle: { color: '#591aaf' },
+                        unmountOnBlur: true,
                         tabBarIcon: ({ focused }) => (
                             <VectorIcon
                                 type={focused ? "Ionicons" : "Ionicons"}

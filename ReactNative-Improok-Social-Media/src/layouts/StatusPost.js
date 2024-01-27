@@ -38,7 +38,6 @@ const StatusPost = ({ navigation }) => {
             })
             console.log(res.data, "Đăng bài thành công!")
             await onSend()
-            setText('')
             navigation.goBack()
         } catch (error) {
             console.log(error)
@@ -99,7 +98,7 @@ const StatusPost = ({ navigation }) => {
                 }
             })
             await onSend()
-            setText('')
+            setSelectedImages([])
             console.log(res.data, "Đăng bài thành công!")
             navigation.goBack()
         }
@@ -120,8 +119,8 @@ const StatusPost = ({ navigation }) => {
         // setMessages([...messages, ...messages]);
         const { createAt, content, avatar } = {
             createAt: new Date(),
-            content: `${user.last_name} ${user.first_name}` + " đã đăng bài viết mới: " + `${text}` + " ",
-            avatar: userInfo?.avatar.toString()
+            content: `${user.last_name} ${user.first_name}` + " posted a new post: " + `${text}` + " ",
+            avatar: userInfo?.avatar === null ? "https://res.cloudinary.com/dhwuwy0to/image/upload/v1706324215/dehgk4ybya4iwy4epduw.png" : userInfo?.avatar
         };
         addDoc(collection(database, 'notifications'), {
             createAt,
