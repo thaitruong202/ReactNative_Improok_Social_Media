@@ -369,46 +369,31 @@ const Profile = ({ navigation }) => {
                 <Text style={styles.name}>{user.last_name} {user.first_name}</Text>
                 <Text style={styles.shortBio}>Trưởng phòng Y Tế Nhà Bè</Text>
                 <View style={styles.profileTabsContainer}>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="plus"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>Add Story</Text>
-                    </View>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="user"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>Edit Profile</Text>
-                    </View>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="list"
-                                type="FontAwesome5"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
-                        <Text style={styles.tabText}>Activity Log</Text>
-                    </View>
-                    <View style={styles.tabContainer}>
-                        <View style={styles.tabImageContainer}>
-                            <VectorIcon
-                                name="dots-horizontal-circle"
-                                type="MaterialCommunityIcons"
-                                size={20}
-                            ></VectorIcon>
-                        </View>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: '#591aaf' }]}>
+                        <VectorIcon
+                            name="add-circle"
+                            type="Ionicons"
+                            size={20}
+                            color="white"
+                        ></VectorIcon>
+                        <Text style={[styles.tabText, { color: 'white' }]}>Add to story</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]} onPress={() => navigation.navigate("Profile edit")}>
+                        <VectorIcon
+                            name="create"
+                            type="Ionicons"
+                            size={20}
+                        ></VectorIcon>
+                        <Text style={styles.tabText}>Edit profile</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.tabContainer, { backgroundColor: 'lightgray' }]}>
+                        <VectorIcon
+                            name="ellipsis-horizontal-circle-sharp"
+                            type="Ionicons"
+                            size={20}
+                        ></VectorIcon>
                         <Text style={styles.tabText}>More</Text>
-                    </View>
+                    </TouchableOpacity>
                 </View>
                 {/* <View style={styles.divider}></View> */}
                 <View style={styles.aboutheadingContainer}>
@@ -505,12 +490,22 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
+        gap: 15,
+        paddingHorizontal: 10
     },
     tabContainer: {
-        height: 90,
-        width: windowWidth / 4.2,
+        // height: 90,
+        // width: windowWidth / 4.2,
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        height: 40,
+        // width: windowWidth / 2.5,,
+        paddingHorizontal: 15,
         alignItems: 'center',
         justifyContent: 'center',
+        flexDirection: 'row',
+        borderRadius: 10,
+        gap: 5
     },
     tabImage: {
         height: 30,

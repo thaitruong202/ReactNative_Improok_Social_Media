@@ -319,71 +319,84 @@ const SurveyPost = ({ navigation }) => {
 
         return (
             <View style={{ marginBottom: 20 }}>
-                <TextInput
-                    style={[styles.textInputStyle, { fontSize: 16 }]}
-                    placeholder="Enter question..."
-                    value={questionTitle}
-                    onChangeText={(value) => handleEditQuestionTitle(value)}
-                    editable={isEditing} />
-                <TouchableOpacity onPress={toggleEditingMode} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
+                <View style={{ paddingHorizontal: 15, flexDirection: 'column', gap: 10 }}>
+                    <View style={{ flexDirection: 'row', gap: 15, alignItems: 'center' }}>
+                        <TextInput
+                            style={[styles.textInputStyle, { fontSize: 16 }]}
+                            placeholder="Enter question..."
+                            value={questionTitle}
+                            onChangeText={(value) => handleEditQuestionTitle(value)}
+                            editable={isEditing} />
+                        {/* <TouchableOpacity onPress={toggleEditingMode} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
                     <VectorIcon
-                        name="edit"
-                        type="Feather"
+                        name="create"
+                        type="Ionicons"
                         size={25}
                         color='white' />
                     <Text style={{ fontSize: 14, color: 'white' }}>Chỉnh sửa</Text>
-                </TouchableOpacity>
-                {questionOptions.map((option, optionIndex) => {
-                    if (option.isDeleted) {
-                        return null;
-                    }
-                    return (
-                        <View key={optionIndex} style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <TextInput
-                                style={[styles.textInputStyle, { flex: 1, marginRight: 10 }]}
-                                placeholder="Enter option..."
-                                value={option.question_option_value}
-                                onChangeText={(value) => handleOptionChange(optionIndex, value)}
-                                editable={isEditing} />
-                            {isEditing && (
-                                <TouchableOpacity onPress={() => handleRemoveOptionFromQuestion(optionIndex)}>
-                                    <VectorIcon
-                                        name="remove-circle"
-                                        type="Ionicons"
-                                        size={22} />
-                                </TouchableOpacity>
-                            )}
-                        </View>
-                    );
-                })}
-                {isEditing && (
-                    <TouchableOpacity onPress={handleAddOptionToQuestion} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
-                        <VectorIcon
-                            name="add-circle"
-                            type="MaterialIcons"
-                            size={25}
-                            color="white" />
-                        <Text style={{ fontSize: 14, color: 'white' }}>Add Option</Text>
-                    </TouchableOpacity>
-                )}
-                <TouchableOpacity onPress={handleRemoveQuestion} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'red', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
-                    <VectorIcon
-                        name="delete"
-                        type="MaterialCommunityIcons"
-                        size={25}
-                        color='white' />
-                    <Text style={{ fontSize: 14, color: 'white' }}>Remove Question</Text>
-                </TouchableOpacity>
-                {isEditing && (
-                    <TouchableOpacity onPress={saveChanges} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'black', padding: 5, width: windowWidth / 2.5, justifyContent: 'space-around', borderRadius: 15 }}>
-                        <VectorIcon
-                            name="save"
-                            type="Entypo"
-                            size={25}
-                            color='white' />
-                        <Text style={{ fontSize: 14, color: 'white' }}>Save Changes</Text>
-                    </TouchableOpacity>
-                )}
+                </TouchableOpacity> */}
+                        <TouchableOpacity onPress={toggleEditingMode} style={{ alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, borderRadius: 15 }}>
+                            <VectorIcon
+                                name="create"
+                                type="Ionicons"
+                                size={25}
+                                color='white' />
+                        </TouchableOpacity>
+                    </View>
+                    {questionOptions.map((option, optionIndex) => {
+                        if (option.isDeleted) {
+                            return null;
+                        }
+                        return (
+                            <View key={optionIndex} style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <TextInput
+                                    style={[styles.textInputStyle, { flex: 1, marginRight: 10 }]}
+                                    placeholder="Enter option..."
+                                    value={option.question_option_value}
+                                    onChangeText={(value) => handleOptionChange(optionIndex, value)}
+                                    editable={isEditing} />
+                                {isEditing && (
+                                    <TouchableOpacity onPress={() => handleRemoveOptionFromQuestion(optionIndex)}>
+                                        <VectorIcon
+                                            name="remove-circle"
+                                            type="Ionicons"
+                                            size={22} />
+                                    </TouchableOpacity>
+                                )}
+                            </View>
+                        );
+                    })}
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                        {isEditing && (
+                            <TouchableOpacity onPress={handleAddOptionToQuestion} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: '#1f83d3', padding: 5, justifyContent: 'space-around', borderRadius: 15 }}>
+                                <VectorIcon
+                                    name="add-circle"
+                                    type="MaterialIcons"
+                                    size={25}
+                                    color="white" />
+                                <Text style={{ fontSize: 13, color: 'white' }}>Add option</Text>
+                            </TouchableOpacity>
+                        )}
+                        <TouchableOpacity onPress={handleRemoveQuestion} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'red', padding: 5, justifyContent: 'space-around', borderRadius: 15 }}>
+                            <VectorIcon
+                                name="delete"
+                                type="MaterialCommunityIcons"
+                                size={25}
+                                color='white' />
+                            <Text style={{ fontSize: 13, color: 'white' }}>Remove question</Text>
+                        </TouchableOpacity>
+                        {isEditing && (
+                            <TouchableOpacity onPress={saveChanges} style={{ flexDirection: 'row', alignItems: 'center', backgroundColor: 'black', padding: 5, justifyContent: 'space-around', borderRadius: 15 }}>
+                                <VectorIcon
+                                    name="save"
+                                    type="Entypo"
+                                    size={25}
+                                    color='white' />
+                                <Text style={{ fontSize: 13, color: 'white' }}>Save changes</Text>
+                            </TouchableOpacity>
+                        )}
+                    </View>
+                </View>
             </View>
         );
     };
@@ -541,71 +554,99 @@ const SurveyPost = ({ navigation }) => {
                                     <View style={styles.dateTimeContainer}>
                                         <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                                             <Text style={{ fontSize: 13, marginBottom: 8 }}>Start date</Text>
-                                            <TouchableOpacity onPress={() => showBeginMode("date")}>
-                                                <Text style={{ fontSize: 17 }}>
-                                                    <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
-                                                </Text>
-                                                {showBeginDatePicker && (
-                                                    <DateTimePicker
-                                                        value={selectedBeginDate}
-                                                        mode={beginMode}
-                                                        format="YYYY-MM-DD"
-                                                        minimumDate={currentDate}
-                                                        is24Hour={true}
-                                                        maximumDate={new Date(2100, 0, 1)}
-                                                        onChange={handleBeginDateChange} />
-                                                )}
-                                            </TouchableOpacity>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <TouchableOpacity onPress={() => showBeginMode("date")}>
+                                                    <Text style={{ fontSize: 17 }}>
+                                                        <Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text>
+                                                    </Text>
+                                                    {showBeginDatePicker && (
+                                                        <DateTimePicker
+                                                            value={selectedBeginDate}
+                                                            mode={beginMode}
+                                                            format="YYYY-MM-DD"
+                                                            minimumDate={currentDate}
+                                                            is24Hour={true}
+                                                            maximumDate={new Date(2100, 0, 1)}
+                                                            onChange={handleBeginDateChange} />
+                                                    )}
+                                                </TouchableOpacity>
+                                                <VectorIcon
+                                                    name="calendar"
+                                                    type="AntDesign"
+                                                    size={17}
+                                                />
+                                            </View>
                                         </View>
                                         <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
                                             <Text style={{ fontSize: 13, marginBottom: 8 }}>Start time</Text>
-                                            <TouchableOpacity onPress={() => showBeginMode("time")}>
-                                                <Text style={{ fontSize: 17 }}>
-                                                    {String(selectedBeginTime.getHours()).padStart(2, '0')}:
-                                                    {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
-                                                </Text>
-                                                {showBeginTimePicker && (
-                                                    <DateTimePicker
-                                                        value={selectedBeginTime}
-                                                        mode={beginMode}
-                                                        is24Hour={true}
-                                                        onChange={handleBeginTimeChange} />
-                                                )}
-                                            </TouchableOpacity>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <TouchableOpacity onPress={() => showBeginMode("time")}>
+                                                    <Text style={{ fontSize: 17 }}>
+                                                        {String(selectedBeginTime.getHours()).padStart(2, '0')}:
+                                                        {String(selectedBeginTime.getMinutes()).padStart(2, '0')}
+                                                    </Text>
+                                                    {showBeginTimePicker && (
+                                                        <DateTimePicker
+                                                            value={selectedBeginTime}
+                                                            mode={beginMode}
+                                                            is24Hour={true}
+                                                            onChange={handleBeginTimeChange} />
+                                                    )}
+                                                </TouchableOpacity>
+                                                <VectorIcon
+                                                    name="clockcircleo"
+                                                    type="AntDesign"
+                                                    size={17}
+                                                />
+                                            </View>
                                         </View>
                                     </View>
                                     <View style={styles.dateTimeContainer}>
                                         <View style={[styles.textInputStyle, { marginRight: 8 }]}>
                                             <Text style={{ fontSize: 13, marginBottom: 8 }}>End date</Text>
-                                            <TouchableOpacity onPress={() => showEndMode("date")}>
-                                                <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
-                                                {showEndDatePicker && (
-                                                    <DateTimePicker
-                                                        value={selectedEndDate}
-                                                        mode={endMode}
-                                                        format="YYYY-MM-DD"
-                                                        minimumDate={currentDate}
-                                                        is24Hour={true}
-                                                        maximumDate={new Date(2100, 0, 1)}
-                                                        onChange={handleEndDateChange} />
-                                                )}
-                                            </TouchableOpacity>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <TouchableOpacity onPress={() => showEndMode("date")}>
+                                                    <Text style={{ fontSize: 17 }}><Text style={{ fontSize: 17 }}>{`${String(selectedBeginDate.getDate()).padStart(2, '0')}/${String(selectedBeginDate.getMonth() + 1).padStart(2, '0')}/${selectedBeginDate.getFullYear()}`}</Text></Text>
+                                                    {showEndDatePicker && (
+                                                        <DateTimePicker
+                                                            value={selectedEndDate}
+                                                            mode={endMode}
+                                                            format="YYYY-MM-DD"
+                                                            minimumDate={currentDate}
+                                                            is24Hour={true}
+                                                            maximumDate={new Date(2100, 0, 1)}
+                                                            onChange={handleEndDateChange} />
+                                                    )}
+                                                </TouchableOpacity>
+                                                <VectorIcon
+                                                    name="calendar"
+                                                    type="AntDesign"
+                                                    size={17}
+                                                />
+                                            </View>
                                         </View>
                                         <View style={[styles.textInputStyle, { marginLeft: 8 }]}>
                                             <Text style={{ fontSize: 13, marginBottom: 8 }}>End time</Text>
-                                            <TouchableOpacity onPress={() => showEndMode("time")}>
-                                                <Text style={{ fontSize: 17 }}>
-                                                    {String(selectedEndTime.getHours()).padStart(2, '0')}:
-                                                    {String(selectedEndTime.getMinutes()).padStart(2, '0')}
-                                                </Text>
-                                                {showEndTimePicker && (
-                                                    <DateTimePicker
-                                                        value={selectedEndTime}
-                                                        mode={endMode}
-                                                        is24Hour={true}
-                                                        onChange={handleEndTimeChange} />
-                                                )}
-                                            </TouchableOpacity>
+                                            <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+                                                <TouchableOpacity onPress={() => showEndMode("time")}>
+                                                    <Text style={{ fontSize: 17 }}>
+                                                        {String(selectedEndTime.getHours()).padStart(2, '0')}:
+                                                        {String(selectedEndTime.getMinutes()).padStart(2, '0')}
+                                                    </Text>
+                                                    {showEndTimePicker && (
+                                                        <DateTimePicker
+                                                            value={selectedEndTime}
+                                                            mode={endMode}
+                                                            is24Hour={true}
+                                                            onChange={handleEndTimeChange} />
+                                                    )}
+                                                </TouchableOpacity>
+                                                <VectorIcon
+                                                    name="clockcircleo"
+                                                    type="AntDesign"
+                                                    size={17}
+                                                />
+                                            </View>
                                         </View>
                                     </View>
                                     <View style={styles.inputContainer}>
@@ -894,9 +935,9 @@ const styles = StyleSheet.create({
     textInputStyle: {
         borderWidth: 1,
         borderColor: 'gray',
-        padding: 10,
+        padding: 7,
         textAlignVertical: 'top',
-        fontSize: 18,
+        fontSize: 17,
         borderRadius: 10
     },
     createEventButt: {

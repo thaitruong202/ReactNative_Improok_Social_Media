@@ -10,6 +10,11 @@ const MyUserReducer = (currentState, action) => {
             AsyncStorage.clear();
             console.log("Xóa")
             return null;
+        case "updateUser":
+            return {
+                ...currentState,
+                ...action.payload
+            };
         default:
             return currentState;
     }

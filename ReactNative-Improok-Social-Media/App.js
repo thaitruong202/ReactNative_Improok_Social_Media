@@ -34,6 +34,7 @@ import Search from './src/layouts/Search';
 import ChatScreen from './src/screen/ChatScreen';
 import MessageScreen from './src/screen/MessageScreen';
 import ProfileUser from './src/components/ProfileUser';
+import ProfileEdit from './src/components/ProfileEdit';
 // import { NativeBaseConfigProvider } from 'native-base/lib/typescript/core/NativeBaseContext';
 
 export const MyUserContext = createContext();
@@ -145,6 +146,7 @@ export default function App() {
                     }}
                   />
                   <Stack.Screen name='User profile' component={ProfileUser} />
+                  <Stack.Screen name='Profile edit' component={ProfileEdit} />
                 </Stack.Navigator>
                 <Toast />
               </NavigationContainer>
