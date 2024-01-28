@@ -57,30 +57,41 @@ const GroupManagement = ({ navigation }) => {
         <>
             <ScrollView>
                 <View style={styles.groupManagementContainer}>
-                    <Text style={styles.groupManagementHeaderText}>Danh sách nhóm</Text>
-                    <View>
-                        <TouchableOpacity onPress={() => setViewAddGroup(true)} style={{}}>
+                    <Text style={styles.groupManagementHeaderText}>List group</Text>
+                    <View style={{ marginVertical: 20 }}>
+                        <TouchableOpacity onPress={() => setViewAddGroup(true)} style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 15, gap: 10 }}>
                             <VectorIcon
-                                name="group-add"
-                                type="MaterialIcons"
-                                size={19}
+                                name="people-circle"
+                                type="Ionicons"
+                                size={23}
                             />
-                            <Text>
-                                Tạo nhóm mới
+                            <Text style={{ fontSize: 18 }}>
+                                Create new group
                             </Text>
                         </TouchableOpacity>
-                        {viewAddGroup && <View>
+                        {viewAddGroup && <View style={{ flexDirection: 'row', marginHorizontal: 15, gap: 10 }}>
                             <TextInput
                                 value={groupName}
-                                placeholder='Nhập tên nhóm...'
+                                placeholder='Enter group name...'
                                 onChangeText={(groupName) => setGroupName(groupName)}
+                                style={{ borderBottomWidth: 1, width: '80%', fontSize: 17, height: 40 }}
                             />
-                            <View style={{ flexDirection: 'row' }}>
-                                <TouchableOpacity onPress={() => createGroup()}>
-                                    <Text>Thêm</Text>
+                            <View style={{ flexDirection: 'row', width: '20%', justifyContent: 'center', alignItems: 'center', gap: 8 }}>
+                                <TouchableOpacity onPress={() => createGroup()} style={{ width: '48%' }}>
+                                    <VectorIcon
+                                        name="checkmark-circle-outline"
+                                        type="Ionicons"
+                                        size={23}
+                                        color="green"
+                                    />
                                 </TouchableOpacity>
-                                <TouchableOpacity onPress={() => setViewAddGroup(false)}>
-                                    <Text>Hủy</Text>
+                                <TouchableOpacity onPress={() => setViewAddGroup(false)} style={{ width: '48%' }}>
+                                    <VectorIcon
+                                        name="close-circle-outline"
+                                        type="Ionicons"
+                                        size={23}
+                                        color="red"
+                                    />
                                 </TouchableOpacity>
                             </View>
                         </View>}
@@ -94,22 +105,24 @@ const GroupManagement = ({ navigation }) => {
                                         <TouchableOpacity onPress={() => navigation.navigate('Group member', { groupId: lg.id })}>
                                             <VectorIcon
                                                 name="eye"
-                                                type="AntDesign"
+                                                type="Ionicons"
                                                 size={19}
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => navigation.navigate('Alter group', { groupId: lg.id })}>
                                             <VectorIcon
-                                                name="mode-edit"
-                                                type="MaterialIcons"
+                                                name="create"
+                                                type="Ionicons"
                                                 size={19}
+                                                color="green"
                                             />
                                         </TouchableOpacity>
                                         <TouchableOpacity onPress={() => deleteGroup(lg.id)}>
                                             <VectorIcon
-                                                name="delete"
-                                                type="MaterialCommunityIcons"
+                                                name="trash"
+                                                type="Ionicons"
                                                 size={19}
+                                                color="red"
                                             />
                                         </TouchableOpacity>
                                     </View>

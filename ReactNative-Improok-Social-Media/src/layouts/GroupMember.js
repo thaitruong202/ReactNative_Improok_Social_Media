@@ -41,8 +41,8 @@ const GroupMember = () => {
                                 <View style={styles.memberItem}>
                                     <Image
                                         source={ml.avatar === null ? require('../images/user.png') : { uri: ml.avatar }}
-                                        style={{ width: 40, height: 40, borderRadius: 20, flex: 1.5 }} />
-                                    <Text style={{ fontSize: 18, flex: 8.5, alignItems: 'center' }}>
+                                        style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                    <Text style={{ fontSize: 18, alignItems: 'center' }}>
                                         {ml.user.last_name} {ml.user.first_name}
                                     </Text>
                                 </View>
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         marginBottom: 7,
         borderBottomColor: 'lightgray',
         alignItems: 'center',
-        gap: 10
+        gap: 15
     }
 })
 

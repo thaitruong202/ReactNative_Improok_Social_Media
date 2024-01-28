@@ -220,13 +220,15 @@ const PersonalScreen = ({ navigation }) => {
                                 />
                                 <Text style={styles.collapsibleSubItemBodyText}>Help Center</Text>
                             </View>
-                            <View style={styles.collapsibleSubItem}>
-                                <VectorIcon
-                                    name="information-circle"
-                                    type="Ionicons"
-                                    size={20}
-                                />
-                                <Text style={styles.collapsibleSubItemBodyText}>About</Text>
+                            <View>
+                                <TouchableOpacity onPress={() => alert("We are I'MPROOK Group")} style={styles.collapsibleSubItem}>
+                                    <VectorIcon
+                                        name="information-circle"
+                                        type="Ionicons"
+                                        size={20}
+                                    />
+                                    <Text style={styles.collapsibleSubItemBodyText}>About</Text>
+                                </TouchableOpacity>
                             </View>
                         </Collapsible>
                     </View>

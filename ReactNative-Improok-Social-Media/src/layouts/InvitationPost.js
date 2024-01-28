@@ -63,8 +63,8 @@ const InvitationPost = ({ navigation }) => {
                     {
                         display: 'flex',
                         flexDirection: 'row',
-                        marginVertical: 10,
-                        paddingHorizontal: 20,
+                        marginVertical: 15,
+                        paddingHorizontal: 25,
                         alignItems: 'center'
                     },
                     isMemberSelected && { opacity: 0.5 },

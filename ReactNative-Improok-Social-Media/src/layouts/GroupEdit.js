@@ -253,7 +253,7 @@ const GroupEdit = () => {
                                     marginHorizontal: 10,
                                     padding: 10,
                                     borderRadius: 5,
-                                    fontSize: 17,
+                                    fontSize: 18,
                                     width: '70%'
                                 }}
                             />
@@ -274,52 +274,31 @@ const GroupEdit = () => {
                                 />
                             </TouchableOpacity>
                         </View>}
-                        {memberList.map(ml => {
-                            return (
-                                <Fragment>
-                                    <View style={styles.memberItem}>
-                                        <Image
-                                            source={ml.avatar === null ? require('../images/user.png') : { uri: ml.avatar }}
-                                            style={{ width: 40, height: 40, borderRadius: 20, flex: 1.5 }} />
-                                        <Text style={{ fontSize: 18, flex: 7.5, alignItems: 'center' }}>
-                                            {ml.user.last_name} {ml.user.first_name}
-                                        </Text>
-                                        <TouchableOpacity style={{ flex: 1 }} onPress={() => deleteMember(ml.id)}>
-                                            <VectorIcon
-                                                name="delete"
-                                                type="MaterialCommunityIcons"
-                                                size={22}>
-                                            </VectorIcon>
-                                        </TouchableOpacity>
-                                    </View>
-                                </Fragment>
-                            )
-                        })}
-                        <View>
-                            <TouchableOpacity style={styles.addMemberButt} onPress={() => addAccount()}>
-                                <VectorIcon
-                                    name="person-add"
-                                    type="Ionicons"
-                                    size={22}>
-                                </VectorIcon>
-                                <Text>
-                                    Thêm thành viên mới
-                                </Text>
-                            </TouchableOpacity>
+                        <View style={{ marginVertical: 15 }}>
+                            <View style={{ flexDirection: 'row', gap: 5 }}>
+                                <TextInput
+                                    placeholder='Enter accounts...'
+                                    value={input}
+                                    onChangeText={(input) => onChangeText(input)}
+                                    style={{
+                                        height: 40,
+                                        marginHorizontal: 10,
+                                        borderBottomWidth: 1,
+                                        padding: 10,
+                                        borderRadius: 5,
+                                        fontSize: 17,
+                                        width: '80%'
+                                    }} />
+                                <TouchableOpacity style={styles.addMemberButt} onPress={() => addAccount()}>
+                                    <VectorIcon
+                                        name="add-circle"
+                                        type="Ionicons"
+                                        size={22}>
+                                    </VectorIcon>
+                                </TouchableOpacity>
+                            </View>
                             <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                                 <SafeAreaView>
-                                    <TextInput
-                                        placeholder='Nhập tài khoản...'
-                                        value={input}
-                                        onChangeText={(input) => onChangeText(input)}
-                                        style={{
-                                            height: 40,
-                                            marginHorizontal: 10,
-                                            borderWidth: 1,
-                                            padding: 10,
-                                            borderRadius: 5,
-                                            fontSize: 17
-                                        }} />
                                     {
                                         input.length > 0 ? <FlatList
                                             data={filteredAccountList}
@@ -340,13 +319,34 @@ const GroupEdit = () => {
                                                 style={{ width: 40, height: 40, borderRadius: 20 }} />
                                             <Text style={{ marginLeft: 10, fontSize: 16 }}>{member.fullName}</Text>
                                             <TouchableOpacity onPress={() => removeMember(index)} style={{ position: 'absolute', right: 5 }}>
-                                                <VectorIcon name="delete" type="MaterialIcons" size={22} />
+                                                <VectorIcon name="remove-circle" type="Ionicons" size={22} />
                                             </TouchableOpacity>
                                         </View>
                                     ))}
                                 </SafeAreaView>
                             </TouchableWithoutFeedback>
                         </View>
+                        {memberList.map(ml => {
+                            return (
+                                <Fragment>
+                                    <View style={styles.memberItem}>
+                                        <Image
+                                            source={ml.avatar === null ? require('../images/user.png') : { uri: ml.avatar }}
+                                            style={{ width: 40, height: 40, borderRadius: 20 }} />
+                                        <Text style={{ fontSize: 18, width: '75%', alignItems: 'center' }}>
+                                            {ml.user.last_name} {ml.user.first_name}
+                                        </Text>
+                                        <TouchableOpacity style={{ width: "10%" }} onPress={() => deleteMember(ml.id)}>
+                                            <VectorIcon
+                                                name="trash"
+                                                type="Ionicons"
+                                                size={22}>
+                                            </VectorIcon>
+                                        </TouchableOpacity>
+                                    </View>
+                                </Fragment>
+                            )
+                        })}
                     </View>
                 </SafeAreaView>
             </ScrollView>
@@ -357,11 +357,11 @@ const GroupEdit = () => {
 const styles = StyleSheet.create({
     groupMemberContainer: {
         padding: 10,
-        marginTop: 5
+        marginTop: 5,
     },
     groupMemberHeaderText: {
         textAlign: 'center',
-        fontSize: 21,
+        fontSize: 19,
         fontWeight: '600',
         textTransform: 'uppercase',
         marginBottom: 10
@@ -379,14 +379,9 @@ const styles = StyleSheet.create({
         gap: 10
     },
     addMemberButt: {
-        display: 'flex',
-        flexDirection: 'row',
-        borderWidth: 1,
-        width: windowWidth / 2,
+        width: '10%',
         alignItems: 'center',
-        paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderRadius: 15
+        justifyContent: 'center'
     }
 })
 
